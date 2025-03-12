@@ -5,7 +5,6 @@ import '../Data Client Screen/data_client_view.dart';
 import '../Data Company Screen/data_company_view.dart';
 import '../Data Worker Screen/data_worker_view.dart';
 
-
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -31,66 +30,47 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFCCD7CD),
       body: screens[currentIndex],
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: currentIndex,
-        onTap: onTabTapped,
-      ),
-    );
-  }
-}
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(bottom: 35.h),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          margin: EdgeInsets.symmetric(horizontal: 35.w),
+          decoration: BoxDecoration(
+            color: const Color(0xFFA3B8A3),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(3, (index) {
+              final List<String> icons = [
+                "assets/icons/Company_icont.svg",
+                "assets/icons/Client_icont.svg",
+                "assets/icons/Worker_icont.svg"
+              ];
+              bool isActive = currentIndex == index;
 
-class CustomBottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
-
-  const CustomBottomNavBar({
-    Key? key,
-    required this.currentIndex,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final List<String> icons = [
-      "assets/icons/Company_icont.svg",
-      "assets/icons/Client_icont.svg",
-      "assets/icons/Worker_icont.svg"
-    ];
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: 35.h), // Jarak ke bawah 35.h
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFA3B8A3),
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(icons.length, (index) {
-            bool isActive = currentIndex == index;
-
-            return GestureDetector(
-              onTap: () => onTap(index),
-              child: Container(
-                height: 50.r,
-                width: 50.r,
-                decoration: BoxDecoration(
-                  color: isActive ? const Color(0xFF184D2B) : Colors.white, // Warna hijau tua jika aktif
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    icons[index],
-                    color: isActive ? Colors.black : Colors.grey, // Icon aktif hitam, tidak aktif abu-abu
-                    width: 15.w,
+              return GestureDetector(
+                onTap: () => onTabTapped(index),
+                child: Container(
+                  height: 50.r,
+                  width: 50.r,
+                  decoration: BoxDecoration(
+                    color: isActive ? const Color(0xFF184D2B) : Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      icons[index],
+                      color: isActive ? Colors.black : Colors.grey,
+                      width: 15.w,
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
         ),
       ),
     );
