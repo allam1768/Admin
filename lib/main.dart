@@ -1,16 +1,19 @@
-import 'package:admin/pages/Bottom%20Nav/home_binding.dart';
-import 'package:admin/pages/Bottom%20Nav/home_view.dart';
-import 'package:admin/pages/Data%20Company%20Screen/data_Company_view.dart';
-import 'package:admin/pages/Data%20Company%20Screen/data_company_binding.dart';
-import 'package:admin/pages/Login%20Screen/login_screen_binding.dart';
-import 'package:admin/pages/Login%20Screen/login_screen_view.dart';
-import 'package:admin/pages/Splash%20Screen/spalsh_screen_binding.dart';
-import 'package:admin/pages/Splash%20Screen/spalsh_screen_view.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'app/pages/Bottom Nav/bottomnav_binding.dart';
+import 'app/pages/Bottom Nav/bottomnav_view.dart';
+import 'app/pages/Data Company Screen/data_company_binding.dart';
+import 'app/pages/Data Company Screen/data_company_view.dart';
+import 'app/pages/Login Screen/login_screen_binding.dart';
+import 'app/pages/Login Screen/login_screen_view.dart';
+import 'app/pages/Splash Screen/spalsh_screen_binding.dart';
+import 'app/pages/Splash Screen/spalsh_screen_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: '/home',
+          initialRoute: '/splash',
           getPages: [
             GetPage(
               name: '/splash',
@@ -44,12 +47,12 @@ class MyApp extends StatelessWidget {
               binding: LoginScreenBinding(),
             ),
             GetPage(
-              name: '/home',
-              page: () => HomeView(),
-              binding: HomeBinding(),
+              name: '/bottomnav',
+              page: () => BottomNavView(),
+              binding: BottomNavBinding(),
             ),
             GetPage(
-              name: '/DataCompany',
+              name: '/datacompany',
               page: () => DataCompanyView(),
               binding: DataCompanyBinding(),
             ),

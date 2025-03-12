@@ -1,4 +1,4 @@
-import 'package:admin/pages/Splash%20Screen/splash_screen_controller.dart';
+import 'package:admin/app/pages/Splash%20Screen/splash_screen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';

@@ -5,14 +5,14 @@ import '../Data Client Screen/data_client_view.dart';
 import '../Data Company Screen/data_company_view.dart';
 import '../Data Worker Screen/data_worker_view.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class BottomNavView extends StatefulWidget {
+  const BottomNavView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<BottomNavView> createState() => _BottomNavViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _BottomNavViewState extends State<BottomNavView> {
   int currentIndex = 0;
 
   final List<Widget> screens = [
