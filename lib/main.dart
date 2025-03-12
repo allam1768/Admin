@@ -1,5 +1,7 @@
 import 'package:admin/pages/Bottom%20Nav/home_binding.dart';
 import 'package:admin/pages/Bottom%20Nav/home_view.dart';
+import 'package:admin/pages/Data%20Company%20Screen/data_Company_view.dart';
+import 'package:admin/pages/Data%20Company%20Screen/data_company_binding.dart';
 import 'package:admin/pages/Login%20Screen/login_screen_binding.dart';
 import 'package:admin/pages/Login%20Screen/login_screen_view.dart';
 import 'package:admin/pages/Splash%20Screen/spalsh_screen_binding.dart';
@@ -45,6 +47,11 @@ class MyApp extends StatelessWidget {
               name: '/home',
               page: () => HomeView(),
               binding: HomeBinding(),
+            ),
+            GetPage(
+              name: '/DataCompany',
+              page: () => DataCompanyView(),
+              binding: DataCompanyBinding(),
             ),
           ],
         );
