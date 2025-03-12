@@ -1,3 +1,5 @@
+import 'package:admin/pages/Bottom%20Nav/home_binding.dart';
+import 'package:admin/pages/Bottom%20Nav/home_view.dart';
 import 'package:admin/pages/Login%20Screen/login_screen_binding.dart';
 import 'package:admin/pages/Login%20Screen/login_screen_view.dart';
 import 'package:admin/pages/Splash%20Screen/spalsh_screen_binding.dart';
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: '/splash',
+          initialRoute: '/home',
           getPages: [
             GetPage(
               name: '/splash',
@@ -38,6 +40,11 @@ class MyApp extends StatelessWidget {
               name: '/login',
               page: () => LoginScreenView(),
               binding: LoginScreenBinding(),
+            ),
+            GetPage(
+              name: '/home',
+              page: () => HomeView(),
+              binding: HomeBinding(),
             ),
           ],
         );
