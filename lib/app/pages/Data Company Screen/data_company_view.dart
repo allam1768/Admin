@@ -2,6 +2,7 @@ import 'package:admin/app/pages/Data%20Company%20Screen/widgets/CompanyCard.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../global component/app_bar.dart';
 import 'data_company_controller.dart';
 
 class DataCompanyView extends StatelessWidget {
@@ -14,21 +15,20 @@ class DataCompanyView extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFCCD7CD),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 20.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20.h),
-              Text(
-                "Company",
-                style: TextStyle(
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAppBar(
+              title: "Company",
+              rightIcon: "",
+              rightOnTap: () {
+                Get.offNamed('');
+              },
+              showBackButton: false,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 20.h),
                 child: Obx(() => ListView.separated(
                   itemCount: controller.companies.length,
                   separatorBuilder: (context, index) => SizedBox(height: 20.h),
@@ -41,8 +41,8 @@ class DataCompanyView extends StatelessWidget {
                   },
                 )),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

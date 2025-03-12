@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class ClientCard extends StatelessWidget {
+  final String company;
+  final String client;
+  final String imagePath;
+
+  const ClientCard({
+    super.key,
+    required this.company,
+    required this.client,
+    required this.imagePath,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFFA3B8A3),
+        borderRadius: BorderRadius.circular(20.r),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 60.r,
+            height: 60.r,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black, width: 1),
+              color: Colors.grey[400],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50.r),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.person, size: 40.r, color: Colors.black);
+                },
+              ),
+            ),
+          ),
+          SizedBox(width: 15.w),
+
+          // Nama Perusahaan & Client
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                company,
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                client,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
