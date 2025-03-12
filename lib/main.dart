@@ -1,5 +1,5 @@
-import 'package:admin/pages/Bottom%20Nav/home_binding.dart';
-import 'package:admin/pages/Bottom%20Nav/home_view.dart';
+import 'package:admin/pages/Bottom%20Nav/bottomnav_binding.dart';
+import 'package:admin/pages/Bottom%20Nav/bottomnav_view.dart';
 import 'package:admin/pages/Data%20Company%20Screen/data_Company_view.dart';
 import 'package:admin/pages/Data%20Company%20Screen/data_company_binding.dart';
 import 'package:admin/pages/Login%20Screen/login_screen_binding.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: '/home',
+          initialRoute: '/splash',
           getPages: [
             GetPage(
               name: '/splash',
@@ -44,12 +44,12 @@ class MyApp extends StatelessWidget {
               binding: LoginScreenBinding(),
             ),
             GetPage(
-              name: '/home',
-              page: () => HomeView(),
-              binding: HomeBinding(),
+              name: '/bottomnav',
+              page: () => BottomNavView(),
+              binding: BottomNavBinding(),
             ),
             GetPage(
-              name: '/DataCompany',
+              name: '/datacompany',
               page: () => DataCompanyView(),
               binding: DataCompanyBinding(),
             ),
