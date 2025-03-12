@@ -1,4 +1,4 @@
-import 'package:admin/pages/Data%20Company%20Screen/widgets/CompanyCard.dart';
+import 'package:admin/app/pages/Data%20Company%20Screen/widgets/CompanyCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
