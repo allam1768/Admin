@@ -1,4 +1,6 @@
 
+import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_binding.dart';
+import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: '/splash',
+          initialRoute: '/detaildata',
           getPages: [
             GetPage(
               name: '/splash',
@@ -55,6 +57,11 @@ class MyApp extends StatelessWidget {
               name: '/datacompany',
               page: () => DataCompanyView(),
               binding: DataCompanyBinding(),
+            ),
+            GetPage(
+              name: '/detaildata',
+              page: () => DetailDataView(),
+              binding: DetailDataBinding(),
             ),
           ],
         );
