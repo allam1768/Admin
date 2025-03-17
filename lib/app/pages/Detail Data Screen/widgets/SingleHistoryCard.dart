@@ -12,7 +12,7 @@ class SingleHistoryCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Card(
-        color: const Color(0xFF9CBE9D),
+        color: const Color(0xFFB4DDB6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
