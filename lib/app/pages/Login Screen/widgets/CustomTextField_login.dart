@@ -55,14 +55,21 @@ class _CustomTextFieldLoginState extends State<CustomTextFieldLogin> {
                 isObscured ? 'assets/icons/eye_closed.svg' : 'assets/icons/eye_open.svg',
                 width: 20.w,
                 height: 20.h,
-
               ),
             ),
           )
               : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.r),
-            borderSide: BorderSide(color: Colors.transparent, width: 1.w),
+            borderSide: BorderSide(color: Color(0xFF275637), width: 1.w),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+            borderSide: BorderSide(color: Color(0xFF275637), width: 1.w),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+            borderSide: BorderSide(color: Color(0xFF275637), width: 2.w),
           ),
         ),
       ),

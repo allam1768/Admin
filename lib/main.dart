@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: '/detaildata',
+          initialRoute: '/splash',
           getPages: [
             GetPage(
               name: '/splash',

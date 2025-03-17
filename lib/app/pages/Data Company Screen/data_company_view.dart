@@ -36,6 +36,7 @@ class DataCompanyView extends StatelessWidget {
                     return CompanyCard(
                       companyName: controller.companies[index]["name"]!,
                       imagePath: controller.companies[index]["image"]!,
+                      onTap: () { Get.offNamed('/detaildata'); },
                     );
                   },
                 )),
