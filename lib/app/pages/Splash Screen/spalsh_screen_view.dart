@@ -10,7 +10,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDCE5D8),
+      backgroundColor: const Color(0xFFCCD7CD),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
