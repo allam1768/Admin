@@ -20,7 +20,7 @@ class DetailDataView extends StatefulWidget {
 
 class _DetailDataViewState extends State<DetailDataView> {
   final controller = Get.find<DetailDataController>();
-  int selectedMonth = 0; // Menyimpan bulan yang dipilih
+  int selectedMonth = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +72,6 @@ class _DetailDataViewState extends State<DetailDataView> {
                       onNoteChanged: (text) {
                         print("Catatan: $text");
                       },
-                      color: Color(0xFF02B78C),
                     ),
                     SizedBox(height: 25.h),
 
@@ -87,7 +86,6 @@ class _DetailDataViewState extends State<DetailDataView> {
                       onNoteChanged: (text) {
                         print("Catatan: $text");
                       },
-                      color: Color(0xFF00A2C7),
                     ),
                     SizedBox(height: 35.h),
                     Row(

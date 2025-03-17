@@ -58,11 +58,6 @@ class MyApp extends StatelessWidget {
               binding: BottomNavBinding(),
             ),
             GetPage(
-              name: '/datacompany',
-              page: () => DataCompanyView(),
-              binding: DataCompanyBinding(),
-            ),
-            GetPage(
               name: '/detaildata',
               page: () => DetailDataView(),
               binding: DetailDataBinding(),

@@ -16,7 +16,7 @@ class CompanyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/companyDetail'); // Pindah ke halaman detail company
+        Get.toNamed('/detaildata');
       },
       child: Container(
         width: 342.w,

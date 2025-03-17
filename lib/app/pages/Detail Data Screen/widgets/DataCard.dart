@@ -23,7 +23,7 @@ class DataCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF00A88B), // Default kalau warna nggak diisi
+        color: color ?? const Color(0xFF97B999), // Default kalau warna nggak diisi
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Column(
