@@ -17,7 +17,7 @@ class SingleHistoryCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
-            Get.offNamed('/detail');
+            Get.offNamed('/detailhistory');
           },
           child: SizedBox(
             height: 84.h,
