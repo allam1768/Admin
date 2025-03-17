@@ -1,6 +1,10 @@
 
 import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_binding.dart';
 import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_view.dart';
+import 'package:admin/app/pages/Detail%20History%20Screen/detail_binding.dart';
+import 'package:admin/app/pages/Detail%20History%20Screen/detail_view.dart';
+import 'package:admin/app/pages/Edit%20Data%20History%20Screen/edit_data_binding.dart';
+import 'package:admin/app/pages/Edit%20Data%20History%20Screen/edit_data_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,6 +67,16 @@ class MyApp extends StatelessWidget {
               page: () => DetailDataView(),
               binding: DetailDataBinding(),
             ),
+            GetPage(
+              name: '/detailhistory',
+              page: () => DetailHistoryView(),
+              binding: DetailHistoryBinding(),
+            ),
+            GetPage(
+                name: '/EditDataHistory',
+                page: () => EditDataHistoryView(),
+                binding: EditDataHistoryBinding()
+            )
           ],
         );
       },
