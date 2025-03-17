@@ -57,7 +57,7 @@ class _BottomNavViewState extends State<BottomNavView> {
                   height: 50.r,
                   width: 50.r,
                   decoration: BoxDecoration(
-                    color: isActive ? const Color(0xFF184D2B) : Colors.white,
+                    color: isActive ? const Color(0xFFFFA726) : Colors.white,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
