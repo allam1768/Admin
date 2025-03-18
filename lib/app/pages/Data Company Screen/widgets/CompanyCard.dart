@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class CompanyCard extends StatelessWidget {
   final String companyName;
   final String imagePath;
-  final VoidCallback onTap; // Callback saat card ditekan
 
   const CompanyCard({
     Key? key,
     required this.companyName,
     required this.imagePath,
-    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Menjalankan aksi saat card ditekan
+      onTap: () {
+        Get.toNamed('/companyDetail'); // Pindah ke halaman detail company
+      },
       child: Container(
         width: 342.w,
         height: 168.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: const Color(0xFF6E6E6E), width: 1.w), // Border tipis
+          border: Border.all(color: const Color(0xFF6E6E6E), width: 1.w),
         ),
         child: Stack(
           children: [
@@ -60,7 +61,7 @@ class CompanyCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white, // Warna teks putih biar kontras
+                    color: Colors.white,
                   ),
                 ),
               ),
