@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../global component/CustomButton.dart';
+
 class ImageUploadComponent extends StatefulWidget {
   @override
   _ImageUploadComponentState createState() => _ImageUploadComponentState();
@@ -14,12 +16,18 @@ class _ImageUploadComponentState extends State<ImageUploadComponent> {
   final picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
       });
     }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _image = null;
+    });
   }
 
   void _showPreview() {
@@ -33,15 +41,15 @@ class _ImageUploadComponentState extends State<ImageUploadComponent> {
           height: double.infinity,
           child: Center(
             child: InteractiveViewer(
-              panEnabled: true, // Bisa digeser
+              panEnabled: true,
               boundaryMargin: EdgeInsets.all(20),
-              minScale: 1, // Zoom out minimal 1x
-              maxScale: 4, // Zoom in maksimal 4x
+              minScale: 1,
+              maxScale: 4,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
                 child: Image.file(
                   _image!,
-                  width: 300.w, // Atur ukuran awal
+                  width: 300.w,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -78,6 +86,17 @@ class _ImageUploadComponentState extends State<ImageUploadComponent> {
                 : Icon(Icons.camera_alt, size: 50, color: Colors.grey),
           ),
         ),
+        SizedBox(height: 15.h),
+
+        CustomButton(
+          text: "Take Photo",
+          color: Color(0xFFFFA726),
+          onPressed:
+            _pickImage
+          ,
+          fontSize: 20,
+        ),
+        SizedBox(width: 10.w),
       ],
     );
   }
