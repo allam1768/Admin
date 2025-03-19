@@ -58,7 +58,7 @@ class _MonthSliderState extends State<MonthSlider> {
                 return Center(
                   child: Text(
                     months[index],
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
                 );
               },
