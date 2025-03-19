@@ -28,7 +28,7 @@ class DataCompanyView extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                 child: Obx(() => ListView.separated(
                   itemCount: controller.companies.length,
                   separatorBuilder: (context, index) => SizedBox(height: 20.h),
