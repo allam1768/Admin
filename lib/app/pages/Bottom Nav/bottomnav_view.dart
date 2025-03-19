@@ -36,7 +36,7 @@ class _BottomNavViewState extends State<BottomNavView> {
         padding: EdgeInsets.only(bottom: 35.h),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-          margin: EdgeInsets.symmetric(horizontal: 35.w),
+          margin: EdgeInsets.symmetric(horizontal: 20.w),
           decoration: BoxDecoration(
             color: const Color(0xFFA3B8A3),
             borderRadius: BorderRadius.circular(12.r),
