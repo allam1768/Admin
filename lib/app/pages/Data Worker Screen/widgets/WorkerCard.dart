@@ -33,7 +33,7 @@ class WorkerCard extends StatelessWidget {
               height: 60.r,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 1),
+                border: Border.all(color: Colors.white, width: 2),
                 color: Colors.grey[400],
               ),
               child: ClipRRect(
