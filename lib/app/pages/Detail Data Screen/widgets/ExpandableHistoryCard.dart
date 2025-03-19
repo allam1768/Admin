@@ -42,8 +42,8 @@
                 children: [
                   Image.asset(
                     widget.imagePath,
-                    width: 342.w,
-                    height: 168.h,
+                    width: 372.w,
+                    height: 180.h,
                     fit: BoxFit.cover,
                   ),
                   Positioned(

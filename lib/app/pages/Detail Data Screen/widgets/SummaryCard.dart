@@ -14,9 +14,11 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double size = 82.w < 82.h ? 82.w : 82.h; // Pastikan ukuran selalu kotak
+
     return Container(
-      width: 82.w,
-      height: 82.h,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: Colors.orange,
         borderRadius: BorderRadius.circular(16.r),
@@ -26,7 +28,7 @@ class SummaryCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 5.h),
@@ -54,11 +56,13 @@ class SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double size = 82.w < 82.h ? 82.w : 82.h; // Pastikan ukuran selalu kotak
+
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 15.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
         color: const Color(0xFF97B999), // Warna latar belakang diperbarui
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -68,17 +72,17 @@ class SummarySection extends StatelessWidget {
           GestureDetector(
             onTap: onQrTap,
             child: Container(
-              width: 82.w,
-              height: 82.h,
+              width: size,
+              height: size,
               decoration: BoxDecoration(
                 color: Colors.orange,
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               child: Center(
                 child: SvgPicture.asset(
                   "assets/icons/qr_icont.svg", // Ganti dengan path icon QR
-                  width: 48.w,
-                  height: 48.h,
+                  width: 40.w,
+                  height: 40.h,
                 ),
               ),
             ),

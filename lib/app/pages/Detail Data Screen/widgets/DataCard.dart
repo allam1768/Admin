@@ -7,14 +7,16 @@ class DataCard extends StatelessWidget {
   final String title;
   final List<FlSpot> dataPoints;
   final Function(String) onNoteChanged;
-  final Color? color; // Warna bisa diubah
+  final VoidCallback onSave;
+  final Color? color;
 
   const DataCard({
     super.key,
     required this.title,
     required this.dataPoints,
     required this.onNoteChanged,
-    this.color, // Parameter opsional
+    required this.onSave,
+    this.color,
   });
 
   @override
@@ -23,8 +25,8 @@ class DataCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF97B999), // Default kalau warna nggak diisi
-        borderRadius: BorderRadius.circular(20.r),
+        color: color ?? const Color(0xFF97B999),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +46,6 @@ class DataCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Grafik Garis
               Expanded(
                 child: SizedBox(
                   height: 175.h,
@@ -65,7 +66,7 @@ class DataCard extends StatelessWidget {
                             show: true,
                             getDotPainter: (spot, percent, barData, index) {
                               return FlDotCirclePainter(
-                                radius: 4.r,
+                                radius: 3.r,
                                 color: Colors.black,
                                 strokeWidth: 0,
                               );
@@ -77,8 +78,6 @@ class DataCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // Keterangan di Samping
               SizedBox(width: 12.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,12 +92,10 @@ class DataCard extends StatelessWidget {
               ),
             ],
           ),
-
           SizedBox(height: 42.h),
 
           // Input Catatan
           Container(
-            height: 48.h,
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -106,19 +103,50 @@ class DataCard extends StatelessWidget {
             ),
             child: TextField(
               onChanged: onNoteChanged,
+              minLines: 1,
+              maxLines: 5,
               style: TextStyle(fontSize: 14.sp),
+              textAlignVertical: TextAlignVertical.top,
+              keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
                 hintText: "Tambah catatan...",
                 hintStyle: TextStyle(fontSize: 14.sp),
                 border: InputBorder.none,
                 prefixIcon: Padding(
-                  padding: EdgeInsets.all(0),
+                  padding: EdgeInsets.all(8.r),
                   child: SvgPicture.asset(
                     "assets/icons/note_icont.svg",
-                    width: 24.r,
-                    height: 24.r,
+                    width: 20.r,
+                    height: 20.r,
                   ),
                 ),
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h), // Jarak antara TextField & tombol
+
+          // Tombol Save di Bawah
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: onSave,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                backgroundColor: Color(0xFFFFA726),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.save_rounded, color: Colors.black, size: 18.r),
+                  SizedBox(width: 6.w),
+                  Text(
+                    "Save",
+                    style: TextStyle(fontSize: 14.sp, color: Colors.black,fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
           ),

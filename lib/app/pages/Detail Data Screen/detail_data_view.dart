@@ -34,7 +34,7 @@ class _DetailDataViewState extends State<DetailDataView> {
 
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 35.w),
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -71,7 +71,7 @@ class _DetailDataViewState extends State<DetailDataView> {
                       ],
                       onNoteChanged: (text) {
                         print("Catatan: $text");
-                      },
+                      }, onSave: () {  },
                     ),
                     SizedBox(height: 25.h),
 
@@ -85,7 +85,7 @@ class _DetailDataViewState extends State<DetailDataView> {
                       ],
                       onNoteChanged: (text) {
                         print("Catatan: $text");
-                      },
+                      }, onSave: () {  },
                     ),
                     SizedBox(height: 35.h),
                     Row(
@@ -125,6 +125,7 @@ class _DetailDataViewState extends State<DetailDataView> {
                         );
                       },
                     )),
+                    SizedBox(height: 25.h),
                   ],
                 ),
               ),
