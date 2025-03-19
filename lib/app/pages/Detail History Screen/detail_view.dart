@@ -28,7 +28,7 @@ class DetailHistoryView extends StatelessWidget {
                 color: Color(0xFFBBD4C3),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 20.h),
+              padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
