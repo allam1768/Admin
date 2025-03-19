@@ -19,8 +19,7 @@ class CompanyCard extends StatelessWidget {
         Get.toNamed('/detaildata');
       },
       child: Container(
-        width: 342.w,
-        height: 168.h,
+        height: 180.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(color: const Color(0xFF6E6E6E), width: 1.w),
@@ -32,7 +31,7 @@ class CompanyCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.r),
               child: Image.asset(
                 imagePath,
-                width: 342.w,
+                width: 372.w,
                 height: 168.h,
                 fit: BoxFit.cover,
               ),
