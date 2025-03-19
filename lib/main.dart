@@ -1,4 +1,6 @@
 
+import 'package:admin/app/pages/Account%20Client/account_client_binding.dart';
+import 'package:admin/app/pages/Account%20Client/account_client_view.dart';
 import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_binding.dart';
 import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_view.dart';
 import 'package:admin/app/pages/Detail%20History%20Screen/detail_binding.dart';
@@ -71,6 +73,11 @@ class MyApp extends StatelessWidget {
                 name: '/EditDataHistory',
                 page: () => EditDataHistoryView(),
                 binding: EditDataHistoryBinding()
+            ),
+            GetPage(
+                name: '/AccountClient',
+                page: () => AccountClientView(),
+                binding: AccountClientBinding()
             )
           ],
         );

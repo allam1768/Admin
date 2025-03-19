@@ -18,7 +18,7 @@ class ClientCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/clientDetail'); // Pindah ke halaman detail klien
+        Get.toNamed('/AccountClient'); // Pindah ke halaman detail klien
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),

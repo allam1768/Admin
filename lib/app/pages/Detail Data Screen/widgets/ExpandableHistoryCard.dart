@@ -78,7 +78,7 @@
             child: widget.isExpanded
                 ? Container(
               decoration: BoxDecoration(
-                color: Color(0xFF6D8F72), // Hijau tua
+                color: Color(0xFF97B999), // Hijau tua
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(12.r),
                   bottomRight: Radius.circular(12.r),

@@ -1,4 +1,3 @@
-import 'package:admin/app/global%20component/custom_button_detail.dart';
 import 'package:admin/app/pages/Detail%20History%20Screen/widgets/info_card.dart';
 import 'package:admin/app/pages/Detail%20History%20Screen/widgets/info_container.dart';
 import 'package:admin/app/pages/Detail%20History%20Screen/widgets/karyawan_card.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import 'widgets/ButtonEdit&Delete_detail.dart';
 import '../../global component/app_bar.dart';
 
 
