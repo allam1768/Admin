@@ -18,7 +18,7 @@ class WorkerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/workerDetail');
+        Get.toNamed('/AccountWorker');
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
