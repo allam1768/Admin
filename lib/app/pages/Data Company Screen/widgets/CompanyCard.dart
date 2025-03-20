@@ -32,7 +32,7 @@ class CompanyCard extends StatelessWidget {
               child: Image.asset(
                 imagePath,
                 width: 372.w,
-                height: 168.h,
+                height: 180.h,
                 fit: BoxFit.cover,
               ),
             ),
