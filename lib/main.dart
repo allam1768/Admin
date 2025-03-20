@@ -14,6 +14,8 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'app/pages/Account Worker/account_worker_binding.dart';
+import 'app/pages/Account Worker/account_worker_view.dart';
 import 'app/pages/Bottom Nav/bottomnav_binding.dart';
 import 'app/pages/Bottom Nav/bottomnav_view.dart';
 import 'app/pages/Data Company Screen/data_company_binding.dart';
@@ -78,6 +80,11 @@ class MyApp extends StatelessWidget {
                 name: '/AccountClient',
                 page: () => AccountClientView(),
                 binding: AccountClientBinding()
+            ),
+            GetPage(
+                name: '/AccountWorker',
+                page: () => AccountWorkerView(),
+                binding: AccountWorkerBinding()
             )
           ],
         );
