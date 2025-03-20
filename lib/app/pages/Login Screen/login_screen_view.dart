@@ -16,7 +16,7 @@ class LoginScreenView extends StatelessWidget {
       backgroundColor: const Color(0xFFCCD7CD),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
