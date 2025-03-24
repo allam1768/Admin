@@ -1,13 +1,13 @@
-import 'package:admin/app/pages/Detail%20History%20Screen/widgets/info_card.dart';
-import 'package:admin/app/pages/Detail%20History%20Screen/widgets/info_container.dart';
-import 'package:admin/app/pages/Detail%20History%20Screen/widgets/karyawan_card.dart';
+
+import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/ButtonEdit&Delete_detail.dart';
+import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/info_card.dart';
+import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/info_container.dart';
+import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/karyawan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-import 'widgets/ButtonEdit&Delete_detail.dart';
-import '../../global component/app_bar.dart';
+import '../../../global component/app_bar.dart';
 
 
 class DetailHistoryView extends StatelessWidget {

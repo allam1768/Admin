@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphic/graphic.dart';
-import '../../../global component/CustomTextField.dart';
+import '../../../../global component/CustomTextField.dart';
 
 class DataCard extends StatelessWidget {
   final String title;

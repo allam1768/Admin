@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../global component/CustomButton.dart';
-
+import '../../../../global component/CustomButton.dart';
 class ImageUploadComponent extends StatefulWidget {
   @override
   _ImageUploadComponentState createState() => _ImageUploadComponentState();

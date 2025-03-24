@@ -1,17 +1,16 @@
-import 'package:admin/app/pages/Data%20Client%20Screen/widgets/ClientCard.dart';
-import 'package:admin/app/pages/Data%20Worker%20Screen/widgets/WorkerCard.dart';
+import 'package:admin/app/pages/Company/Data%20Company%20Screen/widgets/CompanyCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../global component/app_bar.dart';
-import 'data_worker_controller.dart';
+import '../../../global component/app_bar.dart';
+import 'data_company_controller.dart';
 
-class DataWorkerView extends StatelessWidget {
-  const DataWorkerView({super.key});
+class DataCompanyView extends StatelessWidget {
+  const DataCompanyView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(DataWorkerController());
+    final controller = Get.put(DataCompanyController());
 
     return Scaffold(
       backgroundColor: const Color(0xFFCCD7CD),
@@ -20,10 +19,10 @@ class DataWorkerView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(
-              title: "Worker",
-              rightIcon: "assets/icons/add_worker_btn.svg",
+              title: "Company",
+              rightIcon: "",
               rightOnTap: () {
-                Get.offNamed('/add-client');
+                Get.offNamed('');
               },
               showBackButton: false,
             ),
@@ -31,13 +30,12 @@ class DataWorkerView extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                 child: Obx(() => ListView.separated(
-                  itemCount: controller.worker.length,
+                  itemCount: controller.companies.length,
                   separatorBuilder: (context, index) => SizedBox(height: 20.h),
                   itemBuilder: (context, index) {
-                    return WorkerCard(
-                      nokaryawan: controller.worker[index]["nokaryawan"]!,
-                      name: controller.worker[index]["nama"]!,
-                      imagePath: controller.worker[index]["imagePath"]!,
+                    return CompanyCard(
+                      companyName: controller.companies[index]["name"]!,
+                      imagePath: controller.companies[index]["image"]!,
                     );
                   },
                 )),

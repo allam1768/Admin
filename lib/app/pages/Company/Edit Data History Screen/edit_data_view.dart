@@ -1,12 +1,12 @@
 import 'package:admin/app/global%20component/CustomButton.dart';
-import 'package:admin/app/pages/Edit%20Data%20History%20Screen/widgets/CustomRadioButton_edit.dart';
-import 'package:admin/app/pages/Edit%20Data%20History%20Screen/widgets/ImageUpload.dart';
+import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomRadioButton_edit.dart';
+import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/ImageUpload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../../global component/CustomTextField.dart';
-import '../../global component/app_bar.dart';
+import '../../../global component/CustomTextField.dart';
+import '../../../global component/app_bar.dart';
 import 'edit_data_controller.dart';
 
 class EditDataHistoryView extends StatelessWidget {

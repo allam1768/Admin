@@ -1,14 +1,15 @@
-import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_controller.dart';
-import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/DataCard.dart';
-import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/ExpandableHistoryCard.dart';
-import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/MonthSlider.dart';
-import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/SummaryCard.dart';
+
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DataCard.dart';
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ExpandableHistoryCard.dart';
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/MonthSlider.dart';
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/SummaryCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../global component/app_bar.dart';
+import '../../../global component/app_bar.dart';
+import 'detail_data_controller.dart';
 
 class DetailDataView extends StatefulWidget {
   const DetailDataView({super.key});
