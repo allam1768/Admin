@@ -69,9 +69,10 @@ class AccountClientView extends StatelessWidget {
 
                     // Action Buttons
                     ActionButtons(
-                      onEdit: () => print("Edit pressed"),
+                      onEdit: () => Get.offNamed('/EditAccountClient'),
                       onDelete: () => print("Delete pressed"),
                     ),
+
                   ],
                 ),
               ),
