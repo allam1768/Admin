@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphic/graphic.dart';
+import '../../../global component/CustomTextField.dart';
 
 class DataCard extends StatelessWidget {
   final String title;
@@ -9,6 +10,7 @@ class DataCard extends StatelessWidget {
   final Function(String) onNoteChanged;
   final VoidCallback onSave;
   final Color? color;
+  final IconData? icon; // Menambahkan opsi ikon di samping kiri
 
   const DataCard({
     super.key,
@@ -17,6 +19,7 @@ class DataCard extends StatelessWidget {
     required this.onNoteChanged,
     required this.onSave,
     this.color,
+    this.icon,
   });
 
   @override
@@ -70,44 +73,26 @@ class DataCard extends StatelessWidget {
                 ),
               ],
               axes: [
-                Defaults.horizontalAxis..label = LabelStyle(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12.sp), // Warna label sumbu X jadi hitam
-                ),
-                Defaults.verticalAxis,
+                Defaults.horizontalAxis
+                  ..label = LabelStyle(
+                    textStyle: TextStyle(color: Colors.black, fontSize: 12.sp),
+                    offset: const Offset(0, 8), // Jarak label minggu dari diagram
+                  )
+                  ..grid = null,
+                Defaults.verticalAxis
+                  ..label = null
+                  ..grid = null
               ],
             ),
           ),
-          SizedBox(height: 42.h),
+          SizedBox(height: 42.h), // Memberikan jarak lebih antara label minggu dan diagram
 
-          // Input Catatan
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: TextField(
-              onChanged: onNoteChanged,
-              minLines: 1,
-              maxLines: 5,
-              style: TextStyle(fontSize: 14.sp),
-              textAlignVertical: TextAlignVertical.top,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                hintText: "Tambah catatan...",
-                hintStyle: TextStyle(fontSize: 14.sp),
-                border: InputBorder.none,
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(8.r),
-                  child: SvgPicture.asset(
-                    "assets/icons/note_icont.svg",
-                    width: 20.r,
-                    height: 20.r,
-                  ),
-                ),
-              ),
-            ),
+          CustomTextField(
+            label: "Catatan",
+            svgIcon: "assets/icons/note_icont.svg",
+            onChanged: onNoteChanged,
           ),
+
           SizedBox(height: 12.h),
 
           // Tombol Save di Bawah

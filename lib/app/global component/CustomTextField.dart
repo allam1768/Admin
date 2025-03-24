@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomTextField extends StatefulWidget {
   final String label;
   final String? initialValue;
   final bool isPassword;
   final Function(String)? onChanged;
+  final String? svgIcon; // Menambahkan ikon SVG opsional
 
   const CustomTextField({
     super.key,
@@ -13,6 +15,7 @@ class CustomTextField extends StatefulWidget {
     this.initialValue,
     this.isPassword = false,
     this.onChanged,
+    this.svgIcon, IconData? icon,
   });
 
   @override
@@ -78,6 +81,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
               filled: true,
               fillColor: Colors.white,
               contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+              prefixIcon: widget.svgIcon != null
+                  ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                child: SvgPicture.asset(
+                  widget.svgIcon!,
+                  width: 20.r,
+                  height: 20.r,
+                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                ),
+              )
+                  : null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
                 borderSide: BorderSide(
