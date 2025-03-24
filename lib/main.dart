@@ -5,6 +5,8 @@ import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_binding.dart'
 import 'package:admin/app/pages/Detail%20Data%20Screen/detail_data_view.dart';
 import 'package:admin/app/pages/Detail%20History%20Screen/detail_binding.dart';
 import 'package:admin/app/pages/Detail%20History%20Screen/detail_view.dart';
+import 'package:admin/app/pages/Edit%20Account%20Client/edit_account_client_binding.dart';
+import 'package:admin/app/pages/Edit%20Account%20Client/edit_account_client_view.dart';
 import 'package:admin/app/pages/Edit%20Data%20History%20Screen/edit_data_binding.dart';
 import 'package:admin/app/pages/Edit%20Data%20History%20Screen/edit_data_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -85,7 +87,12 @@ class MyApp extends StatelessWidget {
                 name: '/AccountWorker',
                 page: () => AccountWorkerView(),
                 binding: AccountWorkerBinding()
-            )
+            ),
+            GetPage(
+                name: '/EditAccountClient',
+                page: () => EditAccountClientView(),
+                binding: EditAccountClientBinding()
+            ),
           ],
         );
       },

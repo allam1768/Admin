@@ -7,7 +7,7 @@ class CustomTextField extends StatefulWidget {
   final String? initialValue;
   final bool isPassword;
   final Function(String)? onChanged;
-  final String? svgIcon; // Menambahkan ikon SVG opsional
+  final String? svgIcon;
 
   const CustomTextField({
     super.key,
@@ -15,7 +15,7 @@ class CustomTextField extends StatefulWidget {
     this.initialValue,
     this.isPassword = false,
     this.onChanged,
-    this.svgIcon, IconData? icon,
+    this.svgIcon,
   });
 
   @override
@@ -26,18 +26,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
   late final TextEditingController _controller;
   final FocusNode _focusNode = FocusNode();
   bool _isEmpty = false;
-  bool _isExternalController = false;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
     super.initState();
-
-    // Cek apakah initialValue diberikan, jika iya gunakan itu
-    if (widget.initialValue != null) {
-      _controller = TextEditingController(text: widget.initialValue);
-    } else {
-      _controller = TextEditingController();
-    }
+    _controller = TextEditingController(text: widget.initialValue ?? "");
 
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
@@ -50,9 +44,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   void dispose() {
-    if (!_isExternalController) {
-      _controller.dispose();
-    }
+    _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -73,9 +65,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           child: TextField(
             controller: _controller,
             focusNode: _focusNode,
-            obscureText: widget.isPassword,
+            obscureText: widget.isPassword && !_isPasswordVisible,
             style: TextStyle(fontSize: 15.sp, color: Colors.black),
-            maxLines: widget.isPassword ? 1 : null,
+            maxLines: 1,
             keyboardType: widget.isPassword ? TextInputType.text : TextInputType.multiline,
             decoration: InputDecoration(
               filled: true,
@@ -90,6 +82,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   height: 20.r,
                   colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
                 ),
+              )
+                  : null,
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
               )
                   : null,
               border: OutlineInputBorder(
