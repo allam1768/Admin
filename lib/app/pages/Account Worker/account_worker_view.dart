@@ -67,7 +67,7 @@ class AccountWorkerView extends StatelessWidget {
 
                     // Action Buttons
                     ActionButtons(
-                      onEdit: () => print("Edit pressed"),
+                      onEdit: () => Get.offNamed('/EditAccountWorker'),
                       onDelete: () => print("Delete pressed"),
                     ),
                   ],
