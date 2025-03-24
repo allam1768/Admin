@@ -1,11 +1,11 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:graphic/graphic.dart';
 
 class DataCard extends StatelessWidget {
   final String title;
-  final List<FlSpot> dataPoints;
+  final List<Map<String, dynamic>> dataPoints;
   final Function(String) onNoteChanged;
   final VoidCallback onSave;
   final Color? color;
@@ -42,55 +42,40 @@ class DataCard extends StatelessWidget {
           ),
           SizedBox(height: 54.h),
 
-          // Diagram + Keterangan di Samping
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 175.h,
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(show: false),
-                      titlesData: FlTitlesData(show: false),
-                      borderData: FlBorderData(show: false),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: dataPoints
-                              .map((e) => FlSpot(e.x, e.y.toInt().toDouble()))
-                              .toList(),
-                          isCurved: false,
-                          barWidth: 2.w,
-                          color: Colors.black,
-                          dotData: FlDotData(
-                            show: true,
-                            getDotPainter: (spot, percent, barData, index) {
-                              return FlDotCirclePainter(
-                                radius: 3.r,
-                                color: Colors.black,
-                                strokeWidth: 0,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+          // Diagram Batang (dengan label minggu)
+          SizedBox(
+            height: 175.h,
+            child: Chart(
+              data: dataPoints,
+              variables: {
+                'x': Variable(
+                  accessor: (Map map) => map['x'].toString(),
+                  scale: OrdinalScale(tickCount: dataPoints.length),
+                ),
+                'y': Variable(
+                  accessor: (Map map) => map['y'] as num,
+                  scale: LinearScale(),
+                ),
+              },
+              marks: [
+                IntervalMark(
+                  position: Varset('x') * Varset('y'),
+                  color: ColorEncode(
+                    variable: 'x',
+                    values: List.generate(dataPoints.length, (index) => Colors.purple[200]!),
+                  ),
+                  shape: ShapeEncode(
+                    value: RectShape(borderRadius: BorderRadius.circular(4.r)), // Membuat ujung batang tumpul
                   ),
                 ),
-              ),
-              SizedBox(width: 12.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _infoItem("Total",
-                      dataPoints.map((e) => e.y.toInt()).reduce((a, b) => a + b).toString()),
-                  _infoItem("Max",
-                      dataPoints.map((e) => e.y.toInt()).reduce((a, b) => a > b ? a : b).toString()),
-                  _infoItem("Min",
-                      dataPoints.map((e) => e.y.toInt()).reduce((a, b) => a < b ? a : b).toString()),
-                ],
-              ),
-            ],
+              ],
+              axes: [
+                Defaults.horizontalAxis..label = LabelStyle(
+                  textStyle: TextStyle(color: Colors.black, fontSize: 12.sp), // Warna label sumbu X jadi hitam
+                ),
+                Defaults.verticalAxis,
+              ],
+            ),
           ),
           SizedBox(height: 42.h),
 
@@ -123,7 +108,7 @@ class DataCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12.h), // Jarak antara TextField & tombol
+          SizedBox(height: 12.h),
 
           // Tombol Save di Bawah
           Align(
@@ -144,30 +129,11 @@ class DataCard extends StatelessWidget {
                   SizedBox(width: 6.w),
                   Text(
                     "Save",
-                    style: TextStyle(fontSize: 14.sp, color: Colors.black,fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _infoItem(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 4.h),
-      child: Row(
-        children: [
-          Text(
-            "$label:",
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          SizedBox(width: 4.w),
-          Text(
-            value,
-            style: TextStyle(fontSize: 14.sp, color: Colors.black),
           ),
         ],
       ),
