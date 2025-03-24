@@ -22,7 +22,7 @@ class DataWorkerView extends StatelessWidget {
               title: "Worker",
               rightIcon: "assets/icons/add_worker_btn.svg",
               rightOnTap: () {
-                Get.offNamed('/add-client');
+                Get.toNamed('/CreateAccountWorker');
               },
               showBackButton: false,
             ),
