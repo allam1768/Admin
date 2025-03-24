@@ -1,32 +1,8 @@
-
-import 'package:admin/app/pages/Company/Detail%20History%20Screen/detail_binding.dart';
-import 'package:admin/app/pages/Client/Edit%20Account%20Client/edit_account_client_binding.dart';
-import 'package:admin/app/pages/Worker/Edit%20Account%20Worker/edit_account_worker_binding.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'app/pages/Bottom Nav/bottomnav_binding.dart';
-import 'app/pages/Bottom Nav/bottomnav_view.dart';
-import 'app/pages/Client/Account Client/account_client_binding.dart';
-import 'app/pages/Client/Account Client/account_client_view.dart';
-import 'app/pages/Client/Edit Account Client/edit_account_client_view.dart';
-import 'app/pages/Company/Data Company Screen/data_company_binding.dart';
-import 'app/pages/Company/Data Company Screen/data_company_view.dart';
-import 'app/pages/Company/Detail Data Screen/detail_data_binding.dart';
-import 'app/pages/Company/Detail Data Screen/detail_data_view.dart';
-import 'app/pages/Company/Detail History Screen/detail_view.dart';
-import 'app/pages/Company/Edit Data History Screen/edit_data_binding.dart';
-import 'app/pages/Company/Edit Data History Screen/edit_data_view.dart';
-import 'app/pages/Login Screen/login_screen_binding.dart';
-import 'app/pages/Login Screen/login_screen_view.dart';
-import 'app/pages/Splash Screen/spalsh_screen_binding.dart';
-import 'app/pages/Splash Screen/spalsh_screen_view.dart';
-import 'app/pages/Worker/Account Worker/account_worker_binding.dart';
-import 'app/pages/Worker/Account Worker/account_worker_view.dart';
-import 'app/pages/Worker/Edit Account Worker/edit_account_worker_view.dart';
+import 'app/routes/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,59 +23,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: '/splash',
-          getPages: [
-            GetPage(
-              name: '/splash',
-              page: () => SplashScreenView(),
-              binding: SplashScreenBinding(),
-            ),
-            GetPage(
-              name: '/login',
-              page: () => LoginScreenView(),
-              binding: LoginScreenBinding(),
-            ),
-            GetPage(
-              name: '/bottomnav',
-              page: () => BottomNavView(),
-              binding: BottomNavBinding(),
-            ),
-            GetPage(
-              name: '/detaildata',
-              page: () => DetailDataView(),
-              binding: DetailDataBinding(),
-            ),
-            GetPage(
-              name: '/detailhistory',
-              page: () => DetailHistoryView(),
-              binding: DetailHistoryBinding(),
-            ),
-            GetPage(
-                name: '/EditDataHistory',
-                page: () => EditDataHistoryView(),
-                binding: EditDataHistoryBinding()
-            ),
-            GetPage(
-                name: '/AccountClient',
-                page: () => AccountClientView(),
-                binding: AccountClientBinding()
-            ),
-            GetPage(
-                name: '/AccountWorker',
-                page: () => AccountWorkerView(),
-                binding: AccountWorkerBinding()
-            ),
-            GetPage(
-                name: '/EditAccountClient',
-                page: () => EditAccountClientView(),
-                binding: EditAccountClientBinding()
-            ),
-            GetPage(
-                name: '/EditAccountWorker',
-                page: () => EditAccountWorkerView(),
-                binding: EditAccountWorkerBinding()
-            ),
-          ],
+          initialRoute: Routes.splash,
+          getPages: Routes.pages,
         );
       },
     );
