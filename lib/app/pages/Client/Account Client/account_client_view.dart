@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../global component/app_bar.dart';
-import '../../global component/ButtonEdit&Delete_account.dart';
-import 'Widgets/InfoCard.dart';
-import 'Widgets/InfoTile.dart';
+import '../../../global component/app_bar.dart';
+import '../../../global component/ButtonEdit&Delete_account.dart';
+import '../../Worker/Account Worker/Widgets/InfoCard.dart';
+import '../../Worker/Account Worker/Widgets/InfoTile.dart';
 import 'account_client_controller.dart';
 
 class AccountClientView extends StatelessWidget {

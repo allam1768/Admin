@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../Data Client Screen/data_client_view.dart';
-import '../Data Company Screen/data_company_view.dart';
-import '../Data Worker Screen/data_worker_view.dart';
+import '../Client/Data Client Screen/data_client_view.dart';
+import '../Company/Data Company Screen/data_company_view.dart';
+import '../Worker/Data Worker Screen/data_worker_view.dart';
 
 class BottomNavView extends StatefulWidget {
   const BottomNavView({super.key});
