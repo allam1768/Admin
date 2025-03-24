@@ -1,3 +1,4 @@
+import 'package:admin/app/pages/Client/Create%20Account%20Client/create_account_client_view.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_view.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import '../pages/Bottom Nav/bottomnav_binding.dart';
 import '../pages/Bottom Nav/bottomnav_view.dart';
 import '../pages/Client/Account Client/account_client_binding.dart';
 import '../pages/Client/Account Client/account_client_view.dart';
+import '../pages/Client/Create Account Client/create_account_client_binding.dart';
 import '../pages/Client/Edit Account Client/edit_account_client_binding.dart';
 import '../pages/Client/Edit Account Client/edit_account_client_view.dart';
 import '../pages/Company/Data Company Screen/data_company_binding.dart';
@@ -36,6 +38,7 @@ class Routes {
   static const String editAccountClient = '/EditAccountClient';
   static const String editAccountWorker = '/EditAccountWorker';
   static const String createAccountWorker = '/CreateAccountWorker';
+  static const String createAccountClient = '/CreateAccountClient';
 
 
   static final List<GetPage> pages = [
@@ -93,6 +96,11 @@ class Routes {
       name: createAccountWorker,
       page: () => CreateAccountWorkerView(),
       binding: CreateAccountWorkerBinding(),
+    ),
+    GetPage(
+      name: createAccountClient,
+      page: () => CreateAccountClientView(),
+      binding: CreateAccountClientBinding(),
     ),
   ];
 }
