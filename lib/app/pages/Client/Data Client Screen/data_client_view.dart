@@ -22,7 +22,7 @@ class DataClientView extends StatelessWidget {
               title: "Client",
               rightIcon: "assets/icons/add_client_btn.svg",
               rightOnTap: () {
-                Get.offNamed('/add-client'); // Ganti dengan rute yang benar
+                Get.offNamed('/CreateAccountClient'); // Ganti dengan rute yang benar
               },
               showBackButton: false,
             ),
