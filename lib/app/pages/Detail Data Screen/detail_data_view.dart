@@ -3,7 +3,6 @@ import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/DataCard.dart';
 import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/ExpandableHistoryCard.dart';
 import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/MonthSlider.dart';
 import 'package:admin/app/pages/Detail%20Data%20Screen/widgets/SummaryCard.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,12 +63,13 @@ class _DetailDataViewState extends State<DetailDataView> {
                     DataCard(
                       title: "Land",
                       dataPoints: [
-                        FlSpot(1, 5),
-                        FlSpot(2, 7),
-                        FlSpot(3, 3),
-                        FlSpot(4, 9),
+                        {'x': 'Minggu 1', 'y': 10},
+                        {'x': 'Minggu 2', 'y': 15},
+                        {'x': 'Minggu 3', 'y': 7},
+                        {'x': 'Minggu 4', 'y': 12},
                       ],
-                      onNoteChanged: (text) {
+
+                        onNoteChanged: (text) {
                         print("Catatan: $text");
                       }, onSave: () {  },
                     ),
@@ -78,12 +78,13 @@ class _DetailDataViewState extends State<DetailDataView> {
                     DataCard(
                       title: "Fly",
                       dataPoints: [
-                        FlSpot(1, 5),
-                        FlSpot(2, 7),
-                        FlSpot(3, 3),
-                        FlSpot(4, 9),
+                        {'x': 'Minggu 1', 'y': 10},
+                        {'x': 'Minggu 2', 'y': 15},
+                        {'x': 'Minggu 3', 'y': 7},
+                        {'x': 'Minggu 4', 'y': 12},
                       ],
-                      onNoteChanged: (text) {
+
+                        onNoteChanged: (text) {
                         print("Catatan: $text");
                       }, onSave: () {  },
                     ),

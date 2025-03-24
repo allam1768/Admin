@@ -24,6 +24,8 @@ dependencies:
   image_picker: ^1.0.7
   qr_flutter: ^4.1.0
   fl_chart: ^0.64.0
+  graphic: ^2.5.1
+
 
 dev_dependencies:
   flutter_test:
