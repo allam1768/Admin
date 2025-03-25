@@ -6,7 +6,7 @@ import 'ChartLine.dart';
 
 class DataCard extends StatelessWidget {
   final String title;
-  final List<Map<String, dynamic>> dataPoints;
+  final List<FlSpot> chartData;
   final Function(String) onNoteChanged;
   final VoidCallback onSave;
   final Color? color;
@@ -14,7 +14,7 @@ class DataCard extends StatelessWidget {
   const DataCard({
     super.key,
     required this.title,
-    required this.dataPoints,
+    required this.chartData,
     required this.onNoteChanged,
     required this.onSave,
     this.color,
@@ -26,13 +26,12 @@ class DataCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF97B999),
+        color: color ?? const Color(0xFF9CB1A3),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Judul
           Text(
             title,
             style: TextStyle(
@@ -43,13 +42,9 @@ class DataCard extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
 
+          /// Chart hanya menerima data dari `view`
           LineChartWidget(
-            data: [
-              FlSpot(1, 300),
-              FlSpot(2, 4),
-              FlSpot(3, 6),
-              FlSpot(4, 8),
-            ],
+            data: chartData,
             primaryColor: Colors.blue,
           ),
 
@@ -63,14 +58,13 @@ class DataCard extends StatelessWidget {
 
           SizedBox(height: 12.h),
 
-          // Tombol Save di Bawah
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton(
               onPressed: onSave,
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                backgroundColor: Color(0xFFFFA726),
+                backgroundColor: const Color(0xFFFFA726),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),
                 ),

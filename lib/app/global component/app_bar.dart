@@ -14,7 +14,7 @@ class CustomAppBar extends StatelessWidget {
     required this.title,
     this.rightIcon,
     this.rightOnTap,
-    this.showBackButton = true, // Default selalu muncul
+    this.showBackButton = true,
   });
 
   @override
@@ -23,11 +23,10 @@ class CustomAppBar extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Row(
         children: [
-          // Back Button (Bisa di-hide)
           if (showBackButton)
             GestureDetector(
               onTap: () => Get.back(),
-              child: Container(
+              child: Padding(
                 padding: EdgeInsets.all(10.w),
                 child: SvgPicture.asset(
                   "assets/icons/back_btn.svg",
@@ -36,23 +35,17 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             ),
-
-          // Jarak kecil antara back button dan title
           if (showBackButton) SizedBox(width: 10.w),
-
-          // Title
           Expanded(
             child: Text(
               title,
               style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold),
             ),
           ),
-
-          // Right Button (Opsional)
           if (rightIcon != null && rightOnTap != null)
             GestureDetector(
               onTap: rightOnTap,
-              child: Container(
+              child: Padding(
                 padding: EdgeInsets.all(10.w),
                 child: SvgPicture.asset(
                   rightIcon!,

@@ -17,14 +17,7 @@ class LineChartWidget extends StatelessWidget {
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 5,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +55,7 @@ class LineChartWidget extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 5.0),
                             child: Text(
                               'Week ${value.toInt()}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,

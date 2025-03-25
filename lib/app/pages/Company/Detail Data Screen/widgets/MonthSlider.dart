@@ -30,7 +30,7 @@ class _MonthSliderState extends State<MonthSlider> {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.chevron_left, color: Color(0xFF8B8B8B)),
+            icon: Icon(Icons.chevron_left, color: Colors.black),
             onPressed: () {
               if (selectedMonth > 0) {
                 setState(() {
@@ -65,7 +65,7 @@ class _MonthSliderState extends State<MonthSlider> {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.chevron_right, color: Color(0xFF8B8B8B)),
+            icon: Icon(Icons.chevron_right, color: Colors.black),
             onPressed: () {
               if (selectedMonth < months.length - 1) {
                 setState(() {

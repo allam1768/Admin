@@ -1,4 +1,6 @@
 import 'package:admin/app/pages/Client/Create%20Account%20Client/create_account_client_view.dart';
+import 'package:admin/app/pages/Company/Create%20Qr%20Tools/create_qr_tools_binding.dart';
+import 'package:admin/app/pages/Company/Create%20Qr%20Tools/create_qr_tools_view.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_view.dart';
 import 'package:get/get.dart';
@@ -9,8 +11,6 @@ import '../pages/Client/Account Client/account_client_view.dart';
 import '../pages/Client/Create Account Client/create_account_client_binding.dart';
 import '../pages/Client/Edit Account Client/edit_account_client_binding.dart';
 import '../pages/Client/Edit Account Client/edit_account_client_view.dart';
-import '../pages/Company/Data Company Screen/data_company_binding.dart';
-import '../pages/Company/Data Company Screen/data_company_view.dart';
 import '../pages/Company/Detail Data Screen/detail_data_binding.dart';
 import '../pages/Company/Detail Data Screen/detail_data_view.dart';
 import '../pages/Company/Detail History Screen/detail_binding.dart';
@@ -39,6 +39,7 @@ class Routes {
   static const String editAccountWorker = '/EditAccountWorker';
   static const String createAccountWorker = '/CreateAccountWorker';
   static const String createAccountClient = '/CreateAccountClient';
+  static const String createQrTools = '/CreateQrTools';
 
 
   static final List<GetPage> pages = [
@@ -101,6 +102,11 @@ class Routes {
       name: createAccountClient,
       page: () => CreateAccountClientView(),
       binding: CreateAccountClientBinding(),
+    ),
+    GetPage(
+      name: createQrTools,
+      page: () => CreateQrView(),
+      binding: CreateQrBinding(),
     ),
   ];
 }

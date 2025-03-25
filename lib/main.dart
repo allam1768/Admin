@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoTextTheme(),
           ),
-          initialRoute: Routes.splash,
+          initialRoute: Routes.createQrTools,
           getPages: Routes.pages,
         );
       },

@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 class ImagePickerComponent extends StatelessWidget {
   final Rx<File?> profileImage;
 
-  ImagePickerComponent({required this.profileImage});
+  const ImagePickerComponent({super.key, required this.profileImage});
 
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -54,15 +54,11 @@ class ImagePickerComponent extends StatelessWidget {
                 () => Container(
               width: 120.r,
               height: 120.r,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.transparent, // Biar warna dalamnya transparan
-                    border: Border.all(
-                      color: Colors.grey[500]!, // Warna border
-                      width: 3, // Ketebalan border
-                    ),
-                  ),
-                  child: Center(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.grey[500]!, width: 3),
+              ),
+              child: Center(
                 child: profileImage.value != null
                     ? ClipOval(
                   child: Image.file(

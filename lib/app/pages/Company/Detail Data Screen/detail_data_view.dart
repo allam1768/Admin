@@ -1,8 +1,8 @@
-
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DataCard.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ExpandableHistoryCard.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/MonthSlider.dart';
-import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/SummaryCard.dart';
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/SummarySection.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,19 +11,13 @@ import 'package:get/get.dart';
 import '../../../global component/app_bar.dart';
 import 'detail_data_controller.dart';
 
-class DetailDataView extends StatefulWidget {
+class DetailDataView extends StatelessWidget {
   const DetailDataView({super.key});
 
   @override
-  _DetailDataViewState createState() => _DetailDataViewState();
-}
-
-class _DetailDataViewState extends State<DetailDataView> {
-  final controller = Get.find<DetailDataController>();
-  int selectedMonth = 0;
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<DetailDataController>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFCCD7CD),
       body: SafeArea(
@@ -43,7 +37,7 @@ class _DetailDataViewState extends State<DetailDataView> {
                       totalAlat: 6,
                       totalPengecekan: 4,
                       onQrTap: () {
-                        print("Tombol QR diklik!");
+                        Get.toNamed('/CreateQrTools');
                       },
                     ),
                     SizedBox(height: 20.h),
@@ -51,47 +45,42 @@ class _DetailDataViewState extends State<DetailDataView> {
                     // MonthSlider
                     MonthSlider(
                       onMonthChanged: (index) {
-                        setState(() {
-                          selectedMonth = index;
-                        });
-                        print("Bulan terpilih: ${selectedMonth + 1}");
+                        controller.selectedMonth.value = index;
+                        print("Bulan terpilih: ${index + 1}");
                       },
                     ),
 
                     SizedBox(height: 20.h),
 
-                    // Grafik DataCard
+                    // DataCard untuk Land
                     DataCard(
                       title: "Land",
-                      dataPoints: [
-                        {'x': 'Minggu 1', 'y': 10},
-                        {'x': 'Minggu 2', 'y': 15},
-                        {'x': 'Minggu 3', 'y': 7},
-                        {'x': 'Minggu 4', 'y': 12},
+                      chartData: [
+                        FlSpot(1, 10),
+                        FlSpot(2, 15),
+                        FlSpot(3, 7),
+                        FlSpot(4, 12),
                       ],
-
-                        onNoteChanged: (text) {
-                        print("Catatan: $text");
-                      }, onSave: () {  },
+                      onNoteChanged: (text) => print("Catatan: $text"),
+                      onSave: () => print("Data disimpan!"),
                     ),
                     SizedBox(height: 25.h),
 
+                    // DataCard untuk Fly
                     DataCard(
                       title: "Fly",
-                      dataPoints: [
-                        {'x': 'Minggu 1', 'y': 10},
-                        {'x': 'Minggu 2', 'y': 15},
-                        {'x': 'Minggu 3', 'y': 7},
-                        {'x': 'Minggu 4', 'y': 12},
+                      chartData: [
+                        FlSpot(1, 10),
+                        FlSpot(2, 15),
+                        FlSpot(3, 7),
+                        FlSpot(4, 12),
                       ],
-
-                        onNoteChanged: (text) {
-                        print("Catatan: $text");
-                      }, onSave: () {  },
+                      onNoteChanged: (text) => print("Catatan: $text"),
+                      onSave: () => print("Data disimpan!"),
                     ),
                     SizedBox(height: 35.h),
+
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           "History",
@@ -100,7 +89,7 @@ class _DetailDataViewState extends State<DetailDataView> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 9.w),
+                        SizedBox(width: 9.w),
                         SvgPicture.asset(
                           "assets/icons/history_icon.svg",
                           width: 36.w,
@@ -115,8 +104,8 @@ class _DetailDataViewState extends State<DetailDataView> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: controller.traps.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 12.h),
-                      itemBuilder: (context, index) {
+                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                      itemBuilder: (_, index) {
                         final item = controller.traps[index];
                         return ExpandableHistoryCard(
                           imagePath: item["image"],

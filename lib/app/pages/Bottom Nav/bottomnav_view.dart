@@ -1,37 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../Client/Data Client Screen/data_client_view.dart';
-import '../Company/Data Company Screen/data_company_view.dart';
-import '../Worker/Data Worker Screen/data_worker_view.dart';
+import 'package:get/get.dart';
+import 'bottomnav_controller.dart';
 
-class BottomNavView extends StatefulWidget {
+class BottomNavView extends StatelessWidget {
   const BottomNavView({super.key});
 
   @override
-  State<BottomNavView> createState() => _BottomNavViewState();
-}
-
-class _BottomNavViewState extends State<BottomNavView> {
-  int currentIndex = 0;
-
-  final List<Widget> screens = [
-    const DataCompanyView(),
-    const DataClientView(),
-    const DataWorkerView(),
-  ];
-
-  void onTabTapped(int index) {
-    setState(() {
-      currentIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final BottomNavController controller = Get.put(BottomNavController());
+
     return Scaffold(
       backgroundColor: const Color(0xFFCCD7CD),
-      body: screens[currentIndex],
+      body: Obx(() => controller.screens[controller.currentIndex.value]),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(bottom: 35.h),
         child: Container(
@@ -43,32 +25,31 @@ class _BottomNavViewState extends State<BottomNavView> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(3, (index) {
-              final List<String> icons = [
-                "assets/icons/Company_icont.svg",
-                "assets/icons/Client_icont.svg",
-                "assets/icons/Worker_icont.svg"
-              ];
-              bool isActive = currentIndex == index;
-
-              return GestureDetector(
-                onTap: () => onTabTapped(index),
-                child: Container(
-                  height: 50.r,
-                  width: 50.r,
-                  decoration: BoxDecoration(
-                    color: isActive ? const Color(0xFFFFA726) : Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      icons[index],
-                      color: isActive ? Colors.black : Colors.grey,
-                      width: 15.w,
+            children: List.generate(controller.icons.length, (index) {
+              return Obx(() {
+                return GestureDetector(
+                  onTap: () => controller.changeTab(index),
+                  child: Container(
+                    height: 50.r,
+                    width: 50.r,
+                    decoration: BoxDecoration(
+                      color: controller.isActive(index)
+                          ? const Color(0xFFFFA726)
+                          : Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        controller.icons[index],
+                        color: controller.isActive(index)
+                            ? Colors.black
+                            : Colors.grey,
+                        width: 15.w,
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              });
             }),
           ),
         ),

@@ -1,16 +1,16 @@
-import 'package:admin/app/pages/Company/Data%20Company%20Screen/widgets/CompanyCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../global component/app_bar.dart';
 import 'data_company_controller.dart';
+import 'widgets/CompanyCard.dart';
 
 class DataCompanyView extends StatelessWidget {
   const DataCompanyView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(DataCompanyController());
+    final controller = Get.put(DataCompanyController()); // Get.put() saat pertama kali akses
 
     return Scaffold(
       backgroundColor: const Color(0xFFCCD7CD),
@@ -20,10 +20,6 @@ class DataCompanyView extends StatelessWidget {
           children: [
             CustomAppBar(
               title: "Company",
-              rightIcon: "",
-              rightOnTap: () {
-                Get.offNamed('');
-              },
               showBackButton: false,
             ),
             Expanded(

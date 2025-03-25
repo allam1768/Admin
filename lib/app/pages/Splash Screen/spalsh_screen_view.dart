@@ -17,7 +17,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
           children: [
             SvgPicture.asset(
               'assets/icons/logo.svg',
-              width: 140.w,
+              width: 120.w,
             ),
           ],
         ),
