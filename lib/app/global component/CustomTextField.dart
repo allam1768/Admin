@@ -86,9 +86,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   : null,
               suffixIcon: widget.isPassword
                   ? IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.black,
+                icon: SvgPicture.asset(
+                  _isPasswordVisible
+                      ? 'assets/icons/eye_open.svg'
+                      : 'assets/icons/eye_closed.svg',
+                  width: 20.w,
+                  height: 20.h,
                 ),
                 onPressed: () {
                   setState(() {
@@ -100,21 +103,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
                 borderSide: BorderSide(
-                  color: Colors.black,
+                  color: Colors.transparent,
                   width: 1.w,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
                 borderSide: BorderSide(
-                  color: Colors.black,
+                  color: Colors.transparent,
                   width: 1.w,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
                 borderSide: BorderSide(
-                  color: Colors.black,
+                  color: Colors.transparent,
                   width: 1.5.w,
                 ),
               ),

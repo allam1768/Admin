@@ -52,13 +52,17 @@ class ImagePickerComponent extends StatelessWidget {
           onTap: () => _showImageSourceDialog(context),
           child: Obx(
                 () => Container(
-              width: 150.r,
-              height: 150.r,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey[500],
-              ),
-              child: Center(
+              width: 120.r,
+              height: 120.r,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent, // Biar warna dalamnya transparan
+                    border: Border.all(
+                      color: Colors.grey[500]!, // Warna border
+                      width: 3, // Ketebalan border
+                    ),
+                  ),
+                  child: Center(
                 child: profileImage.value != null
                     ? ClipOval(
                   child: Image.file(

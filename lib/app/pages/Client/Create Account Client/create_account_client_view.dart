@@ -19,7 +19,7 @@ class CreateAccountClientView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Create Account Client"),
+            CustomAppBar(title: "Create Client"),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -83,7 +83,7 @@ class CreateAccountClientView extends StatelessWidget {
                               : controller.password.value != controller.confirmPassword.value
                               ? errorText("Password tidak cocok!")
                               : SizedBox()),
-                          SizedBox(height: 20.h),
+                          SizedBox(height: 40.h),
 
                           CustomButton(
                             text: "Save",
