@@ -19,7 +19,7 @@ class CreateAccountWorkerView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Edit Worker"),
+            CustomAppBar(title: "Create Worker"),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

@@ -1,10 +1,19 @@
 import 'package:get/get.dart';
 
 class DataCompanyController extends GetxController {
-  // Data perusahaan dalam bentuk RxList agar bisa di-update secara real-time
-  final companies = <Map<String, String>>[
-    {"name": "Indofood", "image": "assets/images/example.png"},
-    {"name": "Unilever", "image": "assets/images/example.png"},
-    {"name": "Nestle", "image": "assets/images/example.png"},
-  ].obs;
+  var companies = <Map<String, String>>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchCompanies();
+  }
+
+  void fetchCompanies() {
+    companies.value = [
+      {"name": "Company A", "image": "assets/images/example.png"},
+      {"name": "Company B", "image": "assets/images/example.png"},
+    ];
+  }
 }
+

@@ -12,12 +12,12 @@ class SingleHistoryCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Card(
-        color: const Color(0xFFB4DDB6),
+        color: const Color(0xFFBBD4C3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         child: InkWell(
           borderRadius: BorderRadius.circular(12.r),
           onTap: () {
-            Get.offNamed('/detailhistory');
+            Get.toNamed('/detailhistory');
           },
           child: SizedBox(
             height: 84.h,
@@ -25,11 +25,11 @@ class SingleHistoryCard extends StatelessWidget {
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
               title: Text(
-                "Pengecekan", // Gunakan teks default karena `name` tidak ada
+                "Pengecekan",
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                "${item["date"]} | Jumlah: ${item["count"] ?? 0}", // Pakai data yang ada
+                "${item["date"]} | Jumlah: ${item["count"] ?? 0}",
                 style: TextStyle(fontSize: 14.sp),
               ),
             ),

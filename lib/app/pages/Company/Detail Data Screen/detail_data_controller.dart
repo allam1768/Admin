@@ -52,6 +52,13 @@ class DetailDataController extends GetxController {
   }
 
 
+  var selectedMonth = 0.obs;
+
+  void changeMonth(int index) {
+    selectedMonth.value = index;
+  }
+
+
   void updateNote(int index, String value) {
     traps[index]["note"].value = value;
   }

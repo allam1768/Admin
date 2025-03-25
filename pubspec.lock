@@ -216,14 +216,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
-  graphic:
-    dependency: "direct main"
-    description:
-      name: graphic
-      sha256: bded9411106d488b8b26bb6984d566115c07a7a4efb257e3fbf2956df6c2c789
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.1"
   http:
     dependency: transitive
     description:
@@ -376,14 +368,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
-  path_drawing:
-    dependency: transitive
-    description:
-      name: path_drawing
-      sha256: bbb1934c0cbb03091af082a6389ca2080345291ef07a5fa6d6e078ba8682f977
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   path_parsing:
     dependency: transitive
     description:
@@ -645,6 +629,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  widget_to_image:
+    dependency: "direct main"
+    description:
+      name: widget_to_image
+      sha256: dd4d843001eab804fd04c86d84be5a34bd36fc797c5bf5f73f8d06a0a8ec29ee
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   xdg_directories:
     dependency: transitive
     description:

@@ -1,5 +1,5 @@
 
-import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/ButtonEdit&Delete_detail.dart';
+import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/ButtonEdit&Delete.dart';
 import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/info_card.dart';
 import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/info_container.dart';
 import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/karyawan_card.dart';
