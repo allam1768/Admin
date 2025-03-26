@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../Qr Screen/qr_screen.dart';
+import '../Qr Screen/qr_view.dart';
 
 class CreateQrController extends GetxController {
   RxString name = "".obs;
@@ -27,8 +27,20 @@ class CreateQrController extends GetxController {
       showError.value = true;
     } else {
       showError.value = false;
-      String qrContent = "Name: ${name.value}, Area: ${area.value}, Type: ${selectedType.value}";
-      Get.to(() => QrScreen(qrData: qrContent));
+
+      String qrContent =
+          "Hamatech- name :${name.value} area :${area.value} type :${selectedType.value}";
+
+      Get.off(() => QrView(qrData: qrContent))?.then((_) {
+        // Reset nilai setelah berpindah ke QrView
+        name.value = "";
+        area.value = "";
+        selectedType.value = null;
+        imageFile.value = null;
+      });
+
     }
   }
+
+
 }

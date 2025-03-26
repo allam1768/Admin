@@ -1,6 +1,7 @@
 import 'package:admin/app/pages/Client/Create%20Account%20Client/create_account_client_view.dart';
 import 'package:admin/app/pages/Company/Create%20Qr%20Tools/create_qr_tools_binding.dart';
 import 'package:admin/app/pages/Company/Create%20Qr%20Tools/create_qr_tools_view.dart';
+import 'package:admin/app/pages/Company/Qr%20Screen/qr_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_view.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ import '../pages/Company/Detail History Screen/detail_binding.dart';
 import '../pages/Company/Detail History Screen/detail_view.dart';
 import '../pages/Company/Edit Data History Screen/edit_data_binding.dart';
 import '../pages/Company/Edit Data History Screen/edit_data_view.dart';
+import '../pages/Company/Qr Screen/qr_view.dart';
 import '../pages/Login Screen/login_screen_binding.dart';
 import '../pages/Login Screen/login_screen_view.dart';
 import '../pages/Splash Screen/spalsh_screen_binding.dart';

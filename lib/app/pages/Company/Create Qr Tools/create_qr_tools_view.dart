@@ -127,7 +127,7 @@ class CreateQrView extends StatelessWidget {
                           SizedBox(height: 20.h),
 
                           CustomButton(
-                            text: "Save",
+                            text: "Create Qr",
                             color: Color(0xFF275637),
                             onPressed: () {
                               controller.validateForm();
