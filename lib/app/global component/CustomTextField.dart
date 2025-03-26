@@ -29,9 +29,11 @@ class CustomTextField extends StatelessWidget {
         TextField(
           obscureText: isPassword,
           style: TextStyle(fontSize: 15.sp),
+          minLines: 1, // Awal hanya 1 baris
+          maxLines: null, // Bisa bertambah sesuai teks
           decoration: InputDecoration(
-            filled: true, // Tambahin ini biar ada background
-            fillColor: Colors.white, // Warna putih di dalamnya
+            filled: true,
+            fillColor: Colors.white,
             prefixIcon: svgIcon != null
                 ? Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -40,7 +42,7 @@ class CustomTextField extends StatelessWidget {
                 : null,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide.none, // Hilangin border biar clean
+              borderSide: BorderSide.none,
             ),
           ),
           onChanged: onChanged,
