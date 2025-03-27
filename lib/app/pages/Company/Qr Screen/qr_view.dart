@@ -1,9 +1,9 @@
-import 'package:admin/app/pages/Company/Qr%20Screen/qr_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../global component/CustomButton.dart';
+import 'qr_controller.dart';
 
 class QrView extends StatelessWidget {
   final String qrData;
@@ -33,11 +33,27 @@ class QrView extends StatelessWidget {
                             color: const Color(0xFFD9D9D9),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
-                          child: QrImageView(
-                            data: qrData,
-                            version: QrVersions.auto,
-                            size: 250.w,
-                            gapless: false,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              QrImageView(
+                                data: qrData,
+                                version: QrVersions.auto,
+                                size: 250.w,
+                                gapless: true,
+                              ),
+                              Container(
+                                width: 60.w, // Area kosong di tengah QR
+                                height: 60.w,
+                                color: Color(0xFFD9D9D9), // Background putih supaya QR gak nutupin logo
+                              ),
+                              Image.asset(
+                                "assets/images/logo.png",
+                                width: 50.w,
+                                height: 50.w,
+                                fit: BoxFit.contain,
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -52,15 +68,14 @@ class QrView extends StatelessWidget {
                     CustomButton(
                       text: "Save",
                       color: const Color(0xFFFFA726),
-                      onPressed: controller.saveQr,
+                      onPressed: controller.saveQrImage,
                       fontSize: 20.sp,
                     ),
-
                     SizedBox(height: 10.h),
                     CustomButton(
                       text: "Back to Dashboard",
                       color: const Color(0xFF275637),
-                      onPressed: () {Get.offNamed('/detaildata');},
+                      onPressed: controller.goToDashboard,
                       fontSize: 20.sp,
                     ),
                   ],

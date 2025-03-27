@@ -6,25 +6,27 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 class QrController extends GetxController {
   final GlobalKey globalKey = GlobalKey();
 
-  void saveQr() {
-    saveQrImage();
+  void goToDashboard() {
+    Get.offNamed('/detaildata');
   }
 
   Future<void> saveQrImage() async {
     try {
-      // Render QR ke gambar
       RenderRepaintBoundary boundary =
       globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage();
-      ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-      // Dapatkan direktori penyimpanan
       Directory? directory = await getExternalStorageDirectory();
       String newPath = "";
       List<String> paths = directory!.path.split("/");
@@ -38,28 +40,33 @@ class QrController extends GetxController {
         }
       }
 
-      // Buat folder "QR Hamatech" di dalam Pictures
       String qrFolderPath = "$newPath/Pictures/QR Hamatech";
       Directory qrFolder = Directory(qrFolderPath);
       if (!qrFolder.existsSync()) {
         qrFolder.createSync(recursive: true);
       }
 
-      // Simpan file dengan nama unik
-      String fileName = "qrcode_${DateTime.now().millisecondsSinceEpoch}.jpg";
+      String qrHash = generateHash(pngBytes);
+
+      if (isDuplicate(qrFolder, qrHash)) {
+        showCustomSnackbar("QR Code sudah ada!", null);
+        return;
+      }
+
+      String fileName = "qrcode_${DateTime.now().millisecondsSinceEpoch}.png";
       String savePath = "$qrFolderPath/$fileName";
 
       File file = File(savePath);
       await file.writeAsBytes(pngBytes);
 
-      // Scan file agar muncul di galeri
       await scanFile(savePath);
 
-      print("QR Code berhasil disimpan di: $savePath");
+      showCustomSnackbar("QR Code berhasil disimpan!", savePath);
     } catch (e) {
       print("Error saving QR image: $e");
     }
   }
+
 
   Future<void> scanFile(String filePath) async {
     try {
@@ -68,5 +75,51 @@ class QrController extends GetxController {
     } catch (e) {
       print("Error scanning file: $e");
     }
+  }
+
+  void showCustomSnackbar(String message, String? filePath) {
+    Get.rawSnackbar(
+      messageText: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.info, color: Colors.white, size: 18),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              filePath == null ? message : "$message\nLokasi: $filePath",
+              style: TextStyle(color: Colors.white, fontSize: 14),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.black.withOpacity(0.7),
+      borderRadius: 8,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      duration: Duration(seconds: 2),
+      snackPosition: SnackPosition.TOP,
+      animationDuration: Duration(milliseconds: 0), // Tanpa animasi
+    );
+  }
+
+
+  String generateHash(Uint8List data) {
+    return sha256.convert(data).toString();
+  }
+
+  bool isDuplicate(Directory directory, String newHash) {
+    List<FileSystemEntity> files = directory.listSync();
+    for (var file in files) {
+      if (file is File) {
+        Uint8List fileBytes = file.readAsBytesSync();
+        String fileHash = generateHash(fileBytes);
+        if (fileHash == newHash) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

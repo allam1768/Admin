@@ -1,13 +1,14 @@
-import 'package:admin/app/global%20component/CustomButton.dart';
 import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomRadioButton_edit.dart';
-import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/ImageUpload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../global component/CustomButton.dart';
 import '../../../global component/CustomTextField.dart';
+import '../../../global component/ImageUpload.dart';
 import '../../../global component/app_bar.dart';
 import 'edit_data_controller.dart';
+
 
 class EditDataHistoryView extends StatelessWidget {
   EditDataHistoryView({super.key});
@@ -93,15 +94,16 @@ class EditDataHistoryView extends StatelessWidget {
                               : SizedBox()),
                           SizedBox(height: 15.h),
 
-                          ImageUploadComponent(),
+                          ImageUploadComponent(
+                            imageFile: controller.imageFile,
+                            imageError: controller.imageError,
+                          ),
                           SizedBox(height: 20.h),
 
                           CustomButton(
                             text: "Save",
                             color: Color(0xFF275637),
-                            onPressed: () {
-                              controller.validateForm();
-                            },
+                            onPressed: controller.validateForm,
                             fontSize: 20,
                           ),
 

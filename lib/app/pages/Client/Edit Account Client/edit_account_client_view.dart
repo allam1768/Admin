@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../global component/CustomButton.dart';
-import '../../../global component/CustomImagePicker.dart';
+import '../../../global component/ImageProfile.dart';
 import '../../../global component/CustomTextField.dart';
 import '../../../global component/app_bar.dart';
 import 'edit_account_client_controller.dart';
