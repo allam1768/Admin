@@ -6,4 +6,8 @@ class DataClientController extends GetxController {
     {"company": "Unilever", "client": "Doni", "imagePath": "assets/images/example.png"},
     {"company": "Nestle", "client": "Rina", "imagePath": "assets/images/example.png"},
   ].obs;
+
+  void goToCreateClient() {
+    Get.toNamed('/CreateAccountClient');
+  }
 }

@@ -10,7 +10,20 @@ class EditDataHistoryController extends GetxController {
   RxBool showError = false.obs;
 
   Rx<File?> imageFile = Rx<File?>(null);
-  RxBool imageError = false.obs; // Tambahkan error state untuk border merah
+  RxBool imageError = false.obs;
+
+  void setCondition(String? value) {
+    selectedCondition.value = value ?? "";
+  }
+
+
+  void setAmount(String value) {
+    amount.value = value;
+  }
+
+  void setInformation(String value) {
+    information.value = value;
+  }
 
   Future<void> takePicture() async {
     final picker = ImagePicker();
@@ -18,23 +31,27 @@ class EditDataHistoryController extends GetxController {
 
     if (pickedFile != null) {
       imageFile.value = File(pickedFile.path);
-      imageError.value = false; // Reset error jika berhasil ambil gambar
+      imageError.value = false;
     }
   }
 
   void validateForm() {
-    if (selectedCondition.value.isEmpty ||
+    bool isInvalid = selectedCondition.value.isEmpty ||
         amount.value.isEmpty ||
         information.value.isEmpty ||
-        imageFile.value == null) { // Validasi gambar juga
-      showError.value = true;
-      imageError.value = imageFile.value == null; // Tandai error jika belum ada gambar
-    } else {
-      showError.value = false;
-      imageError.value = false;
+        imageFile.value == null;
 
-      Get.snackbar("Success", "Data berhasil disimpan",
-          backgroundColor: Colors.green, colorText: Colors.white);
+    showError.value = isInvalid;
+    imageError.value = imageFile.value == null;
+
+    if (!isInvalid) {
+      Get.snackbar(
+        "Success",
+        "Data berhasil disimpan",
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+
       // TODO: Simpan data ke database atau API
     }
   }

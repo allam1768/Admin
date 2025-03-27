@@ -10,7 +10,7 @@ class DataCompanyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(DataCompanyController()); // Get.put() saat pertama kali akses
+    final controller = Get.put(DataCompanyController());
 
     return Scaffold(
       backgroundColor: const Color(0xFFCCD7CD),
@@ -18,20 +18,18 @@ class DataCompanyView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(
-              title: "Company",
-              showBackButton: false,
-            ),
+            CustomAppBar(title: "Company", showBackButton: false),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                 child: Obx(() => ListView.separated(
-                  itemCount: controller.companies.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 20.h),
-                  itemBuilder: (context, index) {
+                  itemCount: controller.companyCount,
+                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                  itemBuilder: (_, index) {
+                    final company = controller.getCompany(index);
                     return CompanyCard(
-                      companyName: controller.companies[index]["name"]!,
-                      imagePath: controller.companies[index]["image"]!,
+                      companyName: company["name"]!,
+                      imagePath: company["image"]!,
                     );
                   },
                 )),

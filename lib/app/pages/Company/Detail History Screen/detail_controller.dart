@@ -16,4 +16,12 @@ class DetailHistoryController extends GetxController {
     informasi.value = newInformation;
     imagePath.value = newImage;
   }
+
+  void editData() {
+    Get.offNamed('EditDataHistory');
+  }
+
+  void deleteData() {
+    print("Delete Clicked");
+  }
 }

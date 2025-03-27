@@ -14,7 +14,7 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double size = 82.w < 82.h ? 82.w : 82.h; // Pastikan ukuran selalu kotak
+    double size = 82.w < 82.h ? 82.w : 82.h;
 
     return Container(
       width: size,

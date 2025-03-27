@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import '../../../global component/CustomButton.dart';
 import '../../../global component/ImageProfile.dart';
-import '../../../global component/CustomTextField.dart';
 import '../../../global component/app_bar.dart';
+import '../../../global component/CustomTextFieldAccount.dart';
 import 'edit_account_worker_controller.dart';
 
 class EditAccountWorkerView extends StatelessWidget {
@@ -26,72 +26,51 @@ class EditAccountWorkerView extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 20.h),
-
                     ImagePickerComponent(profileImage: controller.profileImage),
-
                     SizedBox(height: 20.h),
-
                     Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height - 180.h, // Sesuaikan dengan tinggi layar
+                      ),
                       color: const Color(0xFFBBD4C3),
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomTextField(
+                          CustomTextFieldAccount(
                             label: "Name",
-                            onChanged: (value) => controller.name.value = value,
+                            value: controller.name,
+                            errorMessage: () => controller.getErrorMessage("Name"),
                           ),
-                          Obx(() => controller.showError.value && controller.name.value.isEmpty
-                              ? errorText("Name harus diisi!")
-                              : SizedBox()),
-                          SizedBox(height: 15.h),
-
-                          CustomTextField(
+                          CustomTextFieldAccount(
                             label: "Phone number",
-                            onChanged: (value) => controller.phoneNumber.value = value,
+                            value: controller.phoneNumber,
+                            isNumber: true,
+                            errorMessage: () => controller.getErrorMessage("Phone number"),
                           ),
-                          Obx(() => controller.showError.value && controller.phoneNumber.value.isEmpty
-                              ? errorText("Phone number harus diisi!")
-                              : SizedBox()),
-                          SizedBox(height: 15.h),
-
-                          CustomTextField(
+                          CustomTextFieldAccount(
                             label: "Email",
-                            onChanged: (value) => controller.email.value = value,
+                            value: controller.email,
+                            errorMessage: () => controller.getErrorMessage("Email"),
                           ),
-                          Obx(() => controller.showError.value && controller.email.value.isEmpty
-                              ? errorText("Email harus diisi!")
-                              : SizedBox()),
-                          SizedBox(height: 15.h),
-
-                          CustomTextField(
+                          CustomTextFieldAccount(
                             label: "Password",
+                            value: controller.password,
                             isPassword: true,
-                            onChanged: (value) => controller.password.value = value,
+                            errorMessage: () => controller.getErrorMessage("Password"),
                           ),
-                          Obx(() => controller.showError.value && controller.password.value.isEmpty
-                              ? errorText("Password harus diisi!")
-                              : SizedBox()),
-                          SizedBox(height: 15.h),
-
-                          CustomTextField(
+                          CustomTextFieldAccount(
                             label: "Confirm Password",
+                            value: controller.confirmPassword,
                             isPassword: true,
-                            onChanged: (value) => controller.confirmPassword.value = value,
+                            errorMessage: () => controller.getErrorMessage("Confirm Password"),
                           ),
-                          Obx(() => controller.showError.value && controller.confirmPassword.value.isEmpty
-                              ? errorText("Confirm Password harus diisi!")
-                              : controller.password.value != controller.confirmPassword.value
-                              ? errorText("Password tidak cocok!")
-                              : SizedBox()),
                           SizedBox(height: 20.h),
-
                           CustomButton(
                             text: "Save",
-                            color: Color(0xFF275637),
-                            onPressed: () {
-                              controller.validateForm();
-                            },
+                            color: const Color(0xFF275637),
+                            onPressed: controller.validateForm,
                             fontSize: 20,
                           ),
                           SizedBox(height: 50.h),
@@ -104,16 +83,6 @@ class EditAccountWorkerView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget errorText(String message) {
-    return Padding(
-      padding: EdgeInsets.only(top: 5.h),
-      child: Text(
-        message,
-        style: TextStyle(fontSize: 14.sp, color: Colors.red),
       ),
     );
   }

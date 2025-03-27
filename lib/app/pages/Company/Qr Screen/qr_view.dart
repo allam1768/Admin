@@ -43,9 +43,9 @@ class QrView extends StatelessWidget {
                                 gapless: true,
                               ),
                               Container(
-                                width: 60.w, // Area kosong di tengah QR
+                                width: 60.w,
                                 height: 60.w,
-                                color: Color(0xFFD9D9D9), // Background putih supaya QR gak nutupin logo
+                                color: Color(0xFFD9D9D9),
                               ),
                               Image.asset(
                                 "assets/images/logo.png",

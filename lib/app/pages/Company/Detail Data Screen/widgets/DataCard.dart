@@ -42,7 +42,6 @@ class DataCard extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
 
-          /// Chart hanya menerima data dari `view`
           LineChartWidget(
             data: chartData,
             primaryColor: Colors.blue,

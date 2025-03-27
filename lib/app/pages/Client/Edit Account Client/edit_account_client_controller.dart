@@ -12,12 +12,35 @@ class EditAccountClientController extends GetxController {
   var profileImage = Rx<File?>(null);
 
   void validateForm() {
-    showError.value = name.value.isEmpty ||
-        companyName.value.isEmpty ||
-        phoneNumber.value.isEmpty ||
-        email.value.isEmpty ||
-        password.value.isEmpty ||
-        confirmPassword.value.isEmpty ||
-        password.value != confirmPassword.value;
+    showError.value = true;
+  }
+
+  bool hasError(String field) {
+    if (!showError.value) return false;
+
+    switch (field) {
+      case "Name":
+        return name.value.isEmpty;
+      case "Name Company":
+        return companyName.value.isEmpty;
+      case "Phone number":
+        return phoneNumber.value.isEmpty;
+      case "Email":
+        return email.value.isEmpty;
+      case "Password":
+        return password.value.isEmpty;
+      case "Confirm Password":
+        return confirmPassword.value.isEmpty || password.value != confirmPassword.value;
+      default:
+        return false;
+    }
+  }
+  String? getErrorMessage(String field) {
+    if (!hasError(field)) return null;
+
+    if (field == "Confirm Password" && password.value != confirmPassword.value) {
+      return "Password tidak cocok!";
+    }
+    return "$field harus diisi!";
   }
 }

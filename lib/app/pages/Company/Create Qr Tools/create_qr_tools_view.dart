@@ -1,5 +1,4 @@
 import 'package:admin/app/global%20component/CustomButton.dart';
-import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomRadioButton_edit.dart';
 import 'package:admin/app/global%20component/ImageUpload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,20 +82,20 @@ class CreateQrView extends StatelessWidget {
                               Text(
                                 "Type",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold, // Teks bold
-                                  fontSize: 16.sp, // Sesuaikan ukuran font
-                                  color: Colors.black, // Warna teks
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.sp,
+                                  color: Colors.black,
                                 ),
                               ),
-                              SizedBox(height: 5.h), // Jarak antara teks dan dropdown
+                              SizedBox(height: 5.h),
                               Obx(() => Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white, // Warna background dropdown
-                                  borderRadius: BorderRadius.circular(5), // Sudut melengkung
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
                                     color: controller.showError.value && controller.selectedType.value == null
                                         ? Colors.red
-                                        : Colors.transparent, // Border merah kalau error
+                                        : Colors.transparent,
                                   ),
                                 ),
                                 child: DropdownMenu<String>(

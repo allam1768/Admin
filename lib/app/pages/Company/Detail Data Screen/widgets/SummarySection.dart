@@ -19,12 +19,12 @@ class SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double size = 82.w < 82.h ? 82.w : 82.h; // Pastikan ukuran selalu kotak
+    double size = 82.w < 82.h ? 82.w : 82.h;
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF9CB1A3), // Warna latar belakang diperbarui
+        color: const Color(0xFF9CB1A3),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
@@ -43,7 +43,7 @@ class SummarySection extends StatelessWidget {
               ),
               child: Center(
                 child: SvgPicture.asset(
-                  "assets/icons/qr_icont.svg", // Ganti dengan path icon QR
+                  "assets/icons/qr_icont.svg",
                   width: 50.w,
                   height: 50.h,
                 ),
