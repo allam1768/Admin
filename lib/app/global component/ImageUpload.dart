@@ -4,21 +4,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../global component/CustomButton.dart';
+import 'CustomButton.dart';
 
 class ImageUploadComponent extends StatelessWidget {
-  final _image = Rx<File?>(null);
-  final _picker = ImagePicker();
+  final Rx<File?> imageFile;
+  final RxBool imageError;
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+  ImageUploadComponent({required this.imageFile, required this.imageError});
+
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      _image.value = File(pickedFile.path);
+      imageFile.value = File(pickedFile.path);
+      imageError.value = false; // Reset error jika berhasil ambil gambar
     }
   }
 
-  void _showPreview() {
-    if (_image.value == null) return;
+  void showPreview() {
+    if (imageFile.value == null) return;
+
     Get.dialog(
       GestureDetector(
         onTap: () => Get.back(),
@@ -29,14 +34,14 @@ class ImageUploadComponent extends StatelessWidget {
           child: Center(
             child: InteractiveViewer(
               panEnabled: true,
-              boundaryMargin: EdgeInsets.all(20),
+              boundaryMargin: const EdgeInsets.all(20),
               minScale: 1,
               maxScale: 4,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(12),
                 child: Image.file(
-                  _image.value!,
-                  width: 300.w,
+                  imageFile.value!,
+                  width: 300,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -55,30 +60,46 @@ class ImageUploadComponent extends StatelessWidget {
       children: [
         Text("Upload Image", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
         SizedBox(height: 10.h),
+
         GestureDetector(
-          onTap: () => _image.value != null ? _showPreview() : _pickImage(),
+          onTap: () => imageFile.value != null ? showPreview() : pickImage(),
           child: Obx(() => Container(
             height: 150.h,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: Colors.grey.shade400),
+              border: Border.all(
+                color: imageError.value ? Colors.red : Colors.grey.shade400, // Border merah jika error
+                width: 2,
+              ),
             ),
-            child: _image.value != null
+            child: imageFile.value != null
                 ? ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
-              child: Image.file(_image.value!, fit: BoxFit.cover),
+              child: Image.file(imageFile.value!, fit: BoxFit.cover),
             )
                 : Icon(Icons.camera_alt, size: 50, color: Colors.grey),
           )),
         ),
-        SizedBox(height: 15.h),
+
+        Obx(() => imageError.value
+            ? Padding(
+          padding: EdgeInsets.only(top: 5.h),
+          child: Text(
+            "Image harus diisi!",
+            style: TextStyle(fontSize: 14.sp, color: Colors.red),
+          ),
+        )
+            : SizedBox()),
+
+        SizedBox(height: 10.h),
+
         CustomButton(
           text: "Take Photo",
-          color: Color(0xFFFFA726),
-          onPressed: _pickImage,
-          fontSize: 20,
+          color: const Color(0xFFFFA726),
+          onPressed: pickImage,
+          fontSize: 20.sp,
         ),
       ],
     );

@@ -1,6 +1,6 @@
 import 'package:admin/app/global%20component/CustomButton.dart';
 import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomRadioButton_edit.dart';
-import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/ImageUpload.dart';
+import 'package:admin/app/global%20component/ImageUpload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -92,7 +92,7 @@ class CreateQrView extends StatelessWidget {
                               Obx(() => Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white, // Warna background dropdown
-                                  borderRadius: BorderRadius.circular(10), // Sudut melengkung
+                                  borderRadius: BorderRadius.circular(5), // Sudut melengkung
                                   border: Border.all(
                                     color: controller.showError.value && controller.selectedType.value == null
                                         ? Colors.red
@@ -123,7 +123,12 @@ class CreateQrView extends StatelessWidget {
 
                           SizedBox(height: 15.h),
 
-                          ImageUploadComponent(),
+                          ImageUploadComponent(
+                            imageFile: controller.imageFile,
+                            imageError: controller.imageError,
+                          ),
+
+
                           SizedBox(height: 20.h),
 
                           CustomButton(
@@ -134,8 +139,6 @@ class CreateQrView extends StatelessWidget {
                             },
                             fontSize: 20,
                           ),
-
-
                           SizedBox(height: 50.h),
                         ],
                       ),
