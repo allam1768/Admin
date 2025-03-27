@@ -14,6 +14,7 @@ class InfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity, // Biar mepet kanan kiri layar
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: const Color(0xFF97B999),
@@ -22,7 +23,7 @@ class InfoContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold)),
+          Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           SizedBox(height: 4.h),
           Text(content, style: TextStyle(fontSize: 16.sp)),
         ],

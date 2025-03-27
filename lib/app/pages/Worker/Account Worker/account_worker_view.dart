@@ -65,11 +65,11 @@ class AccountWorkerView extends StatelessWidget {
 
                     SizedBox(height: 20.h),
 
-                    // Action Buttons
                     ActionButtons(
-                      onEdit: () => Get.offNamed('/EditAccountWorker'),
-                      onDelete: () => print("Delete pressed"),
+                      onEdit: controller.navigateToEditAccount,
+                      onDelete: controller.deleteAccount,
                     ),
+
                   ],
                 ),
               ),

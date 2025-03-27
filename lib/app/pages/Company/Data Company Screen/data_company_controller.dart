@@ -15,5 +15,8 @@ class DataCompanyController extends GetxController {
       {"name": "Company B", "image": "assets/images/example.png"},
     ];
   }
-}
 
+  int get companyCount => companies.length;
+
+  Map<String, String> getCompany(int index) => companies[index];
+}

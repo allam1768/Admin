@@ -1,4 +1,3 @@
-import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomRadioButton_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +7,6 @@ import '../../../global component/CustomTextField.dart';
 import '../../../global component/ImageUpload.dart';
 import '../../../global component/app_bar.dart';
 import 'edit_data_controller.dart';
-
 
 class EditDataHistoryView extends StatelessWidget {
   EditDataHistoryView({super.key});
@@ -56,17 +54,48 @@ class EditDataHistoryView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomRadioButtonGroup(
-                            title: "Condition",
-                            options: ["Baik", "Rusak"],
-                            selectedValue: controller.selectedCondition,
-                            showError: controller.showError,
+                          Text(
+                            "Condition",
+                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
                           ),
+                          Obx(() => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: RadioListTile<String>(
+                                  title: Text("Baik"),
+                                  value: "Baik",
+                                  groupValue: controller.selectedCondition.value,
+                                  onChanged: (value) => controller.setCondition(value),
+                                  activeColor: Colors.orange, // Warna oranye saat dipilih
+                                ),
+                              ),
+                              Expanded(
+                                child: RadioListTile<String>(
+                                  title: Text("Rusak"),
+                                  value: "Rusak",
+                                  groupValue: controller.selectedCondition.value,
+                                  onChanged: (value) => controller.setCondition(value),
+                                  activeColor: Colors.orange, // Warna oranye saat dipilih
+                                ),
+                              ),
+                            ],
+                          )),
+
+                          Obx(() => controller.showError.value && controller.selectedCondition.value.isEmpty
+                              ? Padding(
+                            padding: EdgeInsets.only(top: 5.h),
+                            child: Text(
+                              "Condition harus dipilih!",
+                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                            ),
+                          )
+                              : SizedBox()),
                           SizedBox(height: 15.h),
 
                           CustomTextField(
                             label: "Amount",
-                            onChanged: (value) => controller.amount.value = value,
+                            onChanged: controller.setAmount,
                           ),
                           Obx(() => controller.showError.value && controller.amount.value.isEmpty
                               ? Padding(
@@ -81,7 +110,7 @@ class EditDataHistoryView extends StatelessWidget {
 
                           CustomTextField(
                             label: "Information",
-                            onChanged: (value) => controller.information.value = value,
+                            onChanged: controller.setInformation,
                           ),
                           Obx(() => controller.showError.value && controller.information.value.isEmpty
                               ? Padding(

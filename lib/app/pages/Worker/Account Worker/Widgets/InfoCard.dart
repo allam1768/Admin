@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class UserInfoCard extends StatelessWidget {
   final String name;
   final String email;
-  final String imagePath; // Bisa dari assets atau URL
+  final String imagePath;
 
   const UserInfoCard({
     super.key,

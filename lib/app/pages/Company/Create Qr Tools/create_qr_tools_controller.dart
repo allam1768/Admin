@@ -10,7 +10,7 @@ class CreateQrController extends GetxController {
   RxBool showError = false.obs;
 
   Rx<File?> imageFile = Rx<File?>(null);
-  RxBool imageError = false.obs; // Tambahkan error state untuk border merah
+  RxBool imageError = false.obs;
 
   Future<void> takePicture() async {
     final picker = ImagePicker();
@@ -18,7 +18,7 @@ class CreateQrController extends GetxController {
 
     if (pickedFile != null) {
       imageFile.value = File(pickedFile.path);
-      imageError.value = false; // Reset error jika berhasil ambil gambar
+      imageError.value = false;
     }
   }
 
@@ -26,9 +26,9 @@ class CreateQrController extends GetxController {
     if (name.value.isEmpty ||
         area.value.isEmpty ||
         selectedType.value == null ||
-        imageFile.value == null) { // Cek apakah gambar sudah diunggah
+        imageFile.value == null) {
       showError.value = true;
-      imageError.value = imageFile.value == null; // Tandai error jika belum ada gambar
+      imageError.value = imageFile.value == null;
     } else {
       showError.value = false;
       imageError.value = false;
@@ -37,7 +37,6 @@ class CreateQrController extends GetxController {
           "Hamatech- name: ${name.value}, area: ${area.value}, type: ${selectedType.value}";
 
       Get.off(() => QrView(qrData: qrContent))?.then((_) {
-        // Reset nilai setelah berpindah ke QrView
         name.value = "";
         area.value = "";
         selectedType.value = null;

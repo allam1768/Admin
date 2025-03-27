@@ -21,9 +21,7 @@ class DataClientView extends StatelessWidget {
             CustomAppBar(
               title: "Client",
               rightIcon: "assets/icons/add_client_btn.svg",
-              rightOnTap: () {
-                Get.toNamed('/CreateAccountClient'); // Ganti dengan rute yang benar
-              },
+              rightOnTap: controller.goToCreateClient,
               showBackButton: false,
             ),
             Expanded(
@@ -31,12 +29,13 @@ class DataClientView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                 child: Obx(() => ListView.separated(
                   itemCount: controller.clients.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 20.h),
-                  itemBuilder: (context, index) {
+                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                  itemBuilder: (_, index) {
+                    final clientData = controller.clients[index];
                     return ClientCard(
-                      company: controller.clients[index]["company"]!,
-                      client: controller.clients[index]["client"]!,
-                      imagePath: controller.clients[index]["imagePath"]!,
+                      company: clientData["company"]!,
+                      client: clientData["client"]!,
+                      imagePath: clientData["imagePath"]!,
                     );
                   },
                 )),

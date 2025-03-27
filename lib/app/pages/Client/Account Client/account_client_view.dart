@@ -21,7 +21,6 @@ class AccountClientView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // AppBar
             CustomAppBar(title: "Detail"),
 
             Expanded(
@@ -33,11 +32,11 @@ class AccountClientView extends StatelessWidget {
                     SizedBox(height: 30.h),
 
                     // User Card
-                    UserInfoCard(
-                      name: "Wawan",
-                      email: "abc@gmail.com",
-                      imagePath: "https://example.com/profile.jpg",
-                    ),
+                    Obx(() => UserInfoCard(
+                      name: controller.userName.value,
+                      email: controller.userEmail.value,
+                      imagePath: controller.profileImage.value,
+                    )),
 
                     SizedBox(height: 37.h),
 
@@ -50,14 +49,14 @@ class AccountClientView extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          InfoTile(icon: Icons.person, title: "Name", value: "Wawan Ajay Gimang"),
-                          InfoTile(icon: Icons.business, title: "Company", value: "Indofood"),
-                          InfoTile(icon: Icons.phone, title: "Phone number", value: "087788987208"),
-                          InfoTile(icon: Icons.email, title: "Email", value: "dumyemail@gmail.com"),
+                          Obx(() => InfoTile(icon: Icons.person, title: "Name", value: controller.fullName.value)),
+                          Obx(() => InfoTile(icon: Icons.business, title: "Company", value: controller.company.value)),
+                          Obx(() => InfoTile(icon: Icons.phone, title: "Phone number", value: controller.phoneNumber.value)),
+                          Obx(() => InfoTile(icon: Icons.email, title: "Email", value: controller.userEmail.value)),
                           Obx(() => InfoTile(
                             icon: Icons.lock,
                             title: "Password",
-                            value: controller.isPasswordVisible.value ? "password123" : "********",
+                            value: controller.isPasswordVisible.value ? controller.password.value : "********",
                             isPassword: true,
                             onTogglePassword: controller.togglePasswordVisibility,
                           )),
@@ -69,10 +68,9 @@ class AccountClientView extends StatelessWidget {
 
                     // Action Buttons
                     ActionButtons(
-                      onEdit: () => Get.offNamed('/EditAccountClient'),
-                      onDelete: () => print("Delete pressed"),
+                      onEdit: controller.goToEditAccount,
+                      onDelete: controller.deleteAccount,
                     ),
-
                   ],
                 ),
               ),
