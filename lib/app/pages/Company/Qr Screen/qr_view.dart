@@ -43,14 +43,14 @@ class QrView extends StatelessWidget {
                                 gapless: true,
                               ),
                               Container(
-                                width: 60.w,
-                                height: 60.w,
+                                width: 40.w,
+                                height: 40.w,
                                 color: Color(0xFFD9D9D9),
                               ),
                               Image.asset(
                                 "assets/images/logo.png",
-                                width: 50.w,
-                                height: 50.w,
+                                width: 30.w,
+                                height: 30.w,
                                 fit: BoxFit.contain,
                               ),
                             ],
