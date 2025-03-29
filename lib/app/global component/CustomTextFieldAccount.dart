@@ -44,7 +44,7 @@ class CustomTextFieldAccount extends StatelessWidget {
       padding: EdgeInsets.only(top: 5.h),
       child: Text(
         message,
-        style: TextStyle(fontSize: 14.sp, color: Colors.red),
+        style: TextStyle(fontSize: 12.sp, color: Colors.red),
       ),
     );
   }

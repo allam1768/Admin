@@ -1,6 +1,9 @@
 import 'package:admin/app/pages/Client/Create%20Account%20Client/create_account_client_view.dart';
+import 'package:admin/app/pages/Company/Create%20Qr%20Company/create_qr_company_binding.dart';
+import 'package:admin/app/pages/Company/Create%20Qr%20Company/create_qr_company_view.dart';
 import 'package:admin/app/pages/Company/Create%20Qr%20Tools/create_qr_tools_binding.dart';
 import 'package:admin/app/pages/Company/Create%20Qr%20Tools/create_qr_tools_view.dart';
+
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_view.dart';
 import 'package:get/get.dart';
@@ -39,7 +42,9 @@ class Routes {
   static const String editAccountWorker = '/EditAccountWorker';
   static const String createAccountWorker = '/CreateAccountWorker';
   static const String createAccountClient = '/CreateAccountClient';
+  static const String createAccountCompany = '/CreateAccountCompany';
   static const String createQrTools = '/CreateQrTools';
+  static const String QrTools = '/QrTools';
 
 
   static final List<GetPage> pages = [
@@ -104,9 +109,15 @@ class Routes {
       binding: CreateAccountClientBinding(),
     ),
     GetPage(
+      name: createAccountCompany,
+      page: () => CreateQrCompanyView(),
+      binding: CreateQrCompanyBinding(),
+    ),
+    GetPage(
       name: createQrTools,
       page: () => CreateQrView(),
       binding: CreateQrBinding(),
     ),
+
   ];
 }

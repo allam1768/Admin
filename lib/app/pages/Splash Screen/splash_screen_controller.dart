@@ -15,7 +15,7 @@ class SplashScreenController extends GetxController {
     await Future.delayed(const Duration(seconds: 2));
 
     if (isLoggedIn) {
-      Get.offNamed('/home');
+      Get.offNamed('/bottomnav');
     } else {
       Get.offNamed('/login');
     }

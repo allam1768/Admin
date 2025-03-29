@@ -27,7 +27,7 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4.h),
         ValueListenableBuilder<bool>(

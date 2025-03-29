@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../global component/CustomButton.dart';
-import 'qr_controller.dart';
+import 'qr_tool_controller.dart';
 
-class QrView extends StatelessWidget {
+class QrToolView extends StatelessWidget {
   final String qrData;
-  QrView({super.key, required this.qrData});
+  QrToolView({super.key, required this.qrData});
 
-  final QrController controller = Get.put(QrController());
+  final QrToolController controller = Get.put(QrToolController());
 
   @override
   Widget build(BuildContext context) {

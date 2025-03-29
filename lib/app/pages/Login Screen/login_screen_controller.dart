@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreenController extends GetxController {
   var isPasswordHidden = true.obs;
@@ -39,7 +40,10 @@ class LoginScreenController extends GetxController {
     await Future.delayed(Duration(seconds: 2));
 
     if (username == "admin" && password == "admin123") {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
       Get.offNamed('/bottomnav');
+
     } else {
       loginError.value = "Username atau password salah";
     }

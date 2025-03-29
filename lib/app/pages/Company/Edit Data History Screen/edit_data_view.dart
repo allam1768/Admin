@@ -50,13 +50,13 @@ class EditDataHistoryView extends StatelessWidget {
                     hasScrollBody: false,
                     child: Container(
                       color: const Color(0xFFBBD4C3),
-                      padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "Condition",
-                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
                           ),
                           Obx(() => Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +87,7 @@ class EditDataHistoryView extends StatelessWidget {
                             padding: EdgeInsets.only(top: 5.h),
                             child: Text(
                               "Condition harus dipilih!",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                              style: TextStyle(fontSize: 12.sp, color: Colors.red),
                             ),
                           )
                               : SizedBox()),
@@ -102,7 +102,7 @@ class EditDataHistoryView extends StatelessWidget {
                             padding: EdgeInsets.only(top: 5.h),
                             child: Text(
                               "Amount harus diisi!",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                              style: TextStyle(fontSize: 12.sp, color: Colors.red),
                             ),
                           )
                               : SizedBox()),
@@ -117,13 +117,13 @@ class EditDataHistoryView extends StatelessWidget {
                             padding: EdgeInsets.only(top: 5.h),
                             child: Text(
                               "Information harus diisi!",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                              style: TextStyle(fontSize: 12.sp, color: Colors.red),
                             ),
                           )
                               : SizedBox()),
                           SizedBox(height: 15.h),
 
-                          ImageUploadComponent(
+                          ImageUpload(
                             imageFile: controller.imageFile,
                             imageError: controller.imageError,
                           ),
@@ -133,7 +133,7 @@ class EditDataHistoryView extends StatelessWidget {
                             text: "Save",
                             color: Color(0xFF275637),
                             onPressed: controller.validateForm,
-                            fontSize: 20,
+                            fontSize: 16,
                           ),
 
                           SizedBox(height: 50.h),

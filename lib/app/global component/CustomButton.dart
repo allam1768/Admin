@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.color = const Color(0xFF234E35),
-    this.fontSize = 20,
+    this.fontSize = 16,
   });
 
   @override

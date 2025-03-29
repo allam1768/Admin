@@ -4,13 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'CustomButton.dart';
 
-class ImageUpload extends StatelessWidget {
+class ImageCompany extends StatelessWidget {
   final Rx<File?> imageFile;
   final RxBool imageError;
 
-  ImageUpload({required this.imageFile, required this.imageError});
+  ImageCompany({required this.imageFile, required this.imageError});
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -58,7 +57,8 @@ class ImageUpload extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Upload Image", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+
+        Text("Upload Image", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
         SizedBox(height: 10.h),
 
         GestureDetector(
@@ -93,14 +93,6 @@ class ImageUpload extends StatelessWidget {
         )
             : SizedBox()),
 
-        SizedBox(height: 10.h),
-
-        CustomButton(
-          text: "Take Photo",
-          color: const Color(0xFFFFA726),
-          onPressed: pickImage,
-          fontSize: 16.sp,
-        ),
       ],
     );
   }

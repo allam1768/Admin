@@ -19,6 +19,8 @@ class BottomNavController extends GetxController {
     "assets/icons/Worker_icont.svg"
   ];
 
+  RxInt get selectedIndex => currentIndex; // Tambahkan getter agar bisa diakses
+
   void changeTab(int index) {
     currentIndex.value = index;
   }

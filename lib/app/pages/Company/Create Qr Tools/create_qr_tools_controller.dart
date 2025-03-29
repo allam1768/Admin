@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Qr Screen/qr_view.dart';
+
+import '../Qr Tool Screen/qr_tool_view.dart';
 
 class CreateQrController extends GetxController {
   RxString name = "".obs;
@@ -36,7 +37,7 @@ class CreateQrController extends GetxController {
       String qrContent =
           "Hamatech- name: ${name.value}, area: ${area.value}, type: ${selectedType.value}";
 
-      Get.off(() => QrView(qrData: qrContent))?.then((_) {
+      Get.off(() => QrToolView(qrData: qrContent))?.then((_) {
         name.value = "";
         area.value = "";
         selectedType.value = null;

@@ -53,7 +53,7 @@ class CreateAccountWorkerController extends GetxController {
     return message.isNotEmpty
         ? Padding(
       padding: const EdgeInsets.only(top: 5),
-      child: Text(message, style: TextStyle(fontSize: 14, color: Colors.red)),
+      child: Text(message, style: TextStyle(fontSize: 12, color: Colors.red)),
     )
         : SizedBox();
   }
