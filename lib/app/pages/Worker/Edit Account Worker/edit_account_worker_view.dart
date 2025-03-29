@@ -26,7 +26,7 @@ class EditAccountWorkerView extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 20.h),
-                    ImagePickerComponent(profileImage: controller.profileImage),
+                    ImageProfile(profileImage: controller.profileImage),
                     SizedBox(height: 20.h),
                     Container(
                       width: double.infinity,
@@ -71,7 +71,7 @@ class EditAccountWorkerView extends StatelessWidget {
                             text: "Save",
                             color: const Color(0xFF275637),
                             onPressed: controller.validateForm,
-                            fontSize: 20,
+                            fontSize: 16,
                           ),
                           SizedBox(height: 50.h),
                         ],

@@ -29,8 +29,9 @@ class CreateAccountClientController extends GetxController {
       return;
     }
 
-    print("Data berhasil disimpan!");
+    Get.toNamed('/CreateAccountCompany');
   }
+
 
   Widget showErrorMessage(String fieldName) {
     if (!showError.value) return SizedBox();
@@ -53,7 +54,7 @@ class CreateAccountClientController extends GetxController {
     return message.isNotEmpty
         ? Padding(
       padding: const EdgeInsets.only(top: 5),
-      child: Text(message, style: TextStyle(fontSize: 14, color: Colors.red)),
+      child: Text(message, style: TextStyle(fontSize: 12, color: Colors.red)),
     )
         : SizedBox();
   }

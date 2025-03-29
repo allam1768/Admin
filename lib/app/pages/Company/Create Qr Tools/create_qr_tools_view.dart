@@ -122,7 +122,7 @@ class CreateQrView extends StatelessWidget {
 
                           SizedBox(height: 15.h),
 
-                          ImageUploadComponent(
+                          ImageUpload(
                             imageFile: controller.imageFile,
                             imageError: controller.imageError,
                           ),

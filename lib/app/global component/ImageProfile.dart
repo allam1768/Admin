@@ -4,10 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImagePickerComponent extends StatelessWidget {
+class ImageProfile extends StatelessWidget {
   final Rx<File?> profileImage;
 
-  const ImagePickerComponent({super.key, required this.profileImage});
+  const ImageProfile({super.key, required this.profileImage});
 
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();

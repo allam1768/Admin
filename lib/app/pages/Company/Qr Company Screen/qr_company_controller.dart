@@ -8,14 +8,16 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
-import 'dart:convert';
+import '../../Bottom Nav/bottomnav_controller.dart';
 
-class QrController extends GetxController {
+class QrCompanyController extends GetxController {
   final GlobalKey globalKey = GlobalKey();
 
   void goToDashboard() {
-    Get.offNamed('/detaildata');
+    Get.find<BottomNavController>().selectedIndex.value = 1;
+    Get.offNamed('/bottomnav'); // Ganti dengan nama screen yang ada bottom nav-nya
   }
+
 
   Future<void> saveQrImage() async {
     try {
@@ -40,7 +42,7 @@ class QrController extends GetxController {
         }
       }
 
-      String qrFolderPath = "$newPath/Pictures/QR Hamatech";
+      String qrFolderPath = "$newPath/Pictures/QR Company";
       Directory qrFolder = Directory(qrFolderPath);
       if (!qrFolder.existsSync()) {
         qrFolder.createSync(recursive: true);
@@ -53,7 +55,7 @@ class QrController extends GetxController {
         return;
       }
 
-      String fileName = "qrcode_${DateTime.now().millisecondsSinceEpoch}.png";
+      String fileName = "company_qr_${DateTime.now().millisecondsSinceEpoch}.png";
       String savePath = "$qrFolderPath/$fileName";
 
       File file = File(savePath);
@@ -66,7 +68,6 @@ class QrController extends GetxController {
       print("Error saving QR image: $e");
     }
   }
-
 
   Future<void> scanFile(String filePath) async {
     try {
@@ -82,12 +83,12 @@ class QrController extends GetxController {
       messageText: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.info, color: Colors.white, size: 18),
-          SizedBox(width: 8),
+          const Icon(Icons.info, color: Colors.white, size: 18),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               filePath == null ? message : "$message\nLokasi: $filePath",
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -96,14 +97,13 @@ class QrController extends GetxController {
       ),
       backgroundColor: Colors.black.withOpacity(0.7),
       borderRadius: 8,
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      duration: Duration(seconds: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      duration: const Duration(seconds: 2),
       snackPosition: SnackPosition.TOP,
-      animationDuration: Duration(milliseconds: 0), // Tanpa animasi
+      animationDuration: const Duration(milliseconds: 0),
     );
   }
-
 
   String generateHash(Uint8List data) {
     return sha256.convert(data).toString();
