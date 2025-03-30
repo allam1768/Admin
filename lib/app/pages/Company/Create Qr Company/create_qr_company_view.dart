@@ -17,18 +17,19 @@ class CreateQrCompanyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFCCD7CD),
+      backgroundColor: const Color(0xFFDDDDDD),
       body: SafeArea(
         child: Column(
           children: [
             CustomAppBar(title: "Create Company"),
+
             Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Container(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Container(
                       height: 250.h,
-                      color: const Color(0xFFCCD7CD),
                       child: Center(
                         child: SvgPicture.asset(
                           'assets/images/company_ilustration.svg',
@@ -36,10 +37,9 @@ class CreateQrCompanyView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Container(
+
+                    /// 🔹 Form Input
+                    Container(
                       color: const Color(0xFFBBD4C3),
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
@@ -97,8 +97,8 @@ class CreateQrCompanyView extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
