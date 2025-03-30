@@ -38,7 +38,6 @@ class CreateQrCompanyView extends StatelessWidget {
                       ),
                     ),
 
-                    /// 🔹 Form Input
                     Container(
                       color: const Color(0xFFBBD4C3),
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
