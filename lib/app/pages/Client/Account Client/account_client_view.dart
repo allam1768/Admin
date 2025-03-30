@@ -16,7 +16,7 @@ class AccountClientView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFCCD7CD),
+      backgroundColor: const Color(0xFFDDDDDD),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
