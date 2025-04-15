@@ -1,22 +1,23 @@
-import 'package:admin/app/global%20component/CustomButton.dart';
-import 'package:admin/app/global%20component/ImageUpload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
+import '../../../global component/CustomButton.dart';
 import '../../../global component/CustomTextField.dart';
-import '../../../global component/app_bar.dart';
+import '../../../global component/ImageUpload.dart';
 import 'create_qr_tools_controller.dart';
 
-class CreateQrView extends StatelessWidget {
-  CreateQrView({super.key});
+class CreateQrToolView extends StatelessWidget {
+  CreateQrToolView({super.key});
 
-  final CreateQrController controller = Get.put(CreateQrController());
+  final CreateQrToolController controller = Get.put(CreateQrToolController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -37,40 +38,27 @@ class CreateQrView extends StatelessWidget {
                     ),
 
                     Container(
-                      color: const Color(0xFFBBD4C3),
+                      color: AppColor.backgroundsetengah,
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomTextField(
+                          Obx(() =>CustomTextField(
                             label: "Name",
                             onChanged: (value) => controller.name.value = value,
-                          ),
-                          Obx(() => controller.showError.value && controller.name.value.isEmpty
-                              ? Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "Name harus diisi!",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                            ),
-                          )
-                              : SizedBox()),
+                            errorMessage: controller.nameError.value,
+                            showErrorBorder: controller.showError.value,
+                            )),
                           SizedBox(height: 15.h),
 
-                          CustomTextField(
+                          Obx(() =>CustomTextField(
                             label: "Area",
                             onChanged: (value) => controller.area.value = value,
-                          ),
-                          Obx(() => controller.showError.value && controller.area.value.isEmpty
-                              ? Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "Area harus diisi!",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                            ),
-                          )
-                              : SizedBox()),
+                            errorMessage: controller.areaError.value,
+                            showErrorBorder: controller.showError.value,
+                          )),
                           SizedBox(height: 15.h),
+
 
                           Text(
                             "Type",
@@ -82,35 +70,39 @@ class CreateQrView extends StatelessWidget {
                           ),
                           SizedBox(height: 5.h),
 
-                          Obx(() => Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: controller.showError.value && controller.selectedType.value == null
-                                    ? Colors.red
-                                    : Colors.transparent,
+                          Obx(() => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                    color: controller.showError.value && controller.selectedType.value == null
+                                        ? Colors.red
+                                        : const Color(0xFF275637),
+                                  ),
+                                ),
+                                child: DropdownMenu<String>(
+                                  enableSearch: false,
+                                  onSelected: (value) => controller.selectedType.value = value,
+                                  width: double.infinity,
+                                  dropdownMenuEntries: [
+                                    DropdownMenuEntry(value: 'Darat', label: 'Darat'),
+                                    DropdownMenuEntry(value: 'Terbang', label: 'Terbang'),
+                                  ],
+                                ),
                               ),
-                            ),
-                            child: DropdownMenu<String>(
-                              enableSearch: false,
-                              onSelected: (value) => controller.selectedType.value = value,
-                              width: 340.w,
-                              dropdownMenuEntries: [
-                                DropdownMenuEntry(value: 'Darat', label: 'Darat'),
-                                DropdownMenuEntry(value: 'Terbang', label: 'Terbang'),
-                              ],
-                            ),
+                              if (controller.showError.value && controller.selectedType.value == null)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5.h),
+                                  child: Text(
+                                    "Type harus dipilih!",
+                                    style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                                  ),
+                                ),
+                            ],
                           )),
-                          Obx(() => controller.showError.value && controller.selectedType.value == null
-                              ? Padding(
-                            padding: EdgeInsets.only(top: 5.h),
-                            child: Text(
-                              "Type harus dipilih!",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                            ),
-                          )
-                              : SizedBox()),
 
                           SizedBox(height: 15.h),
 
@@ -123,7 +115,7 @@ class CreateQrView extends StatelessWidget {
 
                           CustomButton(
                             text: "Create Qr",
-                            color: Color(0xFF275637),
+                            backgroundColor:AppColor.btnijo,
                             onPressed: () {
                               controller.validateForm();
                             },

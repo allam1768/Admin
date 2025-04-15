@@ -1,9 +1,10 @@
 import 'package:admin/app/pages/Client/Data%20Client%20Screen/data_client_controller.dart';
 import 'package:admin/app/pages/Client/Data%20Client%20Screen/widgets/ClientCard.dart';
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../global component/app_bar.dart';
+import '../../../global component/CustomAppBar.dart';
 
 class DataClientView extends StatelessWidget {
   const DataClientView({super.key});
@@ -13,7 +14,7 @@ class DataClientView extends StatelessWidget {
     final controller = Get.put(DataClientController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

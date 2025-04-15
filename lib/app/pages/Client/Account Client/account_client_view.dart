@@ -1,11 +1,11 @@
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../../global component/app_bar.dart';
-import '../../../global component/ButtonEdit&Delete_account.dart';
-import '../../Worker/Account Worker/Widgets/InfoCard.dart';
-import '../../Worker/Account Worker/Widgets/InfoTile.dart';
+import '../../../global component/CustomAppBar.dart';
+import '../../Company/Detail History Screen/widgets/ButtonEdit&Delete.dart';
+import 'Widgets/InfoCard.dart';
+import 'Widgets/InfoTile.dart';
 import 'account_client_controller.dart';
 
 class AccountClientView extends StatelessWidget {
@@ -16,13 +16,12 @@ class AccountClientView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(title: "Detail"),
-
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -66,10 +65,36 @@ class AccountClientView extends StatelessWidget {
 
                     SizedBox(height: 20.h),
 
-                    // Action Buttons
-                    ActionButtons(
-                      onEdit: controller.goToEditAccount,
-                      onDelete: controller.deleteAccount,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "More",
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomButtonDetail(
+                                icon: Icons.edit,
+                                color: AppColor.btnijo,
+                                text: 'Edit',
+                                onPressed: controller.goToEditAccount,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: CustomButtonDetail(
+                                text: "Delete",
+                                icon: Icons.delete,
+                                color: Colors.red.shade700,
+                                onPressed: controller.deleteAccount,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),

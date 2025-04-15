@@ -1,12 +1,12 @@
-import 'package:admin/app/global%20component/CustomButton.dart';
-import 'package:admin/app/global%20component/ImageUpload.dart';
-import 'package:admin/app/pages/Company/Create%20Qr%20Company/Widget/ImageCompany.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
+import '../../../global component/CustomButton.dart';
 import '../../../global component/CustomTextField.dart';
-import '../../../global component/app_bar.dart';
+import '../../../global component/ImageUpload.dart';
 import 'create_qr_company_controller.dart';
 
 class CreateQrCompanyView extends StatelessWidget {
@@ -17,7 +17,7 @@ class CreateQrCompanyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -39,56 +39,57 @@ class CreateQrCompanyView extends StatelessWidget {
                     ),
 
                     Container(
-                      color: const Color(0xFFBBD4C3),
+                      color: AppColor.backgroundsetengah,
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ImageCompany(
+                          ImageUpload(
                             imageFile: controller.imageFile,
                             imageError: controller.imageError,
+                            showButton: false,
                           ),
                           SizedBox(height: 15.h),
 
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             label: "Name Company",
                             onChanged: (value) => controller.name.value = value,
-                          ),
-                          Obx(() => controller.showErrorMessage("Name Company")),
+                            errorMessage: controller.nameError.value.isNotEmpty ? controller.nameError.value : null,
+                          )),
                           SizedBox(height: 15.h),
 
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             label: "Address Company",
                             onChanged: (value) => controller.address.value = value,
-                          ),
-                          Obx(() => controller.showErrorMessage("Address Company")),
+                            errorMessage: controller.addressError.value.isNotEmpty ? controller.addressError.value : null,
+                          )),
                           SizedBox(height: 15.h),
 
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             label: "Phone number",
                             isNumber: true,
                             onChanged: (value) => controller.phoneNumber.value = value,
-                          ),
-                          Obx(() => controller.showErrorMessage("Phone number")),
+                            errorMessage: controller.phoneError.value.isNotEmpty ? controller.phoneError.value : null,
+                          )),
                           SizedBox(height: 15.h),
 
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             label: "Email Company",
                             onChanged: (value) => controller.email.value = value,
-                          ),
-                          Obx(() => controller.showErrorMessage("Email Company")),
+                            errorMessage: controller.emailError.value.isNotEmpty ? controller.emailError.value : null,
+                          )),
                           SizedBox(height: 15.h),
 
-                          CustomTextField(
+                          Obx(() => CustomTextField(
                             label: "Industry",
                             onChanged: (value) => controller.industry.value = value,
-                          ),
-                          Obx(() => controller.showErrorMessage("Industry")),
+                            errorMessage: controller.industryError.value.isNotEmpty ? controller.industryError.value : null,
+                          )),
                           SizedBox(height: 40.h),
 
                           CustomButton(
                             text: "Create Qr",
-                            color: const Color(0xFF275637),
+                            backgroundColor: AppColor.btnijo,
                             onPressed: controller.validateForm,
                             fontSize: 16,
                           ),

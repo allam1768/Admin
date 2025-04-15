@@ -11,10 +11,15 @@ class CreateQrCompanyController extends GetxController {
   RxString phoneNumber = "".obs;
   RxString email = "".obs;
   RxString industry = "".obs;
-  RxBool showError = false.obs;
+
+  RxString nameError = "".obs;
+  RxString addressError = "".obs;
+  RxString phoneError = "".obs;
+  RxString emailError = "".obs;
+  RxString industryError = "".obs;
+  RxBool imageError = false.obs;
 
   Rx<File?> imageFile = Rx<File?>(null);
-  RxBool imageError = false.obs;
 
   Future<void> takePicture() async {
     final picker = ImagePicker();
@@ -27,48 +32,27 @@ class CreateQrCompanyController extends GetxController {
   }
 
   void validateForm() {
-    if (name.value.isEmpty ||
-        address.value.isEmpty ||
-        phoneNumber.value.isEmpty ||
-        email.value.isEmpty ||
-        industry.value.isEmpty ) {
-      showError.value = true;
-    } else {
-      showError.value = false;
-      imageError.value = false;
+    bool isValid = true;
 
+    nameError.value = name.value.isEmpty ? "Name Company harus diisi!" : "";
+    addressError.value = address.value.isEmpty ? "Address Company harus diisi!" : "";
+    phoneError.value = phoneNumber.value.isEmpty ? "Phone number harus diisi!" : "";
+    emailError.value = email.value.isEmpty ? "Email Company harus diisi!" : "";
+    industryError.value = industry.value.isEmpty ? "Industry harus diisi!" : "";
+
+    if (nameError.value.isNotEmpty ||
+        addressError.value.isNotEmpty ||
+        phoneError.value.isNotEmpty ||
+        emailError.value.isNotEmpty ||
+        industryError.value.isNotEmpty) {
+      isValid = false;
+    }
+
+    if (isValid) {
       String qrContent =
           "Company- name: ${name.value}, address: ${address.value}, phone: ${phoneNumber.value}, email: ${email.value}, industry: ${industry.value}";
 
-      // Pindah ke QrCompanyView dengan data QR
       Get.off(() => QrCompanyView(qrData: qrContent));
     }
-  }
-
-  Widget showErrorMessage(String fieldName) {
-    if (!showError.value) return SizedBox();
-
-    String message = "";
-    if (fieldName == "Name Company" && name.value.isEmpty) {
-      message = "Name Company harus diisi!";
-    } else if (fieldName == "Address Company" && address.value.isEmpty) {
-      message = "Address Company harus diisi!";
-    } else if (fieldName == "Phone number" && phoneNumber.value.isEmpty) {
-      message = "Phone number harus diisi!";
-    } else if (fieldName == "Email Company" && email.value.isEmpty) {
-      message = "Email Company harus diisi!";
-    } else if (fieldName == "Industry" && industry.value.isEmpty) {
-      message = "Industry harus diisi!";
-    }
-
-    return message.isNotEmpty
-        ? Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: Text(
-        message,
-        style: TextStyle(fontSize: 12, color: Colors.red),
-      ),
-    )
-        : SizedBox();
   }
 }

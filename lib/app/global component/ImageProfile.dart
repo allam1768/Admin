@@ -1,95 +1,96 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+  import 'dart:io';
+  import 'package:admin/values/app_color.dart';
+  import 'package:flutter/material.dart';
+  import 'package:flutter_screenutil/flutter_screenutil.dart';
+  import 'package:get/get.dart';
+  import 'package:image_picker/image_picker.dart';
 
-class ImageProfile extends StatelessWidget {
-  final Rx<File?> profileImage;
+  class ImageProfile extends StatelessWidget {
+    final Rx<File?> profileImage;
 
-  const ImageProfile({super.key, required this.profileImage});
+    const ImageProfile({super.key, required this.profileImage});
 
-  Future<void> _pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: source);
-    if (pickedFile != null) {
-      profileImage.value = File(pickedFile.path);
+    Future<void> _pickImage(ImageSource source) async {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: source);
+      if (pickedFile != null) {
+        profileImage.value = File(pickedFile.path);
+      }
     }
-  }
 
-  void _showImageSourceDialog(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Wrap(
+    void _showImageSourceDialog(BuildContext context) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => Wrap(
+          children: [
+            ListTile(
+              leading: Icon(Icons.camera_alt),
+              title: Text('Ambil dari Kamera'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.image),
+              title: Text('Pilih dari Galeri'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return Stack(
+        alignment: Alignment.bottomRight,
         children: [
-          ListTile(
-            leading: Icon(Icons.camera_alt),
-            title: Text('Ambil dari Kamera'),
-            onTap: () {
-              Navigator.pop(context);
-              _pickImage(ImageSource.camera);
-            },
+          GestureDetector(
+            onTap: () => _showImageSourceDialog(context),
+            child: Obx(
+                  () => Container(
+                width: 120.r,
+                height: 120.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey[500]!, width: 3),
+                ),
+                child: Center(
+                  child: profileImage.value != null
+                      ? ClipOval(
+                    child: Image.file(
+                      profileImage.value!,
+                      width: 120.r,
+                      height: 120.r,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                      : Icon(Icons.image, size: 40.r, color: Colors.black),
+                ),
+              ),
+            ),
           ),
-          ListTile(
-            leading: Icon(Icons.image),
-            title: Text('Pilih dari Galeri'),
-            onTap: () {
-              Navigator.pop(context);
-              _pickImage(ImageSource.gallery);
-            },
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: () => _showImageSourceDialog(context),
+              child: Container(
+                width: 40.r,
+                height: 40.r,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.camera_alt, color: AppColor.oren, size: 24.r),
+              ),
+            ),
           ),
         ],
-      ),
-    );
+      );
+    }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        GestureDetector(
-          onTap: () => _showImageSourceDialog(context),
-          child: Obx(
-                () => Container(
-              width: 120.r,
-              height: 120.r,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey[500]!, width: 3),
-              ),
-              child: Center(
-                child: profileImage.value != null
-                    ? ClipOval(
-                  child: Image.file(
-                    profileImage.value!,
-                    width: 120.r,
-                    height: 120.r,
-                    fit: BoxFit.cover,
-                  ),
-                )
-                    : Icon(Icons.image, size: 40.r, color: Colors.black),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 8,
-          right: 8,
-          child: GestureDetector(
-            onTap: () => _showImageSourceDialog(context),
-            child: Container(
-              width: 40.r,
-              height: 40.r,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.camera_alt, color: Colors.orange, size: 24.r),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}

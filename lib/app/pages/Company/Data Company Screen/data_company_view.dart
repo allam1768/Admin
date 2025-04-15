@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../global component/app_bar.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
 import 'data_company_controller.dart';
 import 'widgets/CompanyCard.dart';
 
@@ -13,12 +14,16 @@ class DataCompanyView extends StatelessWidget {
     final controller = Get.put(DataCompanyController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(title: "Company", showBackButton: false),
+            CustomAppBar(title: "Company",
+                showBackButton: false,
+                rightIcon: "",
+                rightOnTap: (){},
+            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),

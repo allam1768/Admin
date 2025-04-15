@@ -4,14 +4,18 @@ import 'package:image_picker/image_picker.dart';
 
 import '../Qr Tool Screen/qr_tool_view.dart';
 
-class CreateQrController extends GetxController {
+class CreateQrToolController extends GetxController {
   RxString name = "".obs;
   RxString area = "".obs;
-  var selectedType = Rxn<String>(); // Nullable
+  var selectedType = Rxn<String>();
   RxBool showError = false.obs;
 
   Rx<File?> imageFile = Rx<File?>(null);
   RxBool imageError = false.obs;
+
+  RxnString nameError = RxnString(null);
+  RxnString areaError = RxnString(null);
+  RxnString typeError = RxnString(null);
 
   Future<void> takePicture() async {
     final picker = ImagePicker();
@@ -24,16 +28,17 @@ class CreateQrController extends GetxController {
   }
 
   void validateForm() {
-    if (name.value.isEmpty ||
-        area.value.isEmpty ||
-        selectedType.value == null ||
-        imageFile.value == null) {
-      showError.value = true;
-      imageError.value = imageFile.value == null;
-    } else {
-      showError.value = false;
-      imageError.value = false;
+    nameError.value = name.value.isEmpty ? "Name harus diisi!" : null;
+    areaError.value = area.value.isEmpty ? "Area harus diisi!" : null;
+    typeError.value = selectedType.value == null ? "Type harus dipilih!" : null;
+    imageError.value = imageFile.value == null;
 
+    showError.value = nameError.value != null ||
+        areaError.value != null ||
+        typeError.value != null ||
+        imageError.value;
+
+    if (!showError.value) {
       String qrContent =
           "Hamatech- name: ${name.value}, area: ${area.value}, type: ${selectedType.value}";
 
@@ -42,6 +47,10 @@ class CreateQrController extends GetxController {
         area.value = "";
         selectedType.value = null;
         imageFile.value = null;
+        nameError.value = null;
+        areaError.value = null;
+        typeError.value = null;
+        imageError.value = false;
       });
     }
   }

@@ -1,3 +1,4 @@
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,7 +19,7 @@ class UserInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(15.w),
       decoration: BoxDecoration(
-        color: Color(0xFF9BBB9C),
+        color: AppColor.backgroundsetengah,
         borderRadius: BorderRadius.circular(5.r),
       ),
       child: Row(

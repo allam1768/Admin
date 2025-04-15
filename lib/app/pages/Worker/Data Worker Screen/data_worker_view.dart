@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../global component/app_bar.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
 import 'data_worker_controller.dart';
 import 'widgets/WorkerCard.dart';
 
@@ -13,7 +14,7 @@ class DataWorkerView extends StatelessWidget {
     final controller = Get.put(DataWorkerController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
