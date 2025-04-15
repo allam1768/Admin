@@ -1,61 +1,91 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+
+
 
 class CreateAccountClientController extends GetxController {
-  var name = "".obs;
-  var phoneNumber = "".obs;
-  var email = "".obs;
-  var password = "".obs;
-  var confirmPassword = "".obs;
-  var showError = false.obs;
-  var profileImage = Rx<File?>(null);
 
-  void setName(String value) => name.value = value;
-  void setPhoneNumber(String value) => phoneNumber.value = value;
-  void setEmail(String value) => email.value = value;
-  void setPassword(String value) => password.value = value;
-  void setConfirmPassword(String value) => confirmPassword.value = value;
+  final nameController = TextEditingController();
+  final nameCompanyController = TextEditingController();
+  final phoneController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  var profileImage = Rx<File?>(null);
+  var imageError = false.obs;
+  var isPasswordHidden = true.obs;
+  var nameError = RxnString();
+  var nameCompanyError = RxnString();
+  var phoneError = RxnString();
+  var emailError = RxnString();
+  var passwordError = RxnString();
+  var confirmPasswordError = RxnString();
 
   void validateForm() {
-    showError.value = true;
+    final name = nameController.text;
+    final namecompany = nameCompanyController.text;
+    final phone = phoneController.text;
+    final email = emailController.text;
+    final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
 
-    if (name.value.isEmpty ||
-        phoneNumber.value.isEmpty ||
-        email.value.isEmpty ||
-        password.value.isEmpty ||
-        confirmPassword.value.isEmpty ||
-        password.value != confirmPassword.value) {
-      return;
+    nameError.value = name.isEmpty ? "Name harus diisi!" : null;
+    nameCompanyError.value = namecompany.isEmpty ? "Nama Company harus diisi!" : null;
+    phoneError.value = phone.isEmpty ? "Phone number harus diisi!" : null;
+    emailError.value = email.isEmpty ? "Email harus diisi!" : null;
+    passwordError.value = password.isEmpty ? "Password harus diisi!" : null;
+
+    if (confirmPassword.isEmpty) {
+      confirmPasswordError.value = "Confirm Password harus diisi!";
+    } else if (confirmPassword != password) {
+      confirmPasswordError.value = "Password tidak cocok!";
+    } else {
+      confirmPasswordError.value = null;
     }
 
-    Get.toNamed('/CreateAccountCompany');
+    // Optional, cuma untuk styling UI
+    imageError.value = profileImage.value == null;
+
+    // Validasi tanpa image
+    if ([
+      nameError.value,
+      nameCompanyError.value,
+      phoneError.value,
+      emailError.value,
+      passwordError.value,
+      confirmPasswordError.value,
+    ].every((e) => e == null)) {
+      print("✅ Data berhasil disimpan!");
+
+      Get.toNamed('/CreateAccountCompany');
+    }
   }
 
 
-  Widget showErrorMessage(String fieldName) {
-    if (!showError.value) return SizedBox();
-
-    String message = "";
-    if (fieldName == "Name" && name.value.isEmpty) {
-      message = "Name harus diisi!";
-    } else if (fieldName == "Phone number" && phoneNumber.value.isEmpty) {
-      message = "Phone number harus diisi!";
-    } else if (fieldName == "Email" && email.value.isEmpty) {
-      message = "Email harus diisi!";
-    } else if (fieldName == "Password" && password.value.isEmpty) {
-      message = "Password harus diisi!";
-    } else if (fieldName == "Confirm Password" && confirmPassword.value.isEmpty) {
-      message = "Confirm Password harus diisi!";
-    } else if (fieldName == "Confirm Password" && password.value != confirmPassword.value) {
-      message = "Password tidak cocok!";
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      profileImage.value = File(picked.path);
+      imageError.value = false;
     }
+  }
 
-    return message.isNotEmpty
-        ? Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: Text(message, style: TextStyle(fontSize: 12, color: Colors.red)),
-    )
-        : SizedBox();
+  @override
+  void onClose() {
+    nameController.dispose();
+    nameCompanyController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.onClose();
+  }
+
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
   }
 }

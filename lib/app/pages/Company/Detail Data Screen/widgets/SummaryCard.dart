@@ -1,3 +1,4 @@
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,8 +21,8 @@ class SummaryCard extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.orange,
-        borderRadius: BorderRadius.circular(16.r),
+        color: AppColor.btnoren,
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

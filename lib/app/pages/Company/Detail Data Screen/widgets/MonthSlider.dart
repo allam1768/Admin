@@ -1,3 +1,4 @@
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,7 +25,7 @@ class _MonthSliderState extends State<MonthSlider> {
     return Container(
       height: 50.h,
       decoration: BoxDecoration(
-        color: Color(0xFF9CB1A3),
+        color: AppColor.backgroundsetengah,
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(

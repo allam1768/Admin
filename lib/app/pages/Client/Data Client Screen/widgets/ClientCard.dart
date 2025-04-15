@@ -1,3 +1,4 @@
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,8 +24,8 @@ class ClientCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         decoration: BoxDecoration(
-          color: const Color(0xFFA3B8A3),
-          borderRadius: BorderRadius.circular(20.r),
+          color: AppColor.btomnav  ,
+          borderRadius: BorderRadius.circular(8.r),
         ),
         child: Row(
           children: [

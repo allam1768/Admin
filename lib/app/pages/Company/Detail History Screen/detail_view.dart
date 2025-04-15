@@ -5,7 +5,8 @@ import 'package:admin/app/pages/Company/Detail%20History%20Screen/widgets/karyaw
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../global component/app_bar.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
 import 'detail_controller.dart';
 
 class DetailHistoryView extends StatelessWidget {
@@ -16,7 +17,7 @@ class DetailHistoryView extends StatelessWidget {
     final controller = Get.find<DetailHistoryController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -25,8 +26,7 @@ class DetailHistoryView extends StatelessWidget {
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: const Color(0xFFBBD4C3),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                color: AppColor.backgroundsetengah,
               ),
               padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
               child: Column(

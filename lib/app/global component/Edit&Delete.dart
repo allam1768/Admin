@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ActionButtons extends StatelessWidget {
+class BtnEditDelete extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  const ActionButtons({
+  const BtnEditDelete({
     super.key,
     required this.onEdit,
     required this.onDelete,

@@ -1,10 +1,11 @@
+import 'package:admin/values/app_color.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../global component/CustomTextField.dart';
 import 'ChartLine.dart';
 
-class DataCard extends StatelessWidget {
+class DataCard extends StatefulWidget {
   final String title;
   final List<FlSpot> chartData;
   final Function(String) onNoteChanged;
@@ -21,19 +22,44 @@ class DataCard extends StatelessWidget {
   });
 
   @override
+  State<DataCard> createState() => _DataCardState();
+}
+
+class _DataCardState extends State<DataCard> {
+  final TextEditingController _noteController = TextEditingController();
+  String? _errorText;
+  bool _noteTouched = false;
+
+  void _handleSave() {
+    final note = _noteController.text.trim();
+
+    if (_noteTouched && note.isEmpty) {
+      setState(() {
+        _errorText = "Catatan tidak boleh dikosongkan setelah diisi";
+      });
+    } else {
+      setState(() {
+        _errorText = null;
+      });
+      widget.onNoteChanged(note); // tetap kirim meski kosong
+      widget.onSave();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF9CB1A3),
+        color: AppColor.backgroundsetengah,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            widget.title,
             style: TextStyle(
               fontSize: 32.sp,
               fontWeight: FontWeight.bold,
@@ -43,7 +69,7 @@ class DataCard extends StatelessWidget {
           SizedBox(height: 20.h),
 
           LineChartWidget(
-            data: chartData,
+            data: widget.chartData,
             primaryColor: Colors.blue,
           ),
 
@@ -52,7 +78,19 @@ class DataCard extends StatelessWidget {
           CustomTextField(
             label: "Catatan",
             svgIcon: "assets/icons/note_icont.svg",
-            onChanged: onNoteChanged,
+            controller: _noteController,
+            errorMessage: _errorText,
+            onChanged: (value) {
+              if (!_noteTouched && value.trim().isNotEmpty) {
+                _noteTouched = true;
+              }
+
+              if (_errorText != null) {
+                setState(() {
+                  _errorText = null;
+                });
+              }
+            },
           ),
 
           SizedBox(height: 12.h),
@@ -60,10 +98,10 @@ class DataCard extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton(
-              onPressed: onSave,
+              onPressed: _handleSave,
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                backgroundColor: const Color(0xFFFFA726),
+                backgroundColor: AppColor.btnoren,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),
                 ),

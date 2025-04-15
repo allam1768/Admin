@@ -1,10 +1,11 @@
-import 'package:admin/app/global%20component/CustomTextFieldAccount.dart';
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../global component/CustomAppBar.dart';
 import '../../../global component/CustomButton.dart';
+import '../../../global component/CustomTextField.dart';
 import '../../../global component/ImageProfile.dart';
-import '../../../global component/app_bar.dart';
 import 'edit_account_client_controller.dart';
 
 class EditAccountClientView extends StatelessWidget {
@@ -12,78 +13,97 @@ class EditAccountClientView extends StatelessWidget {
 
   final EditAccountClientController controller = Get.put(EditAccountClientController());
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
-      body: SafeArea(
-        child: Column(
-          children: [
-            CustomAppBar(title: "Edit Client"),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    ImageProfile(profileImage: controller.profileImage),
-                    SizedBox(height: 20.h),
-                    Container(
-                      color: const Color(0xFFBBD4C3),
-                      padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomTextFieldAccount(
-                            label: "Name",
-                            value: controller.name,
-                            errorMessage: () => controller.getErrorMessage("Name"),
-                          ),
-                          CustomTextFieldAccount(
-                            label: "Name Company",
-                            value: controller.companyName,
-                            errorMessage: () => controller.getErrorMessage("Name Company"),
-                          ),
-                          CustomTextFieldAccount(
-                            label: "Phone number",
-                            value: controller.phoneNumber,
-                            isNumber: true,
-                            errorMessage: () => controller.getErrorMessage("Phone number"),
-                          ),
-                          CustomTextFieldAccount(
-                            label: "Email",
-                            value: controller.email,
-                            errorMessage: () => controller.getErrorMessage("Email"),
-                          ),
-                          CustomTextFieldAccount(
-                            label: "Password",
-                            value: controller.password,
-                            isPassword: true,
-                            errorMessage: () => controller.getErrorMessage("Password"),
-                          ),
-                          CustomTextFieldAccount(
-                            label: "Confirm Password",
-                            value: controller.confirmPassword,
-                            isPassword: true,
-                            errorMessage: () => controller.getErrorMessage("Confirm Password"),
-                          ),
-                          SizedBox(height: 20.h),
-                          CustomButton(
-                            text: "Save",
-                            color: const Color(0xFF275637),
-                            onPressed: controller.validateForm,
-                            fontSize: 16,
-                          ),
-                          SizedBox(height: 50.h),
-                        ],
-                      ),
+  return Scaffold(
+    backgroundColor: AppColor.background,
+    body: SafeArea(
+      child: Column(
+        children: [
+          CustomAppBar(title: "Edit Client"),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  ImageProfile(profileImage: controller.profileImage),
+                  SizedBox(height: 30.h),
+                  Container(
+                    width: double.infinity,
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height - 180.h, // Sesuaikan dengan tinggi layar
                     ),
-                  ],
-                ),
+                    color: AppColor.backgroundsetengah,
+                    padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() => CustomTextField(
+                          label: "Name",
+                          controller: controller.nameController,
+                          errorMessage: controller.nameError.value,
+                        )),
+                        SizedBox(height: 15.h),
+
+                        Obx(() => CustomTextField(
+                          label: "Name Company",
+                          controller: controller.nameCompanyController,
+                          errorMessage: controller.nameCompanyError.value,
+                        )),
+
+                        SizedBox(height: 16.h),
+
+                        Obx(() => CustomTextField(
+                          label: "Phone Number",
+                          controller: controller.phoneController,
+                          keyboardType: TextInputType.phone,
+                          errorMessage: controller.phoneError.value,
+                        )),
+                        SizedBox(height: 15.h),
+
+                        Obx(() => CustomTextField(
+                          label: "Email",
+                          controller: controller.emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          errorMessage: controller.emailError.value,
+                        )),
+                        SizedBox(height: 15.h),
+
+                        Obx(() => CustomTextField(
+                          label: "Password",
+                          controller: controller.passwordController,
+                          isPassword: true,
+                          errorMessage: controller.passwordError.value,
+                        )),
+                        SizedBox(height: 15.h),
+
+                        Obx(() => CustomTextField(
+                          label: "Confirm Password",
+                          controller: controller.confirmPasswordController,
+                          isPassword: true,
+                          errorMessage: controller.confirmPasswordError.value,
+                        )),
+                        SizedBox(height: 40.h),
+
+                        CustomButton(
+                          text: "Save",
+                          backgroundColor:AppColor.btnijo,
+                          onPressed: controller.validateForm,
+                          fontSize: 16,
+                        ),
+                        SizedBox(height: 50.h),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ),
+  );
   }
 }
+

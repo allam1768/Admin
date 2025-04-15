@@ -1,3 +1,4 @@
+import 'package:admin/values/app_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +25,7 @@ class SummarySection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF9CB1A3),
+        color: AppColor.backgroundsetengah,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
@@ -38,7 +39,7 @@ class SummarySection extends StatelessWidget {
               width: size,
               height: size,
               decoration: BoxDecoration(
-                color: Colors.orange,
+                color: AppColor.btnoren,
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Center(

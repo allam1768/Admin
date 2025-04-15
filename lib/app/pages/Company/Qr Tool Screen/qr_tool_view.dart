@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../values/app_color.dart';
 import '../../../global component/CustomButton.dart';
 import 'qr_tool_controller.dart';
 
@@ -14,7 +15,7 @@ class QrToolView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -67,14 +68,14 @@ class QrToolView extends StatelessWidget {
                   children: [
                     CustomButton(
                       text: "Save",
-                      color: const Color(0xFFFFA726),
+                      backgroundColor: AppColor.btnoren,
                       onPressed: controller.saveQrImage,
                       fontSize: 20.sp,
                     ),
                     SizedBox(height: 10.h),
                     CustomButton(
                       text: "Back to Dashboard",
-                      color: const Color(0xFF275637),
+                      backgroundColor: AppColor.btnijo,
                       onPressed: controller.goToDashboard,
                       fontSize: 20.sp,
                     ),

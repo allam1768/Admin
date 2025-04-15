@@ -4,21 +4,82 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'CustomButton.dart';
+import 'CustomButton.dart'; // tombol custom lu
+import '../../values/app_color.dart'; // warna project lu
 
 class ImageUpload extends StatelessWidget {
   final Rx<File?> imageFile;
   final RxBool imageError;
+  final String title;
+  final bool showButton;
 
-  ImageUpload({required this.imageFile, required this.imageError});
+  ImageUpload({
+    required this.imageFile,
+    required this.imageError,
+    this.title = "Upload Image",
+    this.showButton = true,
+  });
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      imageFile.value = File(pickedFile.path);
-      imageError.value = false; // Reset error jika berhasil ambil gambar
-    }
+
+    await Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Pilih Gambar",
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildPickButton(Icons.camera_alt, "Camera", () async {
+                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                  if (pickedFile != null) {
+                    imageFile.value = File(pickedFile.path);
+                    imageError.value = false;
+                    Get.back();
+                  }
+                }),
+                _buildPickButton(Icons.image, "Gallery", () async {
+                  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                  if (pickedFile != null) {
+                    imageFile.value = File(pickedFile.path);
+                    imageError.value = false;
+                    Get.back();
+                  }
+                }),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPickButton(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 30.r,
+            backgroundColor: Colors.grey.shade200,
+            child: Icon(icon, size: 30.sp, color: Colors.black54),
+          ),
+          SizedBox(height: 5.h),
+          Text(label, style: TextStyle(fontSize: 14.sp)),
+        ],
+      ),
+    );
   }
 
   void showPreview() {
@@ -58,7 +119,7 @@ class ImageUpload extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Upload Image", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+        Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
         SizedBox(height: 10.h),
 
         GestureDetector(
@@ -70,7 +131,7 @@ class ImageUpload extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: imageError.value ? Colors.red : Colors.grey.shade400, // Border merah jika error
+                color: imageError.value ? Colors.red : Colors.grey.shade400,
                 width: 2,
               ),
             ),
@@ -85,22 +146,23 @@ class ImageUpload extends StatelessWidget {
 
         Obx(() => imageError.value
             ? Padding(
-          padding: EdgeInsets.only(top: 5.h),
+          padding: EdgeInsets.only(top: 4.h, left: 4.w),
           child: Text(
             "Image harus diisi!",
-            style: TextStyle(fontSize: 14.sp, color: Colors.red),
+            style: TextStyle(fontSize: 12.sp, color: Colors.red),
           ),
         )
             : SizedBox()),
 
         SizedBox(height: 10.h),
 
-        CustomButton(
-          text: "Take Photo",
-          color: const Color(0xFFFFA726),
-          onPressed: pickImage,
-          fontSize: 16.sp,
-        ),
+        if (showButton)
+          CustomButton(
+            text: "Upload Gambar",
+            backgroundColor: AppColor.btnoren,
+            onPressed: pickImage,
+            fontSize: 16.sp,
+          ),
       ],
     );
   }

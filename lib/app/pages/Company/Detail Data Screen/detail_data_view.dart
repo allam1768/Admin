@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../global component/app_bar.dart';
-  import 'detail_data_controller.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
+import 'detail_data_controller.dart';
 
   class DetailDataView extends StatelessWidget {
     const DetailDataView({super.key});
@@ -17,7 +18,7 @@ import '../../../global component/app_bar.dart';
     final controller = Get.find<DetailDataController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFDDDDDD),
+      backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

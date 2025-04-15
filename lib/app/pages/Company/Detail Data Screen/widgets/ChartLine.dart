@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LineChartWidget extends StatelessWidget {
   final List<FlSpot> data;
@@ -14,17 +15,17 @@ class LineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(30),
+      padding: EdgeInsets.all(22.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
+          SizedBox(height: 8.h),
           SizedBox(
-            height: 250,
+            height: 250.h,
             child: LineChart(
               LineChartData(
                 gridData: FlGridData(
@@ -32,7 +33,7 @@ class LineChartWidget extends StatelessWidget {
                   drawVerticalLine: false,
                   getDrawingHorizontalLine: (value) => FlLine(
                     color: Colors.grey.withOpacity(0.3),
-                    strokeWidth: 1,
+                    strokeWidth: 1.w,
                   ),
                 ),
                 titlesData: FlTitlesData(
@@ -48,22 +49,22 @@ class LineChartWidget extends StatelessWidget {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 22,
+                      reservedSize: 22.h,
                       getTitlesWidget: (value, meta) {
                         if (value % 1 == 0) {
                           return Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
+                            padding: EdgeInsets.only(top: 5.h),
                             child: Text(
                               'Week ${value.toInt()}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: 10.sp,
                               ),
                             ),
                           );
                         }
-                        return Container();
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
@@ -74,12 +75,15 @@ class LineChartWidget extends StatelessWidget {
                     spots: data,
                     isCurved: false,
                     color: primaryColor,
-                    barWidth: 4,
+                    barWidth: 3.w,
                     isStrokeCapRound: true,
                     belowBarData: BarAreaData(
                       show: true,
                       gradient: LinearGradient(
-                        colors: [primaryColor.withOpacity(0.3), Colors.transparent],
+                        colors: [
+                          primaryColor.withOpacity(0.3),
+                          Colors.transparent,
+                        ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -88,9 +92,9 @@ class LineChartWidget extends StatelessWidget {
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
-                          radius: 4,
+                          radius: 4.r,
                           color: primaryColor,
-                          strokeWidth: 2,
+                          strokeWidth: 2.w,
                           strokeColor: Colors.white,
                         );
                       },
