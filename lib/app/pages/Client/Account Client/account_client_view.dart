@@ -2,6 +2,7 @@ import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../global component/CustomAppBar.dart';
 import '../../Company/Detail History Screen/widgets/ButtonEdit&Delete.dart';
 import 'Widgets/InfoCard.dart';
@@ -89,9 +90,23 @@ class AccountClientView extends StatelessWidget {
                                 text: "Delete",
                                 icon: Icons.delete,
                                 color: Colors.red.shade700,
-                                onPressed: controller.deleteAccount,
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => ConfirmDeleteDialog(
+                                      onCancelTap: () {
+                                        Navigator.of(context).pop(); // Tutup dialog
+                                      },
+                                      onDeleteTap: () {
+                                        Navigator.of(context).pop(); // Tutup dialog dulu
+                                        controller.deleteAccount();   // Panggil delete
+                                      },
+                                    ),
+                                  );
+                                },
                               ),
                             ),
+
                           ],
                         ),
                       ],

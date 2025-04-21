@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../../Bottom Nav/bottomnav_controller.dart';
+
 class AccountClientController extends GetxController {
   final userName = "Wawan".obs;
   final userEmail = "abc@gmail.com".obs;
@@ -20,6 +22,7 @@ class AccountClientController extends GetxController {
   }
 
   void deleteAccount() {
-    print("Delete pressed");
+    Get.find<BottomNavController>().selectedIndex.value = 1;
+    Get.offNamed('/bottomnav');
   }
 }
