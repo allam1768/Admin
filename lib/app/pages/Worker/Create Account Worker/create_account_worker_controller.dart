@@ -1,10 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Bottom Nav/bottomnav_controller.dart';
@@ -12,7 +8,6 @@ import '../../Bottom Nav/bottomnav_controller.dart';
 class CreateAccountWorkerController extends GetxController {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
-  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -21,7 +16,6 @@ class CreateAccountWorkerController extends GetxController {
 
   var nameError = RxnString();
   var phoneError = RxnString();
-  var emailError = RxnString();
   var passwordError = RxnString();
   var confirmPasswordError = RxnString();
 
@@ -30,13 +24,11 @@ class CreateAccountWorkerController extends GetxController {
   void validateForm() {
     final name = nameController.text;
     final phone = phoneController.text;
-    final email = emailController.text;
     final password = passwordController.text;
     final confirmPassword = confirmPasswordController.text;
 
     nameError.value = name.isEmpty ? "Name harus diisi!" : null;
     phoneError.value = phone.isEmpty ? "Phone number harus diisi!" : null;
-    emailError.value = email.isEmpty ? "Email harus diisi!" : null;
     passwordError.value = password.isEmpty ? "Password harus diisi!" : null;
 
     if (confirmPassword.isEmpty) {
@@ -52,7 +44,6 @@ class CreateAccountWorkerController extends GetxController {
     if ([
       nameError.value,
       phoneError.value,
-      emailError.value,
       passwordError.value,
       confirmPasswordError.value,
     ].every((e) => e == null)) {
@@ -79,7 +70,6 @@ class CreateAccountWorkerController extends GetxController {
   void onClose() {
     nameController.dispose();
     phoneController.dispose();
-    emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.onClose();

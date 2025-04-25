@@ -43,9 +43,9 @@ import 'create_account_client_controller.dart';
                           children: [
   
                             Obx(() => CustomTextField(
-                              label: "Name",
-                              controller: controller.nameController,
-                              errorMessage: controller.nameError.value,
+                              label: "Username",
+                              controller: controller.usernameController,
+                              errorMessage: controller.usernameError.value,
                             )),
                             SizedBox(height: 15.h),
 
@@ -62,14 +62,6 @@ import 'create_account_client_controller.dart';
                               controller: controller.phoneController,
                               keyboardType: TextInputType.phone,
                               errorMessage: controller.phoneError.value,
-                            )),
-                            SizedBox(height: 15.h),
-  
-                            Obx(() => CustomTextField(
-                              label: "Email",
-                              controller: controller.emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              errorMessage: controller.emailError.value,
                             )),
                             SizedBox(height: 15.h),
   
