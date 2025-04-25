@@ -57,14 +57,7 @@ class CreateAccountWorkerView extends StatelessWidget {
                           )),
                           SizedBox(height: 15.h),
 
-                          Obx(() => CustomTextField(
-                            label: "Email",
-                            controller: controller.emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            errorMessage: controller.emailError.value,
-                          )),
-                          SizedBox(height: 15.h),
-
+                          
                           Obx(() => CustomTextField(
                             label: "Password",
                             controller: controller.passwordController,

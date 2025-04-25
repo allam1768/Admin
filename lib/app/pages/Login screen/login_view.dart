@@ -55,36 +55,34 @@ class LoginView extends StatelessWidget {
                 CustomTextField(
                   hintText: 'Username',
                   svgIcon: 'assets/icons/username.svg',
-                  controller: controller.usernameController,
+                  controller: controller.nameController,
                 ),
                 SizedBox(height: 16.h),
 
-                Obx(() => CustomTextField(
+                CustomTextField(
                   hintText: "Password",
                   svgIcon: 'assets/icons/password.svg',
                   controller: controller.passwordController,
                   isPassword: true,
-                  errorMessage: controller.passwordError.value,
-                  showErrorBorder: false,
-                )),
+                ),
                 SizedBox(height: 12.h),
 
                 Obx(() => Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: Center(
-                    child: Text(
-                      controller.loginError.value.isNotEmpty
-                          ? controller.loginError.value
-                          : ' ',
-                      style: TextStyle(
-                        color: controller.loginError.value.isNotEmpty
-                            ? Colors.red
-                            : Colors.transparent,
-                        fontSize: 14.sp,
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: Center(
+                        child: Text(
+                          controller.loginError.value.isNotEmpty
+                              ? controller.loginError.value
+                              : ' ',
+                          style: TextStyle(
+                            color: controller.loginError.value.isNotEmpty
+                                ? Colors.red
+                                : Colors.transparent,
+                            fontSize: 14.sp,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                )),
+                    )),
 
                 // Button Login
                 CustomButton(
