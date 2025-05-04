@@ -85,11 +85,13 @@ class LoginView extends StatelessWidget {
                     )),
 
                 // Button Login
-                CustomButton(
-                  text: 'Sign In',
-                  onPressed: controller.login,
-                  backgroundColor: AppColor.btnoren,
-                ),
+                Obx(() => CustomButton(
+                      text:
+                          controller.isLoading.value ? 'Loading...' : 'Sign In',
+                      onPressed:
+                           controller.login,
+                      backgroundColor: AppColor.btnoren,
+                    )),
               ],
             ),
           ),
