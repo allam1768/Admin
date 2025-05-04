@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/services/login_service.dart';
 import '../../../routes/routes.dart';
 
+final isLoading = false.obs;
+
 class LoginController extends GetxController {
   var isPasswordHidden = true.obs;
   var nameController = TextEditingController();
@@ -17,6 +19,7 @@ class LoginController extends GetxController {
   }
 
   void login() async {
+    isLoading.value = true;
     String name = nameController.text.trim();
     String password = passwordController.text.trim();
 
