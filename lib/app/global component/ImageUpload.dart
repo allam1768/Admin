@@ -123,7 +123,7 @@ class ImageUpload extends StatelessWidget {
         SizedBox(height: 10.h),
 
         GestureDetector(
-          onTap: () => imageFile.value != null ? showPreview() : pickImage(),
+          onTap: () => pickImage(), // langsung panggil pickImage tanpa preview
           child: Obx(() => Container(
             height: 150.h,
             width: double.infinity,
@@ -144,6 +144,7 @@ class ImageUpload extends StatelessWidget {
           )),
         ),
 
+
         Obx(() => imageError.value
             ? Padding(
           padding: EdgeInsets.only(top: 4.h, left: 4.w),
@@ -154,15 +155,6 @@ class ImageUpload extends StatelessWidget {
         )
             : SizedBox()),
 
-        SizedBox(height: 10.h),
-
-        if (showButton)
-          CustomButton(
-            text: "Upload Gambar",
-            backgroundColor: AppColor.btnoren,
-            onPressed: pickImage,
-            fontSize: 16.sp,
-          ),
       ],
     );
   }

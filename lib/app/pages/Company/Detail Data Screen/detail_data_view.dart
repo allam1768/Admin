@@ -77,11 +77,13 @@ import 'detail_data_controller.dart';
                       itemBuilder: (_, index) {
                         final item = controller.traps[index];
                         return ExpandableHistoryCard(
+                          toolName: item["name"],
                           imagePath: item["image"],
                           location: item["location"],
                           historyItems: List<Map<String, dynamic>>.from(item["history"]),
                           isExpanded: item["isExpanded"],
                           onTap: () => controller.toggleExpand(index),
+                          locationDetail: item["locationDetail"],
                         );
                       },
                     )),

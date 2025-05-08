@@ -4,45 +4,17 @@ import 'package:fl_chart/fl_chart.dart';
 class DetailDataController extends GetxController {
   var traps = <Map<String, dynamic>>[
     {
+      "name": "anjayyy",
       "image": "assets/images/example.png",
       "location": "Tenggara",
+      "locationDetail": "Tenggara",
       "history": [
         {"date": "2024-03-10", "count": 5},
         {"date": "2024-03-17", "count": 3},
       ],
       "isExpanded": false,
       "note": "".obs,
-    },
-    {
-      "image": "assets/images/example.png",
-      "location": "Barat",
-      "history": [
-        {"date": "2024-03-10", "count": 5},
-        {"date": "2024-03-17", "count": 3},
-      ],
-      "isExpanded": false,
-      "note": "".obs,
-    },
-    {
-      "image": "assets/images/example.png",
-      "location": "Selatan",
-      "history": [
-        {"date": "2024-03-10", "count": 5},
-        {"date": "2024-03-17", "count": 3},
-      ],
-      "isExpanded": false,
-      "note": "".obs,
-    },
-    {
-      "image": "assets/images/example.png",
-      "location": "Timur",
-      "history": [
-        {"date": "2024-03-12", "count": 2},
-        {"date": "2024-03-18", "count": 7},
-      ],
-      "isExpanded": false,
-      "note": "".obs,
-    },
+    }
   ].obs;
 
   var selectedMonth = 0.obs;

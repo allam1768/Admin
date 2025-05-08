@@ -48,61 +48,101 @@ class CreateQrToolView extends StatelessWidget {
                             onChanged: (value) => controller.name.value = value,
                             errorMessage: controller.nameError.value,
                             showErrorBorder: controller.showError.value,
-                            )),
+                          )),
                           SizedBox(height: 15.h),
 
                           Obx(() =>CustomTextField(
-                            label: "Area",
+                            label: "Lokasi",
                             onChanged: (value) => controller.area.value = value,
                             errorMessage: controller.areaError.value,
                             showErrorBorder: controller.showError.value,
                           )),
                           SizedBox(height: 15.h),
 
+                          Obx(() =>CustomTextField(
+                            label: "Detail lokasi",
+                            onChanged: (value) => controller.detail.value = value,
+                            errorMessage: controller.detailError.value,
+                            showErrorBorder: controller.showError.value,
+                          )),
+                          SizedBox(height: 15.h),
 
-                          Text(
-                            "Type",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 5.h),
 
-                          Obx(() => Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                    color: controller.showError.value && controller.selectedType.value == null
-                                        ? Colors.red
-                                        : const Color(0xFF275637),
-                                  ),
-                                ),
-                                child: DropdownMenu<String>(
-                                  enableSearch: false,
-                                  onSelected: (value) => controller.selectedType.value = value,
-                                  width: double.infinity,
-                                  dropdownMenuEntries: [
-                                    DropdownMenuEntry(value: 'Darat', label: 'Darat'),
-                                    DropdownMenuEntry(value: 'Terbang', label: 'Terbang'),
-                                  ],
+                              Text(
+                                "Type",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                  color: Colors.black,
                                 ),
                               ),
-                              if (controller.showError.value && controller.selectedType.value == null)
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5.h),
-                                  child: Text(
-                                    "Type harus dipilih!",
-                                    style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                              SizedBox(height: 8.h),
+                              Obx(() => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      border: Border.all(
+                                        color: controller.showError.value &&
+                                            controller.selectedType.value == null
+                                            ? Colors.red
+                                            : AppColor.btnijo,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: DropdownButtonFormField<String>(
+                                      value: controller.selectedType.value,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 14.h,
+                                          horizontal: 8.w,
+                                        ),
+                                        isDense: true,
+                                      ),
+                                      hint: Text(
+                                        "Pilih tipe...",
+                                        style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                                      ),
+                                      style: TextStyle(fontSize: 16.sp, color: Colors.black),
+                                      icon: Icon(Icons.arrow_drop_down),
+                                      onChanged: (value) {
+                                        controller.selectedType.value = value;
+                                        controller.showError.value = false;
+                                      },
+                                      items: const [
+                                        DropdownMenuItem(
+                                          value: 'Land',
+                                          child: Text('Darat'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 'Flying',
+                                          child: Text('Terbang'),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                  if (controller.showError.value &&
+                                      controller.selectedType.value == null)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 5.h, left: 4.w),
+                                      child: Text(
+                                        "Type harus dipilih!",
+                                        style: TextStyle(fontSize: 12.sp, color: Colors.red),
+                                      ),
+                                    ),
+                                ],
+                              )),
                             ],
-                          )),
+                          ),
+
+
 
                           SizedBox(height: 15.h),
 
@@ -111,11 +151,11 @@ class CreateQrToolView extends StatelessWidget {
                             imageError: controller.imageError,
                           ),
 
-                          SizedBox(height: 20.h),
+                          SizedBox(height: 50.h),
 
                           CustomButton(
                             text: "Create Qr",
-                            backgroundColor:AppColor.btnijo,
+                            backgroundColor:AppColor.btnoren,
                             onPressed: () {
                               controller.validateForm();
                             },

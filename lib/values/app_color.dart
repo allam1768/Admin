@@ -8,7 +8,7 @@ class AppColor {
   static const backgroundsetengah = Color(0xFFCCD7CD);
   static const btomnav = Color(0xFFA3B8A3);
   static const btnoren = Color(0xFFFFA726);
-  static const btnijo = Color(0xFF275637);
+  static const btnijo = Color(0xFF348925);
 
 
 }
