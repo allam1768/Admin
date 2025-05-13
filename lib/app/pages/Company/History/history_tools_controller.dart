@@ -30,6 +30,15 @@ class HistoryController extends GetxController {
       {"name": "Wawan", "date": "15.01.2023", "time": "13.00"},
       {"name": "Wawan", "date": "20.01.2023", "time": "14.00"},
       {"name": "Wawan", "date": "25.01.2023", "time": "15.00"},
+      {"name": "Wawan", "date": "05.02.2023", "time": "10.00"},
+      {"name": "Wawan", "date": "10.02.2023", "time": "11.00"},
+      {"name": "Wawan", "date": "20.02.2023", "time": "12.00"},
+      {"name": "Wawan", "date": "25.02.2023", "time": "13.00"},
+      {"name": "Wawan", "date": "05.03.2023", "time": "09.00"},
+      {"name": "Wawan", "date": "8.03.2023", "time": "09.00"},
+      {"name": "Wawan", "date": "9.03.2023", "time": "09.00"},
+      {"name": "Wawan", "date": "11.03.2023", "time": "09.00"},
+      {"name": "Wawan", "date": "10.6.2023", "time": "09.00"},
     ];
   }
 

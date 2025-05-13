@@ -54,7 +54,8 @@ class CompanyCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(10.w),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(10.r)),
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(10.r)),
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,

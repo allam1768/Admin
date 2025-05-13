@@ -14,18 +14,41 @@ class InfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // Biar mepet kanan kiri layar
+      width: double.infinity,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF97B999),
-        borderRadius: BorderRadius.circular(12.r),
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(15.r),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-          SizedBox(height: 4.h),
-          Text(content, style: TextStyle(fontSize: 16.sp)),
+          Row(
+            children: [
+              Icon(Icons.info_outline,
+                  size: 20.sp, color: Colors.grey.shade700),
+              SizedBox(width: 8.w),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            content,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.black,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.justify,
+          ),
         ],
       ),
     );
