@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import '../models/alat_model.dart';
 
 class AlatService {
-  static const String baseUrl = "https://8821-36-81-11-141.ngrok-free.app/api";
+  static const String baseUrl = "https://cb5b-36-65-191-209.ngrok-free.app/api";
 
   static Future<http.Response?> createAlat(AlatModel alat, File imageFile) async {
     try {

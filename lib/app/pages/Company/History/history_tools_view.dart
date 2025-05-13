@@ -1,3 +1,4 @@
+import 'package:admin/app/pages/Company/History/widgets/GroupHistoryCard.dart';
 import 'package:admin/app/pages/Company/History/widgets/SingleHistoryCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,40 +19,43 @@ class HistoryToolView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(
-              title: Get.arguments?['toolName'] ,
+              title: "History Tools",
+              // title: Get.arguments?['toolName'] ,
             ),
+            Expanded(
+              child: Obx(() {
+                var groupedHistory = controller.groupByMonth();
+                var sortedKeys = groupedHistory.keys.toList()
+                  ..sort((b, a) => a.compareTo(b));
 
+                return controller.historyData.isEmpty
+                    ? Center(
+                        child: Text(
+                          "Belum ada data",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    : ListView(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        children: sortedKeys.map((month) {
+                          var items = groupedHistory[month]!;
 
-            Obx(() {
-              var groupedHistory = controller.groupByMonth();
-              var sortedKeys = groupedHistory.keys.toList()
-                ..sort((b, a) => a.compareTo(b));
-
-              if (controller.historyData.isEmpty) {
-                return Expanded(
-                  child: Center(
-                    child: Text(
-                      "Belum ada data",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              return Expanded(
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w),
-                  children: sortedKeys.expand((month) {
-                    var items = groupedHistory[month]!;
-                    return items.map((item) => SingleHistoryCard(item: item));
-                  }).toList(),
-                ),
-              );
-            }),
+                          return (items.length >= 4)
+                              ? GroupedHistoryCard(month: month, items: items)
+                              : Column(
+                                  children: items
+                                      .map((item) =>
+                                          SingleHistoryCard(item: item))
+                                      .toList(),
+                                );
+                        }).toList(),
+                      );
+              }),
+            ),
           ],
         ),
       ),
