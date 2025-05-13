@@ -26,21 +26,37 @@ class DataClientView extends StatelessWidget {
               showBackButton: false,
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                child: Obx(() => ListView.separated(
-                  itemCount: controller.clients.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 20.h),
-                  itemBuilder: (_, index) {
-                    final clientData = controller.clients[index];
-                    return ClientCard(
-                      company: clientData["company"]!,
-                      client: clientData["client"]!,
-                      imagePath: clientData["imagePath"]!,
-                    );
-                  },
-                )),
-              ),
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return RefreshIndicator(
+                  onRefresh: controller.fetchClients,
+                  child: controller.clients.isEmpty
+                      ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      SizedBox(height: 100.h),
+                      Center(child: Text("Belum ada data client.")),
+                    ],
+                  )
+                      : ListView.separated(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 20.w, vertical: 20.h),
+                    itemCount: controller.clients.length,
+                    separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                    itemBuilder: (_, index) {
+                      final clientData = controller.clients[index];
+                      return ClientCard(
+                        company: clientData.company ?? "-",
+                        client: clientData.name,
+                        imagePath: clientData.image ?? "assets/images/example.png",
+                      );
+                    },
+                  ),
+                );
+              }),
             ),
           ],
         ),
