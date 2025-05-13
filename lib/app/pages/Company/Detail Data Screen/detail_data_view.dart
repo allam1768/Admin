@@ -1,5 +1,5 @@
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DataCard.dart';
-import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ExpandableHistoryCard.dart';
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ToolCard.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/MonthSlider.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/SummarySection.dart';
 import 'package:flutter/material.dart';
@@ -76,15 +76,17 @@ import 'detail_data_controller.dart';
                       separatorBuilder: (_, __) => SizedBox(height: 12.h),
                       itemBuilder: (_, index) {
                         final item = controller.traps[index];
-                        return ExpandableHistoryCard(
-                          toolName: item["name"],
-                          imagePath: item["image"],
-                          location: item["location"],
-                          historyItems: List<Map<String, dynamic>>.from(item["history"]),
-                          isExpanded: item["isExpanded"],
-                          onTap: () => controller.toggleExpand(index),
-                          locationDetail: item["locationDetail"],
+                        return ToolCard(
+                          toolName: item.namaAlat,
+                          imagePath: item.imagePath ?? "",
+                          location: item.lokasi,
+                          locationDetail: item.detail_lokasi,
+                          historyItems: [], // kosongin aja dulu kalau gak ada
+                          kondisi:item.kondisi,
+                          type: item.pestType,
+                          kodeQR: item.kodeQr,
                         );
+
                       },
                     )),
                     SizedBox(height: 25.h),

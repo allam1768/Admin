@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -7,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import '../models/alat_model.dart';
 
 class AlatService {
-  static const String baseUrl = "https://8aa7-36-81-11-141.ngrok-free.app/api";
+  static const String baseUrl = "https://8821-36-81-11-141.ngrok-free.app/api";
 
   static Future<http.Response?> createAlat(AlatModel alat, File imageFile) async {
     try {
@@ -35,6 +36,19 @@ class AlatService {
     } catch (e) {
       print('Error kirim ke API: $e');
       return null;
+    }
+  }
+
+  static Future<List<AlatModel>> fetchAlat() async {
+    final response = await http.get(Uri.parse('$baseUrl/alat'));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List dataList = jsonData['data'];
+
+      return dataList.map((json) => AlatModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Gagal mengambil data alat (${response.statusCode})');
     }
   }
 

@@ -3,30 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class ExpandableHistoryCard extends StatelessWidget {
+class ToolCard extends StatelessWidget {
   final String toolName;
   final String imagePath;
   final String location;
   final String locationDetail;
+  final String kondisi;
+  final String kodeQR;
+  final String type;
   final List<Map<String, dynamic>> historyItems;
-  final bool isExpanded;
-  final VoidCallback onTap;
 
-  const ExpandableHistoryCard({
+
+  const ToolCard({
     super.key,
     required this.toolName,
     required this.imagePath,
     required this.location,
     required this.locationDetail,
     required this.historyItems,
-    required this.isExpanded,
-    required this.onTap,
+    required this.kondisi,
+    required this.kodeQR,
+    required this.type,
   });
 
   @override
   Widget build(BuildContext context) {
-    String kondisi = historyItems.isNotEmpty ? historyItems.first['kondisi'] ?? '' : '';
-    Color statusColor = kondisi.toLowerCase() == 'baik' ? Colors.green : Colors.red;
+    String normalized = kondisi.trim().toLowerCase();
+    Color statusColor = normalized == 'good' ? Colors.green : Colors.red;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h),
@@ -39,11 +42,10 @@ class ExpandableHistoryCard extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Get.toNamed('/historytool', arguments: {
-                'location': location,
-                'imagePath': imagePath,
-                'historyItems': historyItems,
+                'toolName': toolName,
               });
             },
+
             child: Padding(
               padding: EdgeInsets.all(12.w),
               child: Column(
@@ -53,14 +55,21 @@ class ExpandableHistoryCard extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12.r),
-                        child: Image.asset(
+                        child: Image.network(
                           imagePath,
                           width: double.infinity,
                           height: 180.h,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/broken.png', // fallback image lokal
+                              width: double.infinity,
+                              height: 180.h,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
-
                       // Lingkaran status kondisi di kanan atas
                       Positioned(
                         top: 10.h,
@@ -71,11 +80,9 @@ class ExpandableHistoryCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: statusColor,
                             shape: BoxShape.circle,
-
                           ),
                         ),
                       ),
-
                       // Nama alat di atas gambar
                       Positioned(
                         top: 12.h,
@@ -99,7 +106,6 @@ class ExpandableHistoryCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 12.h),
-
                   // Lokasi dan more icon
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,8 +134,14 @@ class ExpandableHistoryCard extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           Get.toNamed('/detailtool', arguments: {
-                            'locationDetail': locationDetail,
+                            'toolName': toolName,
+                            'imagePath': imagePath,
                             'location': location,
+                            'locationDetail': locationDetail,
+                            'historyItems': historyItems,
+                            'kondisi': kondisi,
+                            'kodeQr': kodeQR,
+                            'pestType': type,
                           });
                         },
                         child: Icon(Icons.more_vert, size: 24.sp, color: Colors.black),
