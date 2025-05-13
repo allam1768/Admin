@@ -8,6 +8,8 @@ class CustomAppBar extends StatelessWidget {
   final String? rightIcon;
   final VoidCallback? rightOnTap;
   final bool showBackButton;
+  final double? rightIconWidth;
+  final double? rightIconHeight;
 
   const CustomAppBar({
     super.key,
@@ -15,6 +17,8 @@ class CustomAppBar extends StatelessWidget {
     this.rightIcon,
     this.rightOnTap,
     this.showBackButton = true,
+    this.rightIconWidth,
+    this.rightIconHeight,
   });
 
   @override
@@ -49,8 +53,8 @@ class CustomAppBar extends StatelessWidget {
                 padding: EdgeInsets.all(10.w),
                 child: SvgPicture.asset(
                   rightIcon!,
-                  width: 36.w,
-                  height: 36.h,
+                  width: rightIconWidth ?? 36.w,
+                  height: rightIconHeight ?? 36.h,
                 ),
               ),
             ),
