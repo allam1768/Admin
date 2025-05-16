@@ -14,8 +14,18 @@ class MonthSlider extends StatefulWidget {
 class _MonthSliderState extends State<MonthSlider> {
   final PageController _monthController = PageController(initialPage: 0);
   final List<String> months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ];
 
   int selectedMonth = 0;
@@ -24,9 +34,17 @@ class _MonthSliderState extends State<MonthSlider> {
   Widget build(BuildContext context) {
     return Container(
       height: 50.h,
+      margin: EdgeInsets.symmetric(vertical: 8.h),
       decoration: BoxDecoration(
-        color: AppColor.backgroundsetengah,
-        borderRadius: BorderRadius.circular(10.r),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -59,7 +77,8 @@ class _MonthSliderState extends State<MonthSlider> {
                 return Center(
                   child: Text(
                     months[index],
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
                 );
               },

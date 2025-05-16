@@ -1,38 +1,61 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:admin/values/app_color.dart';
 
 class LineChartWidget extends StatelessWidget {
   final List<FlSpot> data;
   final Color primaryColor;
+  final String title;
 
   const LineChartWidget({
     Key? key,
     required this.data,
-    this.primaryColor = Colors.blue,
+    required this.title,
+    this.primaryColor = AppColor.btnoren,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(22.w),
+      padding: EdgeInsets.all(16.w),
+      margin: EdgeInsets.symmetric(vertical: 8.h),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8.r),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 8.h),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 16.h),
           SizedBox(
             height: 250.h,
             child: LineChart(
               LineChartData(
                 gridData: FlGridData(
                   show: true,
-                  drawVerticalLine: false,
+                  drawVerticalLine: true,
                   getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.grey.withOpacity(0.15),
+                    strokeWidth: 1.w,
+                  ),
+                  getDrawingVerticalLine: (value) => FlLine(
+                    color: Colors.grey.withOpacity(0.15),
                     strokeWidth: 1.w,
                   ),
                 ),
@@ -81,9 +104,11 @@ class LineChartWidget extends StatelessWidget {
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          primaryColor.withOpacity(0.3),
+                          primaryColor.withOpacity(0.2),
+                          primaryColor.withOpacity(0.05),
                           Colors.transparent,
                         ],
+                        stops: const [0.1, 0.5, 0.9],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -92,12 +117,17 @@ class LineChartWidget extends StatelessWidget {
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
-                          radius: 4.r,
+                          radius: 5.r,
                           color: primaryColor,
-                          strokeWidth: 2.w,
+                          strokeWidth: 2.5.w,
                           strokeColor: Colors.white,
                         );
                       },
+                    ),
+                    shadow: Shadow(
+                      color: primaryColor.withOpacity(0.2),
+                      offset: const Offset(0, 3),
+                      blurRadius: 8,
                     ),
                   ),
                 ],

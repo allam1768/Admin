@@ -25,7 +25,10 @@ class DetailHistoryView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Nama tools"),
+            CustomAppBar(
+              title: "Nama tools",
+              onBackTap: () => Get.back(),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),

@@ -23,7 +23,7 @@ class DataWorkerView extends StatelessWidget {
               title: "Worker",
               rightIcon: "assets/icons/add_worker_btn.svg",
               rightOnTap: controller.goToCreateAccountWorker,
-              showBackButton: false,
+              showBackButton: false, onBackTap: () {  },
             ),
             Expanded(
               child: Padding(

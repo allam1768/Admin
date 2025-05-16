@@ -20,7 +20,10 @@ class EditAccountWorkerView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Edit Worker"),
+            CustomAppBar(
+              title: "Edit Worker",
+              onBackTap: () => Get.toNamed('/AccountWorker'),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

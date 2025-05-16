@@ -22,7 +22,7 @@ class DataCompanyView extends StatelessWidget {
             CustomAppBar(title: "Company",
                 showBackButton: false,
                 rightIcon: "",
-                rightOnTap: (){},
+                rightOnTap: (){}, onBackTap: () {  },
             ),
             Expanded(
               child: Padding(

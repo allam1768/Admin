@@ -21,7 +21,10 @@ class EditDataHistoryView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Edit Data"),
+            CustomAppBar(
+              title: "Edit Data",
+              onBackTap: () => Get.toNamed('/detailhistory'),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

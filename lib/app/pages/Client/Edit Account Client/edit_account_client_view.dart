@@ -21,7 +21,7 @@ class EditAccountClientView extends StatelessWidget {
     body: SafeArea(
       child: Column(
         children: [
-          CustomAppBar(title: "Edit Client"),
+          CustomAppBar(title: "Edit Client", onBackTap:() => Get.toNamed('/AccountClient'), ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(

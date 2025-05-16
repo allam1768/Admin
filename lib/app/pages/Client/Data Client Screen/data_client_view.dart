@@ -23,7 +23,7 @@ class DataClientView extends StatelessWidget {
               title: "Client",
               rightIcon: "assets/icons/add_client_btn.svg",
               rightOnTap: controller.goToCreateClient,
-              showBackButton: false,
+              showBackButton: false, onBackTap: () {  },
             ),
             Expanded(
               child: Obx(() {

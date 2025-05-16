@@ -20,7 +20,7 @@ import 'create_account_client_controller.dart';
         body: SafeArea(
           child: Column(
             children: [
-              CustomAppBar(title: "Create Client"),
+              CustomAppBar(title: "Create Client", onBackTap: () => Get.back(),),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
