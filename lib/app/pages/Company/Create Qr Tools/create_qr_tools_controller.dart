@@ -43,7 +43,8 @@ class CreateQrToolController extends GetxController {
       } else {
         imageFile.value = null;
         imageError.value = true;
-        Get.snackbar("Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
+        Get.snackbar(
+            "Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
       }
     }
   }
@@ -60,7 +61,8 @@ class CreateQrToolController extends GetxController {
       } else {
         imageFile.value = null;
         imageError.value = true;
-        Get.snackbar("Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
+        Get.snackbar(
+            "Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
       }
     }
   }
@@ -69,7 +71,8 @@ class CreateQrToolController extends GetxController {
   void validateForm() {
     nameError.value = name.value.isEmpty ? "Name harus diisi!" : null;
     areaError.value = area.value.isEmpty ? "Lokasi harus diisi!" : null;
-    detailError.value = detail.value.isEmpty? "Detail lokasi harus diisi!" :null;
+    detailError.value =
+        detail.value.isEmpty ? "Detail lokasi harus diisi!" : null;
     typeError.value = selectedType.value == null ? "Type harus dipilih!" : null;
     imageError.value = imageFile.value == null;
 
@@ -87,9 +90,11 @@ class CreateQrToolController extends GetxController {
   // Generate QR unik
   String generateUniqueQrCode() {
     const prefix = "Hmt-Tool-";
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const chars =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     final random = Random();
-    final randomCode = List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+    final randomCode =
+        List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
     return "$prefix$randomCode";
   }
 
@@ -107,6 +112,7 @@ class CreateQrToolController extends GetxController {
       pestType: selectedType.value!,
       kondisi: 'good',
       kodeQr: qrCode,
+      id: 0,
     );
 
     final response = await AlatService.createAlat(alat, image);
@@ -114,7 +120,8 @@ class CreateQrToolController extends GetxController {
     print("STATUS: ${response?.statusCode}");
     print("BODY: ${response?.body}");
 
-    if (response != null && (response.statusCode == 200 || response.statusCode == 201)) {
+    if (response != null &&
+        (response.statusCode == 200 || response.statusCode == 201)) {
       Get.off(() => QrToolView(qrData: qrCode))?.then((_) => _resetForm());
     } else {
       Get.snackbar("Gagal", "Gagal mengirim data ke server.");
@@ -125,7 +132,7 @@ class CreateQrToolController extends GetxController {
   void _resetForm() {
     name.value = "";
     area.value = "";
-    detail.value ="";
+    detail.value = "";
     selectedType.value = null;
     imageFile.value = null;
 

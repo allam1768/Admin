@@ -33,6 +33,11 @@ class AccountWorkerController extends GetxController {
     Get.offNamed('/bottomnav');
   }
 
+  void goToDashboard() {
+    Get.find<BottomNavController>().selectedIndex.value = 2;
+    Get.offNamed('/bottomnav'); // Ganti dengan nama screen yang ada bottom nav-nya
+  }
+
   void navigateToEditAccount() {
     Get.toNamed('/EditAccountWorker');
   }

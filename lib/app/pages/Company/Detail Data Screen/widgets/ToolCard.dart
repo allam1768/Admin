@@ -9,8 +9,8 @@ class ToolCard extends StatelessWidget {
   final String location;
   final String locationDetail;
   final String kondisi;
-  final String kodeQR;
-  final String type;
+  final String kode_qr;
+  final String pest_type;
   final List<Map<String, dynamic>> historyItems;
 
   const ToolCard({
@@ -21,8 +21,8 @@ class ToolCard extends StatelessWidget {
     required this.locationDetail,
     required this.historyItems,
     required this.kondisi,
-    required this.kodeQR,
-    required this.type,
+    required this.kode_qr,
+    required this.pest_type,
   });
 
   @override
@@ -48,7 +48,7 @@ class ToolCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
           onTap: () => Get.toNamed('/historytool', arguments: {
-            // 'toolName': toolName,
+            'toolName': toolName,
           }),
           child: Padding(
             padding: EdgeInsets.all(12.w),
@@ -74,7 +74,7 @@ class ToolCard extends StatelessWidget {
                         },
                       ),
                     ),
-                    // Status kondisi
+                    // Status kondisi (bulat)
                     Positioned(
                       top: 10.h,
                       right: 10.w,
@@ -111,9 +111,10 @@ class ToolCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 12.h),
-                // Lokasi dan detail
+                // Lokasi, detail & kondisi
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       flex: 3,
@@ -144,21 +145,44 @@ class ToolCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Text(
-                        kondisi.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: statusColor,
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: statusColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            kondisi.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600,
+                              color: statusColor,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 4.w),
+                        IconButton(
+                          icon: Icon(
+                            Icons.more_vert,
+                            size: 20.sp,
+                            color: Colors.grey.shade700,
+                          ),
+                          onPressed: () {
+                            Get.toNamed('/detailtool', arguments: {
+                              'toolName': toolName,
+                              'imagePath': imagePath,
+                              'location': location,
+                              'locationDetail': locationDetail,
+                              'kondisi': kondisi,
+                              'kodeQR': kode_qr,
+                              'type': pest_type,
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),

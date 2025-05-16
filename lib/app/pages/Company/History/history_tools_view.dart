@@ -19,8 +19,8 @@ class HistoryToolView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(
-              title: "History Tools",
-              // title: Get.arguments?['toolName'] ,
+              title: Get.arguments?['toolName'], 
+              onBackTap: () => Get.toNamed('/detaildata') ,
             ),
             Expanded(
               child: Obx(() {

@@ -25,8 +25,15 @@ class WorkerCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         decoration: BoxDecoration(
-          color: AppColor.btomnav,
-          borderRadius: BorderRadius.circular(8.r),
+          color: AppColor.ijomuda.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -35,8 +42,8 @@ class WorkerCard extends StatelessWidget {
               height: 60.r,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color:Color(0xFF275637), width: 2),
-                color: Colors.grey[400],
+                border: Border.all(color: AppColor.btnijo, width: 2),
+                color: Colors.white,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50.r),

@@ -21,7 +21,10 @@ class CreateQrCompanyView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Create Company"),
+            CustomAppBar(
+              title: "Create Company",
+              onBackTap: () => Get.toNamed('/CreateAccountClient'),
+            ),
 
             Expanded(
               child: SingleChildScrollView(

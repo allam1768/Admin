@@ -21,7 +21,10 @@ class DetailToolView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(title: "Detail"),
+            CustomAppBar(
+              title: "Detail",
+              onBackTap: () => Get.toNamed('/detaildata'),
+            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -30,7 +33,7 @@ class DetailToolView extends StatelessWidget {
                   children: [
                     // Gambar alat dengan border
                     Obx(
-                          () => Container(
+                      () => Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey, width: 2),
                           borderRadius: BorderRadius.circular(12.r),
@@ -42,6 +45,31 @@ class DetailToolView extends StatelessWidget {
                             width: double.infinity,
                             height: 180.h,
                             fit: BoxFit.cover,
+                            headers: {
+                              'ngrok-skip-browser-warning': '1',
+                            },
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: 180.h,
+                                color: Colors.grey[300],
+                                child: Icon(Icons.error_outline,
+                                    size: 50, color: Colors.grey[600]),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -59,35 +87,35 @@ class DetailToolView extends StatelessWidget {
                       child: Column(
                         children: [
                           Obx(() => InfoTile(
-                            icon: Icons.build,
-                            title: "Nama Alat",
-                            value: controller.namaAlat.value,
-                          )),
+                                icon: Icons.build,
+                                title: "Nama Alat",
+                                value: controller.namaAlat.value,
+                              )),
                           Obx(() => InfoTile(
-                            icon: Icons.location_on,
-                            title: "Lokasi",
-                            value: controller.lokasi.value,
-                          )),
+                                icon: Icons.location_on,
+                                title: "Lokasi",
+                                value: controller.lokasi.value,
+                              )),
                           Obx(() => InfoTile(
-                            icon: Icons.map,
-                            title: "Detail Lokasi",
-                            value: controller.detailLokasi.value,
-                          )),
+                                icon: Icons.map,
+                                title: "Detail Lokasi",
+                                value: controller.detailLokasi.value,
+                              )),
                           Obx(() => InfoTile(
-                            icon: Icons.info_outline,
-                            title: "Kondisi",
-                            value: controller.kondisi.value,
-                          )),
+                                icon: Icons.info_outline,
+                                title: "Kondisi",
+                                value: controller.kondisi.value,
+                              )),
                           Obx(() => InfoTile(
-                            icon: Icons.bug_report,
-                            title: "Pest Type",
-                            value: controller.pestType.value,
-                          )),
+                                icon: Icons.bug_report,
+                                title: "Pest Type",
+                                value: controller.pestType.value,
+                              )),
                           Obx(() => InfoTile(
-                            icon: Icons.qr_code,
-                            title: "Kode QR",
-                            value: controller.kodeQr.value,
-                          )),
+                                icon: Icons.qr_code,
+                                title: "Kode QR",
+                                value: controller.kodeQr.value,
+                              )),
                         ],
                       ),
                     ),
@@ -130,7 +158,8 @@ class DetailToolView extends StatelessWidget {
                                           Navigator.of(context).pop(),
                                       onDeleteTap: () {
                                         Navigator.of(context).pop();
-                                        controller.deleteTool();
+                                        controller
+                                            .deleteTool(controller.id.value);
                                       },
                                     ),
                                   );

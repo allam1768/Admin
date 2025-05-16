@@ -74,4 +74,9 @@ class CreateAccountWorkerController extends GetxController {
     confirmPasswordController.dispose();
     super.onClose();
   }
+
+  void goToDashboard() {
+    Get.find<BottomNavController>().selectedIndex.value = 2;
+    Get.offNamed('/bottomnav'); // Ganti dengan nama screen yang ada bottom nav-nya
+  }
 }

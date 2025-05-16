@@ -21,7 +21,10 @@ class CreateQrToolView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Create Qr"),
+            CustomAppBar(
+              title: "Create Qr",
+              onBackTap: () => Get.toNamed('/detaildata'),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
@@ -38,7 +41,6 @@ class CreateQrToolView extends StatelessWidget {
                     ),
 
                     Container(
-                      color: AppColor.backgroundsetengah,
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,13 +89,13 @@ class CreateQrToolView extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.r),
+                                      borderRadius: BorderRadius.circular(8.r),
                                       border: Border.all(
                                         color: controller.showError.value &&
                                             controller.selectedType.value == null
                                             ? Colors.red
-                                            : AppColor.btnijo,
-                                        width: 1.5,
+                                            : Color(0xFF275637),
+                                        width: 1.w,
                                       ),
                                     ),
                                     child: DropdownButtonFormField<String>(

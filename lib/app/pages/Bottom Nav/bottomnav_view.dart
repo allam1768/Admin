@@ -15,21 +15,23 @@ class BottomNavView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.background,
       body: Obx(
-        () => AnimatedSwitcher(
-          duration: Duration(milliseconds: 400),
+            () => AnimatedSwitcher(
+          duration: const Duration(milliseconds: 400),
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
           transitionBuilder: (child, animation) {
             return FadeTransition(
               opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: Offset(0.1, 0),
-                  end: Offset.zero,
-                ).animate(animation),
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.98, end: 1.0).animate(animation),
                 child: child,
               ),
             );
           },
-          child: controller.screens[controller.currentIndex.value],
+          child: KeyedSubtree(
+            key: ValueKey<int>(controller.currentIndex.value),
+            child: controller.screens[controller.currentIndex.value],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(
@@ -44,7 +46,7 @@ class BottomNavView extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 30,
-                offset: Offset(0, 10),
+                offset: const Offset(0, 10),
               ),
             ],
           ),
@@ -56,39 +58,50 @@ class BottomNavView extends StatelessWidget {
                 return GestureDetector(
                   onTap: () => controller.changeTab(index),
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     height: isActive ? 60.r : 50.r,
                     width: isActive ? 60.r : 50.r,
                     decoration: BoxDecoration(
                       gradient: isActive
                           ? LinearGradient(
-                              colors: [
-                                AppColor.oren.withOpacity(0.8),
-                                AppColor.oren,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
+                        colors: [
+                          AppColor.oren.withOpacity(0.8),
+                          AppColor.oren,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
                           : null,
                       color: isActive ? null : Colors.white,
                       borderRadius: BorderRadius.circular(15.r),
                       boxShadow: isActive
                           ? [
-                              BoxShadow(
-                                color: AppColor.oren.withOpacity(0.3),
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                                offset: Offset(0, 4),
-                              ),
-                            ]
+                        BoxShadow(
+                          color: AppColor.oren.withOpacity(0.3),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
                           : null,
                     ),
                     child: Center(
-                      child: SvgPicture.asset(
-                        controller.icons[index],
-                        color: isActive ? Colors.white : Colors.grey,
-                        width: isActive ? 24.w : 20.w,
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        transitionBuilder: (child, animation) => ScaleTransition(
+                          scale: animation,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        ),
+                        child: SvgPicture.asset(
+                          controller.icons[index],
+                          key: ValueKey<bool>(isActive),
+                          color: isActive ? Colors.white : Colors.grey,
+                          width: isActive ? 24.w : 20.w,
+                        ),
                       ),
                     ),
                   ),

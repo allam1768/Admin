@@ -1,4 +1,5 @@
 class AlatModel {
+  final int id;
   final String namaAlat;
   final String lokasi;
   final String detail_lokasi;
@@ -11,6 +12,7 @@ class AlatModel {
   List<Map<String, dynamic>> history; // 🔥 baru
 
   AlatModel({
+    required this.id,
     required this.namaAlat,
     required this.lokasi,
     required this.detail_lokasi,
@@ -24,6 +26,7 @@ class AlatModel {
 
   factory AlatModel.fromJson(Map<String, dynamic> json) {
     return AlatModel(
+      id: json['id'] ?? 0,
       namaAlat: json['nama_alat'] ?? '',
       lokasi: json['lokasi'] ?? '',
       detail_lokasi: json['detail_lokasi'] ?? '',
@@ -31,7 +34,7 @@ class AlatModel {
       kondisi: json['kondisi'] ?? '',
       kodeQr: json['kode_qr'] ?? '',
       imagePath: json['alat_image'] != null
-          ? "https://bfe1-36-81-11-141.ngrok-free.app/storage/${json['alat_image']}"
+          ? "https://dda4-160-22-25-46.ngrok-free.app/storage/${json['alat_image']}"
           : null,
       // kamu bisa isi ini kalau history ada dari API
       history: List<Map<String, dynamic>>.from(json['history'] ?? []),

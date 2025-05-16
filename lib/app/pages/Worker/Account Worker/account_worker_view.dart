@@ -23,7 +23,10 @@ class AccountWorkerView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // AppBar
-            CustomAppBar(title: "Detail"),
+            CustomAppBar(
+              title: "Detail",
+              onBackTap: controller.goToDashboard,
+            ),
 
             Expanded(
               child: Padding(

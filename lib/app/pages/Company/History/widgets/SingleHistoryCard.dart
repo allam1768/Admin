@@ -28,7 +28,14 @@ class SingleHistoryCard extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12.r),
-            onTap: () => Get.toNamed('/detailhistory'),
+            onTap: () => Get.toNamed(
+              '/detailhistory',
+              arguments: {
+                'tool_name': item['name'],
+
+              },
+            ),
+
             child: Container(
               padding: EdgeInsets.all(16.w),
               child: Row(

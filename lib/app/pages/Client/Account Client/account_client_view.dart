@@ -22,7 +22,7 @@ class AccountClientView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(title: "Detail"),
+            CustomAppBar(title: "Detail", onBackTap: () => Get.back(),),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),

@@ -23,7 +23,9 @@ import 'detail_data_controller.dart';
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(title: "Detail Data"),
+            CustomAppBar(
+              title: "Detail Data",
+              onBackTap:controller.goToDashboard,),
 
             Expanded(
               child: SingleChildScrollView(
@@ -83,8 +85,8 @@ import 'detail_data_controller.dart';
                           locationDetail: item.detail_lokasi,
                           historyItems: [], // kosongin aja dulu kalau gak ada
                           kondisi:item.kondisi,
-                          type: item.pestType,
-                          kodeQR: item.kodeQr,
+                          pest_type: item.pestType,
+                          kode_qr: item.kodeQr,
                         );
 
                       },
