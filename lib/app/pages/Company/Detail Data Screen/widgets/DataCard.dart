@@ -73,11 +73,10 @@ class _DataCardState extends State<DataCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              SizedBox(height: 20.h),
               LineChartWidget(
                 data: widget.chartData,
-                primaryColor: Colors.blue,
-                title: 'asdada',
+                primaryColor: widget.color ?? Colors.blue,
+                title: widget.title,
               ),
               SizedBox(height: 20.h),
               CustomTextField(
@@ -105,7 +104,7 @@ class _DataCardState extends State<DataCard> {
                   onPressed: _handleSave,
                   style: ElevatedButton.styleFrom(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                     backgroundColor: AppColor.btnoren,
                     elevation: 2,
                     shape: RoundedRectangleBorder(

@@ -22,21 +22,16 @@ class EditAccountWorkerView extends StatelessWidget {
           children: [
             CustomAppBar(
               title: "Edit Worker",
-              onBackTap: () => Get.toNamed('/AccountWorker'),
+              onBackTap: () => Get.offNamed('/AccountWorker'),
             ),
-            Expanded(
-              child: SingleChildScrollView(
+
+               SingleChildScrollView(
                 child: Column(
                   children: [
                     SizedBox(height: 20.h),
                     ImageProfile(profileImage: controller.profileImage),
                     SizedBox(height: 25.h),
                     Container(
-                      width: double.infinity,
-                      constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height - 180.h, // Sesuaikan dengan tinggi layar
-                      ),
-                      color: AppColor.backgroundsetengah,
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,21 +75,20 @@ class EditAccountWorkerView extends StatelessWidget {
                           ),
 
 
-                          SizedBox(height: 30.h),
+                          SizedBox(height: 50.h),
                           CustomButton(
                             text: "Save",
-                            backgroundColor: AppColor.btnijo,
+                            backgroundColor: AppColor.btnoren,
                             onPressed: controller.validateForm,
                             fontSize: 16,
                           ),
-                          SizedBox(height: 50.h),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
+
           ],
         ),
       ),

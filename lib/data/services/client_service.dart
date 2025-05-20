@@ -4,7 +4,7 @@ import '../models/client_model.dart';
 
 class ClientService {
   static const String baseUrl =
-      'https://dda4-160-22-25-46.ngrok-free.app/api/clients';
+      'https://hamatech.rplrus.com/api/clients';
 
   static Future<List<ClientModel>> fetchClients() async {
     final response = await http.get(

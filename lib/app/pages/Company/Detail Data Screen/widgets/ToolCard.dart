@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../../../data/models/alat_model.dart';
+import '../detail_data_controller.dart';
+
 class ToolCard extends StatelessWidget {
   final String toolName;
   final String imagePath;
@@ -47,7 +50,7 @@ class ToolCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
-          onTap: () => Get.toNamed('/historytool', arguments: {
+          onTap: () => Get.offNamed('/historytool', arguments: {
             'toolName': toolName,
           }),
           child: Padding(
@@ -64,7 +67,11 @@ class ToolCard extends StatelessWidget {
                         width: double.infinity,
                         height: 180.h,
                         fit: BoxFit.cover,
+                        headers: {
+                          'ngrok-skip-browser-warning': '1',
+                        },
                         errorBuilder: (context, error, stackTrace) {
+                          print('Error loading image: $error');
                           return Image.asset(
                             'assets/images/broken.png',
                             width: double.infinity,
@@ -171,17 +178,44 @@ class ToolCard extends StatelessWidget {
                             color: Colors.grey.shade700,
                           ),
                           onPressed: () {
-                            Get.toNamed('/detailtool', arguments: {
-                              'toolName': toolName,
-                              'imagePath': imagePath,
-                              'location': location,
-                              'locationDetail': locationDetail,
-                              'kondisi': kondisi,
-                              'kodeQR': kode_qr,
-                              'type': pest_type,
-                            });
+                            final item = Get.find<DetailDataController>()
+                                .traps
+                                .firstWhere(
+                                  (trap) =>
+                                      trap.namaAlat == toolName &&
+                                      trap.lokasi == location,
+                                  orElse: () => AlatModel(
+                                      id: 0,
+                                      namaAlat: '',
+                                      lokasi: '',
+                                      pestType: '',
+                                      kondisi: '',
+                                      kodeQr: '',
+                                      detailLokasi: ''),
+                                );
+
+                            if (item.id > 0) {
+                              Get.toNamed('/detailtool', arguments: {
+                                'id': item.id,
+                                'toolName': toolName,
+                                'imagePath': imagePath,
+                                'location': location,
+                                'locationDetail': locationDetail,
+                                'kondisi': kondisi,
+                                'kodeQr': kode_qr,
+                                'pestType': pest_type,
+                              });
+                            } else {
+                              Get.snackbar(
+                                'Error',
+                                'Data alat tidak ditemukan',
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                            }
                           },
-                        ),
+                        )
                       ],
                     ),
                   ],

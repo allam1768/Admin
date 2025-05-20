@@ -4,20 +4,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'CustomButton.dart'; // tombol custom lu
-import '../../values/app_color.dart'; // warna project lu
+import 'CustomButton.dart'; // tombol custom kamu
+import '../../values/app_color.dart'; // warna dari project kamu
 
 class ImageUpload extends StatelessWidget {
   final Rx<File?> imageFile;
-  final RxBool imageError;
+  final RxBool? imageError; // opsional sekarang
   final String title;
   final bool showButton;
+  final String? imageUrl;
 
   ImageUpload({
     required this.imageFile,
-    required this.imageError,
+    this.imageError, // nggak wajib
     this.title = "Upload Image",
     this.showButton = true,
+    this.imageUrl,
   });
 
   Future<void> pickImage() async {
@@ -42,18 +44,20 @@ class ImageUpload extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildPickButton(Icons.camera_alt, "Camera", () async {
-                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                  final pickedFile =
+                      await picker.pickImage(source: ImageSource.camera);
                   if (pickedFile != null) {
                     imageFile.value = File(pickedFile.path);
-                    imageError.value = false;
+                    imageError?.value = false;
                     Get.back();
                   }
                 }),
                 _buildPickButton(Icons.image, "Gallery", () async {
-                  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                  final pickedFile =
+                      await picker.pickImage(source: ImageSource.gallery);
                   if (pickedFile != null) {
                     imageFile.value = File(pickedFile.path);
-                    imageError.value = false;
+                    imageError?.value = false;
                     Get.back();
                   }
                 }),
@@ -119,42 +123,86 @@ class ImageUpload extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+        Text(title,
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
         SizedBox(height: 10.h),
-
         GestureDetector(
-          onTap: () => pickImage(), // langsung panggil pickImage tanpa preview
-          child: Obx(() => Container(
+          onTap: () => pickImage(),
+          child: Container(
             height: 150.h,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: imageError.value ? Colors.red : Colors.grey.shade400,
+                color: imageError?.value == true
+                    ? Colors.red
+                    : Colors.grey.shade400,
                 width: 2,
               ),
             ),
-            child: imageFile.value != null
+            child: Obx(() => imageFile.value != null
                 ? ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: Image.file(imageFile.value!, fit: BoxFit.cover),
-            )
-                : Icon(Icons.camera_alt, size: 50, color: Colors.grey),
-          )),
-        ),
-
-
-        Obx(() => imageError.value
-            ? Padding(
-          padding: EdgeInsets.only(top: 4.h, left: 4.w),
-          child: Text(
-            "Image harus diisi!",
-            style: TextStyle(fontSize: 12.sp, color: Colors.red),
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: Image.file(imageFile.value!, fit: BoxFit.cover),
+                  )
+                : imageUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10.r),
+                        child: Image.network(
+                          imageUrl!.trim().replaceAll(' ', ''),
+                          fit: BoxFit.cover,
+                          headers: {
+                            'Accept': 'image/*',
+                            'ngrok-skip-browser-warning': '1',
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.error_outline, color: Colors.red),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Gambar tidak tersedia',
+                                  style: TextStyle(color: Colors.red),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  'Coba refresh halaman',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : Icon(Icons.camera_alt, size: 50, color: Colors.grey)),
           ),
-        )
-            : SizedBox()),
-
+        ),
+        if (imageError != null)
+          Obx(() => imageError!.value
+              ? Padding(
+                  padding: EdgeInsets.only(top: 4.h, left: 4.w),
+                  child: Text(
+                    'Gambar harus diisi',
+                    style: TextStyle(color: Colors.red, fontSize: 12.sp),
+                  ),
+                )
+              : SizedBox()),
       ],
     );
   }
