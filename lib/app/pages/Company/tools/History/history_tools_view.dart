@@ -1,10 +1,10 @@
-import 'package:admin/app/pages/Company/History/widgets/GroupHistoryCard.dart';
-import 'package:admin/app/pages/Company/History/widgets/SingleHistoryCard.dart';
+import 'package:admin/app/pages/Company/tools/History/widgets/GroupHistoryCard.dart';
+import 'package:admin/app/pages/Company/tools/History/widgets/SingleHistoryCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../values/app_color.dart';
-import '../../../global component/CustomAppBar.dart';
+import '../../../../../values/app_color.dart';
+import '../../../../global component/CustomAppBar.dart';
 import 'history_tools_controller.dart';
 
 class HistoryToolView extends StatelessWidget {

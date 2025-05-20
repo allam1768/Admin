@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../values/app_color.dart';
-import '../../../global component/CustomButton.dart';
+import '../../../../../values/app_color.dart';
+import '../../../../global component/CustomButton.dart';
 import 'qr_tool_controller.dart';
 
 class QrToolView extends StatelessWidget {

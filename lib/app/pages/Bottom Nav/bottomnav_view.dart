@@ -15,7 +15,7 @@ class BottomNavView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.background,
       body: Obx(
-            () => AnimatedSwitcher(
+        () => AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           switchInCurve: Curves.easeInOut,
           switchOutCurve: Curves.easeInOut,
@@ -65,31 +65,32 @@ class BottomNavView extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: isActive
                           ? LinearGradient(
-                        colors: [
-                          AppColor.oren.withOpacity(0.8),
-                          AppColor.oren,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
+                              colors: [
+                                AppColor.oren.withOpacity(0.8),
+                                AppColor.oren,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
                           : null,
                       color: isActive ? null : Colors.white,
                       borderRadius: BorderRadius.circular(15.r),
                       boxShadow: isActive
                           ? [
-                        BoxShadow(
-                          color: AppColor.oren.withOpacity(0.3),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 4),
-                        ),
-                      ]
+                              BoxShadow(
+                                color: AppColor.oren.withOpacity(0.3),
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
                           : null,
                     ),
                     child: Center(
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) => ScaleTransition(
+                        transitionBuilder: (child, animation) =>
+                            ScaleTransition(
                           scale: animation,
                           child: FadeTransition(
                             opacity: animation,

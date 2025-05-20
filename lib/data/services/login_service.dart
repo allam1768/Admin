@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../../data/models/LoginResponse_model.dart';
 
 class LoginService {
-  static const String baseUrl = 'https://dda4-160-22-25-46.ngrok-free.app/api';
+  static const String baseUrl = 'https://hamatech.rplrus.com/api';
 
   static Future<LoginResponseModel> login({
     required String name,

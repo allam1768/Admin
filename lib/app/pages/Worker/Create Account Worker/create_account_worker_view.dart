@@ -30,17 +30,10 @@ class CreateAccountWorkerView extends StatelessWidget {
                   children: [
                     SizedBox(height: 20.h),
                     ImageProfile(profileImage: controller.profileImage),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 70.h),
 
                     Container(
-                      width: double.infinity,
-                      constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height - 200.h, // Dynamic Height
-                      ),
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
-                      decoration: BoxDecoration(
-                        color: AppColor.backgroundsetengah,
-                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -75,11 +68,11 @@ class CreateAccountWorkerView extends StatelessWidget {
                             isPassword: true,
                             errorMessage: controller.confirmPasswordError.value,
                           )),
-                          SizedBox(height: 40.h),
+                          SizedBox(height: 60.h),
 
                           CustomButton(
                             text: "Save",
-                            backgroundColor:AppColor.btnijo,
+                            backgroundColor:AppColor.btnoren,
                             onPressed: controller.validateForm,
                             fontSize: 16,
                           ),

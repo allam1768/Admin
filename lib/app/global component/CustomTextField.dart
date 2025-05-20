@@ -6,27 +6,32 @@ class CustomTextField extends StatefulWidget {
   final String? label;
   final String? hintText;
   final TextEditingController? controller;
+  final String? initialValue;
   final bool isPassword;
   final bool isNumber;
   final TextInputType? keyboardType;
   final String? errorMessage;
   final String? svgIcon;
   final Function(String)? onChanged;
-  final bool showErrorBorder; // NEW PARAMETER
+  final bool showErrorBorder;
 
   const CustomTextField({
     super.key,
     this.label,
     this.hintText,
     this.controller,
+    this.initialValue,
     this.isPassword = false,
     this.isNumber = false,
     this.keyboardType,
     this.errorMessage,
     this.svgIcon,
     this.onChanged,
-    this.showErrorBorder = true, // DEFAULT TRUE
-  });
+    this.showErrorBorder = true,
+  }) : assert(
+  controller == null || initialValue == null,
+  'Gunakan salah satu: controller atau initialValue, bukan keduanya.',
+  );
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -34,6 +39,16 @@ class CustomTextField extends StatefulWidget {
 
 class _CustomTextFieldState extends State<CustomTextField> {
   bool _isPasswordHidden = true;
+  late final TextEditingController _internalController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.controller == null) {
+      _internalController = TextEditingController(text: widget.initialValue ?? '');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +73,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         SizedBox(
           height: 48.h,
           child: TextField(
-            controller: widget.controller,
+            controller: widget.controller ?? _internalController,
             obscureText: widget.isPassword ? _isPasswordHidden : false,
-            keyboardType: widget.keyboardType ?? (widget.isNumber ? TextInputType.number : TextInputType.text),
+            keyboardType: widget.keyboardType ??
+                (widget.isNumber ? TextInputType.number : TextInputType.text),
             style: TextStyle(fontSize: 15.sp, color: Colors.black),
             onChanged: widget.onChanged,
             decoration: InputDecoration(
@@ -68,7 +84,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
               hintStyle: TextStyle(fontSize: 15.sp, color: Colors.grey),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+              contentPadding:
+              EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
               prefixIcon: widget.svgIcon != null
                   ? Padding(
                 padding: EdgeInsets.all(12.w),

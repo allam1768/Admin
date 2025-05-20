@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../data/models/alat_model.dart';
-import '../../../../data/services/alat_service.dart';
+import '../../../../../data/models/alat_model.dart';
+import '../../../../../data/services/alat_service.dart';
 import '../Qr Tool Screen/qr_tool_view.dart';
 
 class CreateQrToolController extends GetxController {
@@ -11,6 +11,7 @@ class CreateQrToolController extends GetxController {
   RxString name = "".obs;
   RxString area = "".obs;
   RxString detail = "".obs;
+  RxBool isLoading = false.obs;
   var selectedType = Rxn<String>();
 
   // Error states
@@ -31,41 +32,57 @@ class CreateQrToolController extends GetxController {
     return validExtensions.contains(extension);
   }
 
-  // Ambil dari kamera
+  bool isFileSizeValid(File file, {int maxSizeInMB = 2}) {
+    final maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+    return file.lengthSync() <= maxSizeInBytes;
+  }
+
+
   Future<void> takePicture() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
-      if (isValidImageFormat(pickedFile.path)) {
-        imageFile.value = File(pickedFile.path);
-        imageError.value = false;
-      } else {
+      final file = File(pickedFile.path);
+
+      if (!isValidImageFormat(file.path)) {
         imageFile.value = null;
         imageError.value = true;
-        Get.snackbar(
-            "Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
+        Get.snackbar("Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
+      } else if (!isFileSizeValid(file)) {
+        imageFile.value = null;
+        imageError.value = true;
+        Get.snackbar("Ukuran Terlalu Besar", "Gambar tidak boleh lebih dari 2MB.");
+      } else {
+        imageFile.value = file;
+        imageError.value = false;
       }
     }
   }
 
-  // Ambil dari galeri
+
   Future<void> pickFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      if (isValidImageFormat(pickedFile.path)) {
-        imageFile.value = File(pickedFile.path);
-        imageError.value = false;
-      } else {
+      final file = File(pickedFile.path);
+
+      if (!isValidImageFormat(file.path)) {
         imageFile.value = null;
         imageError.value = true;
-        Get.snackbar(
-            "Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
+        Get.snackbar("Format Tidak Didukung", "Gambar harus jpg, jpeg, atau png.");
+      } else if (!isFileSizeValid(file)) {
+        imageFile.value = null;
+        imageError.value = true;
+        Get.snackbar("Ukuran Terlalu Besar", "Gambar tidak boleh lebih dari 2MB.");
+      } else {
+        imageFile.value = file;
+        imageError.value = false;
       }
     }
   }
+
 
   // Validasi form
   void validateForm() {
@@ -103,12 +120,14 @@ class CreateQrToolController extends GetxController {
     final image = imageFile.value;
     if (image == null) return;
 
+    isLoading.value = true;
+
     final qrCode = generateUniqueQrCode();
 
     final alat = AlatModel(
       namaAlat: name.value,
       lokasi: area.value,
-      detail_lokasi: detail.value,
+      detailLokasi: detail.value,
       pestType: selectedType.value!,
       kondisi: 'good',
       kodeQr: qrCode,
@@ -117,8 +136,7 @@ class CreateQrToolController extends GetxController {
 
     final response = await AlatService.createAlat(alat, image);
 
-    print("STATUS: ${response?.statusCode}");
-    print("BODY: ${response?.body}");
+    isLoading.value = false;
 
     if (response != null &&
         (response.statusCode == 200 || response.statusCode == 201)) {
@@ -127,6 +145,7 @@ class CreateQrToolController extends GetxController {
       Get.snackbar("Gagal", "Gagal mengirim data ke server.");
     }
   }
+
 
   // Reset form
   void _resetForm() {

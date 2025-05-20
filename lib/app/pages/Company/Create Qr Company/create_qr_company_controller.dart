@@ -10,13 +10,11 @@ class CreateQrCompanyController extends GetxController {
   RxString address = "".obs;
   RxString phoneNumber = "".obs;
   RxString email = "".obs;
-  RxString industry = "".obs;
 
   RxString nameError = "".obs;
   RxString addressError = "".obs;
   RxString phoneError = "".obs;
   RxString emailError = "".obs;
-  RxString industryError = "".obs;
   RxBool imageError = false.obs;
 
   Rx<File?> imageFile = Rx<File?>(null);
@@ -38,19 +36,17 @@ class CreateQrCompanyController extends GetxController {
     addressError.value = address.value.isEmpty ? "Address Company harus diisi!" : "";
     phoneError.value = phoneNumber.value.isEmpty ? "Phone number harus diisi!" : "";
     emailError.value = email.value.isEmpty ? "Email Company harus diisi!" : "";
-    industryError.value = industry.value.isEmpty ? "Industry harus diisi!" : "";
 
     if (nameError.value.isNotEmpty ||
         addressError.value.isNotEmpty ||
         phoneError.value.isNotEmpty ||
-        emailError.value.isNotEmpty ||
-        industryError.value.isNotEmpty) {
+        emailError.value.isNotEmpty ) {
       isValid = false;
     }
 
     if (isValid) {
       String qrContent =
-          "Company- name: ${name.value}, address: ${address.value}, phone: ${phoneNumber.value}, email: ${email.value}, industry: ${industry.value}";
+          "Hmt-Company: ${name.value}, address: ${address.value}, phone: ${phoneNumber.value}, email: ${email.value}, }";
 
       Get.off(() => QrCompanyView(qrData: qrContent));
     }
