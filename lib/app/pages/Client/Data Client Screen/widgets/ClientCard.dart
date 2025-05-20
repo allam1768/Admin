@@ -41,7 +41,7 @@ class ClientCard extends StatelessWidget {
               height: 60.r,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColor.btnijo, width: 2),
+                border: Border.all(color: Color(0xFF275637), width: 2),
                 color: Colors.white,
               ),
               child: ClipRRect(
