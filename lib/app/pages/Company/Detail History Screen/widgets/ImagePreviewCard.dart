@@ -25,12 +25,20 @@ class ImagePreviewCard extends StatelessWidget {
           borderRadius:
               BorderRadius.circular(MediaQuery.of(context).size.width * 0.025),
           image: DecorationImage(
-            image: AssetImage(imageUrl),
+            image: _getImageProvider(imageUrl),
             fit: BoxFit.cover,
           ),
         ),
       ),
     );
+  }
+
+  ImageProvider _getImageProvider(String url) {
+    if (url.startsWith('http')) {
+      return NetworkImage(url);
+    } else {
+      return AssetImage(url);
+    }
   }
 
   void _showImagePreview(BuildContext context, String imageUrl) {
@@ -43,10 +51,38 @@ class ImagePreviewCard extends StatelessWidget {
         child: ClipRRect(
           borderRadius:
               BorderRadius.circular(MediaQuery.of(context).size.width * 0.025),
-          child: Image.asset(
-            imageUrl,
-            fit: BoxFit.cover,
-          ),
+          child: imageUrl.startsWith('http')
+              ? Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 64,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Image.asset(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                ),
         ),
       ),
       barrierDismissible: true,

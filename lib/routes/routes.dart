@@ -108,8 +108,8 @@ class Routes {
     ),
     GetPage(
       name: Routes.detailHistory,
-      page: () => DetailHistoryView(),
-      binding: DetailHistoryBinding(),
+      page: () => DetailView(),
+      binding: DetailBinding(),
     ),
     GetPage(
       name: Routes.editDataHistory,

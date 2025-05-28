@@ -7,7 +7,7 @@ import '../../../../../values/app_color.dart';
 import '../../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../../global component/CustomAppBar.dart';
 import '../../../Client/Account Client/Widgets/InfoTile.dart';
-import '../../Detail History Screen/widgets/ButtonEdit&Delete.dart';
+import '../../../../global component/ButtonEdit&Delete.dart';
 import 'Detail_Tool_controller.dart';
 
 class DetailToolView extends StatelessWidget {
