@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../global component/CustomAppBar.dart';
 import '../../Client/Account Client/Widgets/InfoTile.dart';
-import '../../Company/Detail History Screen/widgets/ButtonEdit&Delete.dart';
+import '../../../global component/ButtonEdit&Delete.dart';
 import 'Widgets/InfoCard.dart';
 import 'account_worker_controller.dart';
 
