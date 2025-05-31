@@ -45,7 +45,8 @@ class DataWorkerView extends StatelessWidget {
                   return RefreshIndicator(
                     onRefresh: controller.fetchWorkers,
                     child: ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
+                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      padding: EdgeInsets.zero,
                       itemCount: controller.workers.length,
                       separatorBuilder: (_, __) => SizedBox(height: 20.h),
                       itemBuilder: (_, index) {
@@ -53,8 +54,7 @@ class DataWorkerView extends StatelessWidget {
                         return WorkerCard(
                           nokaryawan: worker.id.toString(),
                           name: worker.name,
-                          imagePath:
-                              worker.image ?? 'assets/images/example.png',
+                          imagePath: worker.image ?? 'assets/images/example.png',
                         );
                       },
                     ),

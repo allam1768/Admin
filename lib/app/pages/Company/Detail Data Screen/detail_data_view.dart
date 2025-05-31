@@ -91,6 +91,7 @@ class DetailDataView extends StatelessWidget {
                                 kondisi: item.kondisi,
                                 pest_type: item.pestType,
                                 kode_qr: item.kodeQr,
+                                alatId: item.id.toString(),
                               );
                             },
                           )),

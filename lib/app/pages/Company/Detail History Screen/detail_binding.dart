@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'detail_controller.dart';
 
-class DetailHistoryBinding extends Bindings {
+class DetailBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DetailHistoryController>(() => DetailHistoryController());
+    Get.lazyPut<DetailController>(() => DetailController());
   }
 }

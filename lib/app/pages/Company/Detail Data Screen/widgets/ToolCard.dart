@@ -14,6 +14,7 @@ class ToolCard extends StatelessWidget {
   final String kondisi;
   final String kode_qr;
   final String pest_type;
+  final String alatId; // Added from second version
   final List<Map<String, dynamic>> historyItems;
 
   const ToolCard({
@@ -26,6 +27,7 @@ class ToolCard extends StatelessWidget {
     required this.kondisi,
     required this.kode_qr,
     required this.pest_type,
+    required this.alatId, // Added parameter
   });
 
   @override
@@ -50,8 +52,11 @@ class ToolCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
-          onTap: () => Get.offNamed('/historytool', arguments: {
+          onTap: () => Get.toNamed('/historytool', arguments: {
+            'alatId': alatId, // Using alatId from second version
             'toolName': toolName,
+            'location': location,
+            'locationDetail': locationDetail,
           }),
           child: Padding(
             padding: EdgeInsets.all(12.w),
@@ -182,17 +187,17 @@ class ToolCard extends StatelessWidget {
                                 .traps
                                 .firstWhere(
                                   (trap) =>
-                                      trap.namaAlat == toolName &&
-                                      trap.lokasi == location,
-                                  orElse: () => AlatModel(
-                                      id: 0,
-                                      namaAlat: '',
-                                      lokasi: '',
-                                      pestType: '',
-                                      kondisi: '',
-                                      kodeQr: '',
-                                      detailLokasi: ''),
-                                );
+                              trap.namaAlat == toolName &&
+                                  trap.lokasi == location,
+                              orElse: () => AlatModel(
+                                  id: 0,
+                                  namaAlat: '',
+                                  lokasi: '',
+                                  pestType: '',
+                                  kondisi: '',
+                                  kodeQr: '',
+                                  detailLokasi: ''),
+                            );
 
                             if (item.id > 0) {
                               Get.toNamed('/detailtool', arguments: {
@@ -204,6 +209,7 @@ class ToolCard extends StatelessWidget {
                                 'kondisi': kondisi,
                                 'kodeQr': kode_qr,
                                 'pestType': pest_type,
+                                'alatId': alatId, // Added alatId to arguments
                               });
                             } else {
                               Get.snackbar(
