@@ -38,69 +38,67 @@ class CreateAccountWorkerView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Obx(() => CustomTextField(
-                                label: "Name",
-                                controller: controller.nameController,
-                                errorMessage: controller.nameError.value,
-                              )),
+                            label: "Name",
+                            controller: controller.nameController,
+                            errorMessage: controller.nameError.value,
+                          )),
                           SizedBox(height: 15.h),
 
                           Obx(() => CustomTextField(
-                                label: "Email",
-                                controller: controller.emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                errorMessage: controller.emailError.value,
-                              )),
+                            label: "Email",
+                            controller: controller.emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            errorMessage: controller.emailError.value,
+                          )),
                           SizedBox(height: 15.h),
 
                           Obx(() => CustomTextField(
-                                label: "Phone Number",
-                                controller: controller.phoneController,
-                                keyboardType: TextInputType.phone,
-                                errorMessage: controller.phoneError.value,
-                              )),
+                            label: "Phone Number",
+                            controller: controller.phoneController,
+                            keyboardType: TextInputType.phone,
+                            errorMessage: controller.phoneError.value,
+                          )),
                           SizedBox(height: 15.h),
 
                           Obx(() => CustomTextField(
-                                label: "Password",
-                                controller: controller.passwordController,
-                                isPassword: true,
-                                errorMessage: controller.passwordError.value,
-                              )),
+                            label: "Password",
+                            controller: controller.passwordController,
+                            isPassword: true,
+                            errorMessage: controller.passwordError.value,
+                          )),
                           SizedBox(height: 15.h),
 
                           Obx(() => CustomTextField(
-                                label: "Confirm Password",
-                                controller:
-                                    controller.confirmPasswordController,
-                                isPassword: true,
-                                errorMessage:
-                                    controller.confirmPasswordError.value,
-                              )),
+                            label: "Confirm Password",
+                            controller:
+                            controller.confirmPasswordController,
+                            isPassword: true,
+                            errorMessage:
+                            controller.confirmPasswordError.value,
+                          )),
                           SizedBox(height: 60.h),
 
                           Obx(
-                            () => controller.isLoading.value
-                                ? Center(child: CircularProgressIndicator())
-                                : CustomButton(
-                                    text: "Save",
-                                    backgroundColor: AppColor.btnoren,
-                                    onPressed: controller.validateForm,
-                                    fontSize: 16,
-                                  ),
+                                () => CustomButton(
+                              text: controller.isLoading.value ? "Loading..." : "Save",
+                              backgroundColor: AppColor.btnoren,
+                              onPressed: controller.isLoading.value ? () {} : controller.validateForm,
+                              fontSize: 16,
+                            ),
                           ),
 
                           // Menampilkan pesan error jika ada
                           Obx(
-                            () => controller.errorMessage.value != null
+                                () => controller.errorMessage.value != null
                                 ? Padding(
-                                    padding: EdgeInsets.only(top: 10.h),
-                                    child: Text(
-                                      controller.errorMessage.value!,
-                                      style: TextStyle(
-                                          color: Colors.red, fontSize: 14.sp),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
+                              padding: EdgeInsets.only(top: 10.h),
+                              child: Text(
+                                controller.errorMessage.value!,
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: 14.sp),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
                                 : SizedBox(),
                           ),
 

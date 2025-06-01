@@ -64,15 +64,6 @@ class WorkerCard extends StatelessWidget {
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  // Tambahan: Tampilkan phone number jika ada
-                  if (worker.phoneNumber != null && worker.phoneNumber!.isNotEmpty)
-                    Text(
-                      'Phone: ${worker.phoneNumber}',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.black45,
-                      ),
-                    ),
                 ],
               ),
             ),
