@@ -51,10 +51,42 @@ class DataWorkerView extends StatelessWidget {
                       separatorBuilder: (_, __) => SizedBox(height: 20.h),
                       itemBuilder: (_, index) {
                         final worker = controller.workers[index];
+
+                        // TAMBAHAN DEBUG: Log data worker
+                        print('=== WORKER DATA DEBUG ===');
+                        print('Index: $index');
+                        print('Worker ID: ${worker.id}');
+                        print('Worker Name: ${worker.name}');
+                        print('Worker Email: "${worker.email}"');
+                        print('Worker Email is null: ${worker.email == null}');
+                        print('Worker Email isEmpty: ${worker.email?.isEmpty ?? true}');
+                        print('Has valid email: ${worker.hasValidEmail}');
+                        print('Display email: ${worker.displayEmail}');
+                        print('Phone: ${worker.phoneNumber}');
+                        print('Image: ${worker.image}');
+                        print('========================');
+
+                        // Membuat URL lengkap untuk gambar jika ada
+                        String? imageUrl;
+                        bool isNetworkImage = false;
+
+                        if (worker.image != null && worker.image!.isNotEmpty) {
+                          // Jika worker.image sudah berupa URL lengkap
+                          if (worker.image!.startsWith('http')) {
+                            imageUrl = worker.image;
+                            isNetworkImage = true;
+                          }
+                          // Jika worker.image hanya nama file, gabungkan dengan base URL
+                          else {
+                            imageUrl = 'https://hamatech.rplrus.com/storage/${worker.image}';
+                            isNetworkImage = true;
+                          }
+                        }
+
                         return WorkerCard(
-                          nokaryawan: worker.id.toString(),
-                          name: worker.name,
-                          imagePath: worker.image ?? 'assets/images/example.png',
+                          worker: worker, // Pass worker model lengkap
+                          imagePath: imageUrl,
+                          isNetworkImage: isNetworkImage,
                         );
                       },
                     ),
