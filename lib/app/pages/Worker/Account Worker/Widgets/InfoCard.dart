@@ -15,6 +15,12 @@ class UserInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('=== USER INFO CARD DEBUG ===');
+    print('Name: "$name"');
+    print('Email: "$email"');
+    print('ImagePath: "$imagePath"');
+    print('============================');
+
     return Container(
       padding: EdgeInsets.all(15.w),
       decoration: BoxDecoration(
@@ -41,7 +47,7 @@ class UserInfoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  name.isNotEmpty ? name : "Nama tidak tersedia",
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -50,18 +56,14 @@ class UserInfoCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 4.h),
-                // Tambahkan debug print untuk melihat nilai email yang diterima
-                Builder(builder: (context) {
-                  print('Email in UserInfoCard: "$email"');
-                  return Text(
-                    email.isNotEmpty ? email : "Email tidak tersedia",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.white70,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  );
-                }),
+                Text(
+                  _getDisplayEmail(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.white70,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
@@ -70,9 +72,23 @@ class UserInfoCard extends StatelessWidget {
     );
   }
 
+  String _getDisplayEmail() {
+    // Jika email kosong, null, atau "Memuat data..."
+    if (email.isEmpty ||
+        email == "Memuat data..." ||
+        email == "Email tidak tersedia") {
+      return "Email tidak tersedia";
+    }
+
+    // Jika email valid
+    return email;
+  }
+
   Widget _buildProfileImage() {
-    // Jika imagePath kosong atau null
-    if (imagePath.isEmpty || imagePath == "assets/images/default_profile.png") {
+    // Jika imagePath kosong, null, atau default
+    if (imagePath.isEmpty ||
+        imagePath == "assets/images/default_profile.png" ||
+        imagePath == "Memuat data...") {
       return Icon(
         Icons.person,
         size: 40.r,
@@ -99,6 +115,7 @@ class UserInfoCard extends StatelessWidget {
           );
         },
         errorBuilder: (context, error, stackTrace) {
+          print('Error loading profile image: $error');
           return Icon(
             Icons.person,
             size: 40.r,
@@ -113,6 +130,7 @@ class UserInfoCard extends StatelessWidget {
       imagePath,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
+        print('Error loading asset image: $error');
         return Icon(
           Icons.person,
           size: 40.r,

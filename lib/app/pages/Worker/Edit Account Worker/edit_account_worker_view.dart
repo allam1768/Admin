@@ -25,69 +25,69 @@ class EditAccountWorkerView extends StatelessWidget {
               onBackTap: () => Get.offNamed('/AccountWorker'),
             ),
 
-               SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    ImageProfile(profileImage: controller.profileImage),
-                    SizedBox(height: 25.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  ImageProfile(profileImage: controller.profileImage),
+                  SizedBox(height: 25.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-                          CustomTextField(
-                            label: "Name",
-                            onChanged: controller.name,
-                            errorMessage: controller.getErrorMessage("Name"),
-                          ),
-                          SizedBox(height: 12.h),
+                        CustomTextField(
+                          label: "Name",
+                          onChanged: controller.name,
+                          errorMessage: controller.getErrorMessage("Name"),
+                        ),
+                        SizedBox(height: 12.h),
 
-                          CustomTextField(
-                            label: "Phone number",
-                            onChanged: controller.phoneNumber,
-                            isNumber: true,
-                            errorMessage:  controller.getErrorMessage("Phone number"),
-                          ),
-                          SizedBox(height: 12.h),
+                        CustomTextField(
+                          label: "Phone number",
+                          onChanged: controller.phoneNumber,
+                          isNumber: true,
+                          errorMessage:  controller.getErrorMessage("Phone number"),
+                        ),
+                        SizedBox(height: 12.h),
 
-                          CustomTextField(
-                            label: "Email",
-                            onChanged: controller.email,
-                            errorMessage:  controller.getErrorMessage("Email"),
-                          ),
-                          SizedBox(height: 12.h),
+                        CustomTextField(
+                          label: "Email",
+                          onChanged: controller.email,
+                          errorMessage:  controller.getErrorMessage("Email"),
+                        ),
+                        SizedBox(height: 12.h),
 
-                          CustomTextField(
-                            label: "Password",
-                            onChanged: controller.password,
-                            isPassword: true,
-                            errorMessage: controller.getErrorMessage("Password"),
-                          ),
-                          SizedBox(height: 12.h),
+                        CustomTextField(
+                          label: "Password",
+                          onChanged: controller.password,
+                          isPassword: true,
+                          errorMessage: controller.getErrorMessage("Password"),
+                        ),
+                        SizedBox(height: 12.h),
 
-                          CustomTextField(
-                            label: "Confirm Password",
-                            onChanged: controller.confirmPassword,
-                            isPassword: true,
-                            errorMessage:  controller.getErrorMessage("Confirm Password"),
-                          ),
+                        CustomTextField(
+                          label: "Confirm Password",
+                          onChanged: controller.confirmPassword,
+                          isPassword: true,
+                          errorMessage:  controller.getErrorMessage("Confirm Password"),
+                        ),
 
 
-                          SizedBox(height: 50.h),
-                          CustomButton(
-                            text: "Save",
-                            backgroundColor: AppColor.btnoren,
-                            onPressed: controller.validateForm,
-                            fontSize: 16,
-                          ),
-                        ],
-                      ),
+                        SizedBox(height: 50.h),
+                        CustomButton(
+                          text: "Save",
+                          backgroundColor: AppColor.btnoren,
+                          onPressed: controller.validateForm,
+                          fontSize: 16,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
           ],
         ),
