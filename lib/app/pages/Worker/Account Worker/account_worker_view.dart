@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../dialogs/ConfirmDeleteDialog.dart';
+import '../../../global component/ButtonEdit&Delete.dart';
 import '../../../global component/CustomAppBar.dart';
 import '../../Client/Account Client/Widgets/InfoTile.dart';
-import '../../../global component/ButtonEdit&Delete.dart';
 import 'Widgets/InfoCard.dart';
 import 'account_worker_controller.dart';
 
 class AccountWorkerView extends StatelessWidget {
   AccountWorkerView({super.key});
 
-  final controller = Get.put(AccountWorkerController());
+  final controller = Get.find<AccountWorkerController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,158 +24,103 @@ class AccountWorkerView extends StatelessWidget {
           children: [
             // AppBar
             CustomAppBar(
-              title: "Detail Worker",
+              title: "Detail",
               onBackTap: controller.goToDashboard,
             ),
 
             Expanded(
-              child: Obx(() {
-                // Tampilkan loading jika data belum tersedia
-                if (controller.selectedWorker.value == null) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 16),
-                        Text('Memuat data worker...'),
-                      ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 30.h),
+
+                    // User Card
+                    UserInfoCard(
+                      name: "Wawan",
+                      email: "abc@gmail.com",
+                      imagePath: "https://example.com/profile.jpg",
                     ),
-                  );
-                }
 
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 30.h),
+                    SizedBox(height: 37.h),
 
-                      // User Card dengan data real
-                      UserInfoCard(
-                        name: controller.workerName,
-                        email: controller.workerEmail,
-                        imagePath: controller.workerImageUrl ?? "assets/images/default_profile.png",
+                    // Detail Info
+                    Container(
+                      padding: EdgeInsets.all(18.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5.r),
                       ),
-
-                      SizedBox(height: 37.h),
-
-                      // Detail Info dengan data real
-                      Container(
-                        padding: EdgeInsets.all(18.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5.r),
-                        ),
-                        child: Column(
-                          children: [
-                            InfoTile(
-                              icon: Icons.person,
-                              title: "Name",
-                              value: controller.workerName,
-                            ),
-                            InfoTile(
-                              icon: Icons.email, // Tambahkan InfoTile untuk email
-                              title: "Email",
-                              value: controller.workerEmail,
-                            ),
-                            InfoTile(
-                              icon: Icons.phone,
-                              title: "Phone number",
-                              value: controller.workerPhone,
-                            ),
-                            InfoTile(
-                              icon: Icons.badge,
-                              title: "Worker ID",
-                              value: controller.workerId,
-                            ),
-                            InfoTile(
-                              icon: Icons.work,
-                              title: "Role",
-                              value: controller.workerRole.toUpperCase(),
-                            ),
-                            InfoTile(
-                              icon: Icons.calendar_today,
-                              title: "Created At",
-                              value: _formatDate(controller.selectedWorker.value!.createdAt),
-                            ),
-                            // Password tidak ditampilkan karena tidak tersedia di model
-                            // Obx(() => InfoTile(
-                            //   icon: Icons.lock,
-                            //   title: "Password",
-                            //   value: controller.isPasswordVisible.value ? "password123" : "********",
-                            //   isPassword: true,
-                            //   onTogglePassword: controller.togglePasswordVisibility,
-                            // )),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 20.h),
-
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Column(
                         children: [
-                          Text(
-                            "More",
-                            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomButtonDetail(
-                                  icon: Icons.edit,
-                                  color: AppColor.btnijo,
-                                  text: 'Edit',
-                                  onPressed: controller.navigateToEditAccount,
-                                ),
-                              ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: Obx(() => controller.isLoading.value
-                                    ? const Center(child: CircularProgressIndicator())
-                                    : CustomButtonDetail(
-                                  text: "Delete",
-                                  icon: Icons.delete,
-                                  color: Colors.red.shade700,
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => ConfirmDeleteDialog(
-                                        onCancelTap: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        onDeleteTap: () {
-                                          Navigator.of(context).pop();
-                                          controller.deleteAccount();
-                                        },
-                                      ),
-                                    );
-                                  },
-                                )),
-                              ),
-                            ],
-                          ),
+                          InfoTile(icon: Icons.person, title: "Name", value: "Wawan Ajay Gimang"),
+                          InfoTile(icon: Icons.phone, title: "Phone number", value: "087788987208"),
+                          InfoTile(icon: Icons.email, title: "Email", value: "dumyemail@gmail.com"),
+                          Obx(() => InfoTile(
+                            icon: Icons.lock,
+                            title: "Password",
+                            value: controller.isPasswordVisible.value ? "password123" : "********",
+                            isPassword: true,
+                            onTogglePassword: controller.togglePasswordVisibility,
+                          )),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              }),
+                    ),
+
+                    SizedBox(height: 20.h),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "More",
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomButtonDetail(
+                                icon: Icons.edit,
+                                color: AppColor.btnijo,
+                                text: 'Edit',
+                                onPressed: controller.navigateToEditAccount,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: CustomButtonDetail(
+                                text: "Delete",
+                                icon: Icons.delete,
+                                color: Colors.red.shade700,
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => ConfirmDeleteDialog(
+                                      onCancelTap: () {
+                                        Navigator.of(context).pop(); // Tutup dialog
+                                      },
+                                      onDeleteTap: () {
+                                        Navigator.of(context).pop(); // Tutup dialog dulu
+                                        controller.deleteAccount();   // Panggil delete
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  String _formatDate(String dateString) {
-    try {
-      final DateTime date = DateTime.parse(dateString);
-      return "${date.day}/${date.month}/${date.year}";
-    } catch (e) {
-      return dateString;
-    }
   }
 }

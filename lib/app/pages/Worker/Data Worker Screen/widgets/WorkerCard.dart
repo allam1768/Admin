@@ -5,7 +5,7 @@ import '../../../../../data/models/worker_model.dart';
 import '../../../../../values/app_color.dart';
 
 class WorkerCard extends StatelessWidget {
-  final WorkerModel worker; // Ganti dengan model worker lengkap
+  final WorkerModel worker;
   final String? imagePath;
   final bool isNetworkImage;
 
@@ -20,6 +20,18 @@ class WorkerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('=== WORKER CARD ON TAP DEBUG ===');
+        print('Worker being sent:');
+        print('- ID: ${worker.id}');
+        print('- Name: ${worker.name}');
+        print('- Email: "${worker.email}"');
+        print('- Phone: ${worker.phoneNumber}');
+        print('- Role: ${worker.role}');
+        print('- Image: ${worker.image}');
+        print('- Created At: ${worker.createdAt}');
+        print('- Worker JSON: ${worker.toJson()}');
+        print('================================');
+
         // Kirim data worker ke halaman AccountWorker
         Get.toNamed('/AccountWorker', arguments: worker);
       },
@@ -64,8 +76,15 @@ class WorkerCard extends StatelessWidget {
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
+                  SizedBox(height: 4.h),
                 ],
               ),
+            ),
+            // Tambahkan arrow icon untuk menunjukkan bisa diklik
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16.sp,
+              color: Colors.grey[600],
             ),
           ],
         ),
@@ -101,6 +120,7 @@ class WorkerCard extends StatelessWidget {
           );
         },
         errorBuilder: (context, error, stackTrace) {
+          print('Error loading network image: $error');
           return Icon(
             Icons.person,
             size: 40.r,
@@ -115,6 +135,7 @@ class WorkerCard extends StatelessWidget {
       imagePath!,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
+        print('Error loading asset image: $error');
         return Icon(
           Icons.person,
           size: 40.r,

@@ -47,6 +47,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
     if (widget.controller == null) {
       _internalController = TextEditingController(text: widget.initialValue ?? '');
+      
+      // Jika ada onChanged callback, panggil dengan nilai awal
+      if (widget.onChanged != null && widget.initialValue != null) {
+        widget.onChanged!(widget.initialValue!);
+      }
     }
   }
 
