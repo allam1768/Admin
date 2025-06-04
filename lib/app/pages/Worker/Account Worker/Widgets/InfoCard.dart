@@ -47,7 +47,7 @@ class UserInfoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name.isNotEmpty ? name : "Nama tidak tersedia",
+                  _getDisplayName(),
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -72,11 +72,20 @@ class UserInfoCard extends StatelessWidget {
     );
   }
 
+  String _getDisplayName() {
+    // Jika name kosong atau null
+    if (name.isEmpty || name == "Data tidak tersedia") {
+      return "Nama tidak tersedia";
+    }
+    return name;
+  }
+
   String _getDisplayEmail() {
-    // Jika email kosong, null, atau "Memuat data..."
+    // Jika email kosong, null, atau default messages
     if (email.isEmpty ||
         email == "Memuat data..." ||
-        email == "Email tidak tersedia") {
+        email == "Email tidak tersedia" ||
+        email == "Data tidak tersedia") {
       return "Email tidak tersedia";
     }
 
@@ -88,7 +97,8 @@ class UserInfoCard extends StatelessWidget {
     // Jika imagePath kosong, null, atau default
     if (imagePath.isEmpty ||
         imagePath == "assets/images/default_profile.png" ||
-        imagePath == "Memuat data...") {
+        imagePath == "Memuat data..." ||
+        imagePath == "Data tidak tersedia") {
       return Icon(
         Icons.person,
         size: 40.r,
