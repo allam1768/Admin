@@ -52,21 +52,6 @@ class DataWorkerView extends StatelessWidget {
                       itemBuilder: (_, index) {
                         final worker = controller.workers[index];
 
-                        // TAMBAHAN DEBUG: Log data worker
-                        print('=== WORKER DATA DEBUG ===');
-                        print('Index: $index');
-                        print('Worker ID: ${worker.id}');
-                        print('Worker Name: ${worker.name}');
-                        print('Worker Email: "${worker.email}"');
-                        print('Worker Email is null: ${worker.email == null}');
-                        print('Worker Email isEmpty: ${worker.email?.isEmpty ?? true}');
-                        print('Has valid email: ${worker.hasValidEmail}');
-                        print('Display email: ${worker.displayEmail}');
-                        print('Phone: ${worker.phoneNumber}');
-                        print('Image: ${worker.image}');
-                        print('========================');
-
-                        // Membuat URL lengkap untuk gambar jika ada
                         String? imageUrl;
                         bool isNetworkImage = false;
 
