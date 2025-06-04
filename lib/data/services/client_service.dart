@@ -7,6 +7,7 @@ import '../models/client_model.dart';
 class ClientService {
   static const String baseUrl = 'https://hamatech.rplrus.com/api/clients';
   static const String createUserUrl = 'https://hamatech.rplrus.com/api/users';
+  static const String userDetailUrl = 'https://hamatech.rplrus.com/api/users';
 
   static Future<List<ClientModel>> fetchClients() async {
     final response = await http.get(
@@ -31,9 +32,30 @@ class ClientService {
     }
   }
 
+  static Future<ClientModel?> fetchClientDetail(int clientId) async {
+    final response = await http.get(
+      Uri.parse('$userDetailUrl/$clientId'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    try {
+      if (response.statusCode == 200) {
+        print('Client detail response: ${response.body}');
+        final data = jsonDecode(response.body);
+        return ClientModel.fromJson(data['data']);
+      } else {
+        print('Error fetching client detail: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Error parsing client detail: $e');
+      return null;
+    }
+  }
+
   static Future<bool> deleteClient(int clientId) async {
     final response = await http.delete(
-      Uri.parse('$baseUrl/$clientId'),
+      Uri.parse('$createUserUrl/$clientId'),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -54,6 +76,7 @@ class ClientService {
 
   static Future<LoginResponseModel> createClient({
     required String username,
+    required String email,
     required String phoneNumber,
     required String password,
     File? profileImage,
@@ -66,6 +89,7 @@ class ClientService {
 
       // Menambahkan data teks
       request.fields['name'] = username;
+      request.fields['email'] = email;
       request.fields['phone_number'] = phoneNumber;
       request.fields['password'] = password;
       request.fields['role'] = 'client'; // Set role sebagai client
