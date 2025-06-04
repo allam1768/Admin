@@ -1,104 +1,136 @@
-  import 'package:admin/values/app_color.dart';
-  import 'package:flutter/material.dart';
-  import 'package:flutter_screenutil/flutter_screenutil.dart';
-  import 'package:get/get.dart';
-  import '../../../global component/CustomAppBar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import '../../../../values/app_color.dart';
+import '../../../global component/CustomAppBar.dart';
 import '../../../global component/CustomButton.dart';
 import '../../../global component/CustomTextField.dart';
 import '../../../global component/ImageProfile.dart';
 import 'create_account_client_controller.dart';
-  
-  class CreateAccountClientView extends StatelessWidget {
-    CreateAccountClientView({super.key});
-  
-    final controller = Get.put(CreateAccountClientController());
-  
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: AppColor.background,
-        body: SafeArea(
-          child: Column(
-            children: [
-              CustomAppBar(title: "Create Client"),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      ImageProfile(profileImage: controller.profileImage),
-                      SizedBox(height: 20.h),
-  
-                      Container(
-                        width: double.infinity,
-                        constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height - 200.h, // Dynamic Height
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
-                        decoration: BoxDecoration(
-                          color: AppColor.backgroundsetengah,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-  
-                            Obx(() => CustomTextField(
-                              label: "Username",
-                              controller: controller.usernameController,
-                              errorMessage: controller.usernameError.value,
-                            )),
-                            SizedBox(height: 15.h),
 
-                            Obx(() => CustomTextField(
-                              label: "Name Company",
-                              controller: controller.nameCompanyController,
-                              errorMessage: controller.nameCompanyError.value,
-                            )),
+class CreateAccountClientView extends StatelessWidget {
+  CreateAccountClientView({super.key});
 
-                            SizedBox(height: 16.h),
+  final controller = Get.put(CreateAccountClientController());
 
-                            Obx(() => CustomTextField(
-                              label: "Phone Number",
-                              controller: controller.phoneController,
-                              keyboardType: TextInputType.phone,
-                              errorMessage: controller.phoneError.value,
-                            )),
-                            SizedBox(height: 15.h),
-  
-                            Obx(() => CustomTextField(
-                              label: "Password",
-                              controller: controller.passwordController,
-                              isPassword: true,
-                              errorMessage: controller.passwordError.value,
-                            )),
-                            SizedBox(height: 15.h),
-  
-                            Obx(() => CustomTextField(
-                              label: "Confirm Password",
-                              controller: controller.confirmPasswordController,
-                              isPassword: true,
-                              errorMessage: controller.confirmPasswordError.value,
-                            )),
-                            SizedBox(height: 40.h),
-  
-                            CustomButton(
-                              text: "Save",
-                              backgroundColor:AppColor.btnijo,
-                              onPressed: controller.validateForm,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColor.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            CustomAppBar(
+              title: "Create Client",
+              onBackTap: controller.goToDashboard,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20.h),
+
+                    ImageProfile(profileImage: controller.profileImage),
+
+                    SizedBox(height: 40.h),
+
+                    // Form Section
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 16.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Name Field
+                          Obx(() => CustomTextField(
+                            label: "Full Name",
+                            controller: controller.nameController,
+                            errorMessage: controller.nameError.value,
+                          )),
+                          SizedBox(height: 20.h),
+
+                          // Phone Field
+                          Obx(() => CustomTextField(
+                            label: "Phone Number",
+                            controller: controller.phoneController,
+                            keyboardType: TextInputType.phone,
+                            errorMessage: controller.phoneError.value,
+                          )),
+                          SizedBox(height: 20.h),
+
+                          // Password Field
+                          Obx(() => CustomTextField(
+                            label: "Password",
+                            controller: controller.passwordController,
+                            isPassword: true,
+                            errorMessage: controller.passwordError.value,
+                          )),
+                          SizedBox(height: 20.h),
+
+                          // Confirm Password Field
+                          Obx(() => CustomTextField(
+                            label: "Confirm Password",
+                            controller: controller.confirmPasswordController,
+                            isPassword: true,
+                            errorMessage: controller.confirmPasswordError.value,
+                          )),
+                          SizedBox(height: 40.h),
+
+                          Obx(
+                                () => CustomButton(
+                              text: controller.isLoading.value ? "Loading..." : "Save",
+                              backgroundColor: AppColor.btnoren,
+                              onPressed: controller.isLoading.value ? () {} : controller.validateForm,
                               fontSize: 16,
                             ),
-  
-                            SizedBox(height: 20.h),
-                          ],
-                        ),
+                          ),
+
+
+                          // Error Message Display
+                          Obx(() => controller.errorMessage.value != null
+                              ? Container(
+                            margin: EdgeInsets.only(top: 15.h),
+                            padding: EdgeInsets.all(12.w),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: Border.all(
+                                color: Colors.red.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 16.sp,
+                                ),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    controller.errorMessage.value!,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                              : SizedBox()),
+
+                          SizedBox(height: 20.h),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
+}
