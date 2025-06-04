@@ -8,6 +8,7 @@ import '../../Bottom Nav/bottomnav_controller.dart';
 
 class CreateAccountClientController extends GetxController {
   final nameController = TextEditingController();
+  final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -16,6 +17,7 @@ class CreateAccountClientController extends GetxController {
   var imageError = false.obs;
 
   var nameError = RxnString();
+  var emailError = RxnString();
   var phoneError = RxnString();
   var passwordError = RxnString();
   var confirmPasswordError = RxnString();
@@ -26,12 +28,14 @@ class CreateAccountClientController extends GetxController {
 
   void validateForm() {
     final name = nameController.text.trim();
+    final email = emailController.text.trim();
     final phone = phoneController.text.trim();
     final password = passwordController.text;
     final confirmPassword = confirmPasswordController.text;
 
     // Reset error messages
     nameError.value = null;
+    emailError.value = null;
     phoneError.value = null;
     passwordError.value = null;
     confirmPasswordError.value = null;
@@ -42,6 +46,13 @@ class CreateAccountClientController extends GetxController {
       nameError.value = "Name harus diisi!";
     } else if (name.length < 2) {
       nameError.value = "Name minimal 2 karakter!";
+    }
+
+    // Validate email
+    if (email.isEmpty) {
+      emailError.value = "Email harus diisi!";
+    } else if (!GetUtils.isEmail(email)) {
+      emailError.value = "Format email tidak valid!";
     }
 
     // Validate phone
@@ -70,6 +81,7 @@ class CreateAccountClientController extends GetxController {
     // Check if all validations passed
     if ([
       nameError.value,
+      emailError.value,
       phoneError.value,
       passwordError.value,
       confirmPasswordError.value,
@@ -86,6 +98,7 @@ class CreateAccountClientController extends GetxController {
 
       final response = await ClientService.createClient(
         username: nameController.text.trim(),
+        email: emailController.text.trim(),
         phoneNumber: phoneController.text.trim(),
         password: passwordController.text,
         profileImage: profileImage.value,
@@ -121,10 +134,10 @@ class CreateAccountClientController extends GetxController {
         _clearForm();
 
         // Delay before navigation to allow user to see success message
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(Duration(seconds: 1));
 
         // Navigate back to dashboard
-        Get.find<BottomNavController>().selectedIndex.value = 2;
+        Get.find<BottomNavController>().selectedIndex.value = 1;
         Get.offNamed('/bottomnav');
 
       } else {
@@ -197,6 +210,7 @@ class CreateAccountClientController extends GetxController {
 
   void _clearForm() {
     nameController.clear();
+    emailController.clear();
     phoneController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
@@ -204,6 +218,7 @@ class CreateAccountClientController extends GetxController {
 
     // Clear error messages
     nameError.value = null;
+    emailError.value = null;
     phoneError.value = null;
     passwordError.value = null;
     confirmPasswordError.value = null;
@@ -226,6 +241,7 @@ class CreateAccountClientController extends GetxController {
   @override
   void onClose() {
     nameController.dispose();
+    emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();

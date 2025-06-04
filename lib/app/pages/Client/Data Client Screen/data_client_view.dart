@@ -23,7 +23,8 @@ class DataClientView extends StatelessWidget {
               title: "Client",
               rightIcon: "assets/icons/add_client_btn.svg",
               rightOnTap: controller.goToCreateClient,
-              showBackButton: false, onBackTap: () {  },
+              showBackButton: false,
+              onBackTap: () {},
             ),
             Expanded(
               child: Obx(() {
@@ -48,10 +49,26 @@ class DataClientView extends StatelessWidget {
                     separatorBuilder: (_, __) => SizedBox(height: 20.h),
                     itemBuilder: (_, index) {
                       final clientData = controller.clients[index];
+
+                      String? imageUrl;
+                      bool isNetworkImage = false;
+
+                      if (clientData.image != null &&
+                          clientData.image!.isNotEmpty) {
+                        if (clientData.image!.startsWith('http')) {
+                          imageUrl = clientData.image!;
+                          isNetworkImage = true;
+                        } else {
+                          imageUrl =
+                          'https://hamatech.rplrus.com/storage/${clientData.image}';
+                          isNetworkImage = true;
+                        }
+                      }
+
                       return ClientCard(
-                        company: clientData.company ?? "-",
                         client: clientData.name,
-                        imagePath: clientData.image ?? "assets/images/example.png",
+                        imagePath: imageUrl,
+                        isNetworkImage: isNetworkImage,
                       );
                     },
                   ),

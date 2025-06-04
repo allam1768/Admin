@@ -1,25 +1,25 @@
-import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../../../values/app_color.dart';
 
 class ClientCard extends StatelessWidget {
-  final String company;
   final String client;
-  final String imagePath;
+  final String? imagePath;
+  final bool isNetworkImage;
 
   const ClientCard({
     super.key,
-    required this.company,
     required this.client,
-    required this.imagePath,
+    this.imagePath,
+    this.isNetworkImage = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/AccountClient');
+        Get.toNamed('/AccountClient', arguments: client);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
@@ -46,38 +46,83 @@ class ClientCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50.r),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.person, size: 40.r, color: Colors.black);
-                  },
-                ),
+                child: _buildImage(),
               ),
             ),
             SizedBox(width: 15.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  company,
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    client,
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  client,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16.sp,
+              color: Colors.grey[600],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildImage() {
+    if (imagePath == null || imagePath!.isEmpty) {
+      return Icon(
+        Icons.person,
+        size: 40.r,
+        color: Colors.grey[600],
+      );
+    }
+
+    if (isNetworkImage) {
+      return Image.network(
+        imagePath!,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                  loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading network image: $error');
+          return Icon(
+            Icons.person,
+            size: 40.r,
+            color: Colors.grey[600],
+          );
+        },
+      );
+    }
+
+    return Image.asset(
+      imagePath!,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        print('Error loading asset image: $error');
+        return Icon(
+          Icons.person,
+          size: 40.r,
+          color: Colors.grey[600],
+        );
+      },
     );
   }
 }

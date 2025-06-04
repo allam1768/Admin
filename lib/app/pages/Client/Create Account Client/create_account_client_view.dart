@@ -49,6 +49,15 @@ class CreateAccountClientView extends StatelessWidget {
                           )),
                           SizedBox(height: 20.h),
 
+                          // Email Field
+                          Obx(() => CustomTextField(
+                            label: "Email",
+                            controller: controller.emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            errorMessage: controller.emailError.value,
+                          )),
+                          SizedBox(height: 20.h),
+
                           // Phone Field
                           Obx(() => CustomTextField(
                             label: "Phone Number",
@@ -84,7 +93,6 @@ class CreateAccountClientView extends StatelessWidget {
                               fontSize: 16,
                             ),
                           ),
-
 
                           // Error Message Display
                           Obx(() => controller.errorMessage.value != null
