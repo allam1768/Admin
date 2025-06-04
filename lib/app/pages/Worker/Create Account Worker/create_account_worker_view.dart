@@ -20,32 +20,35 @@ class CreateAccountWorkerView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Create Worker"),
+            CustomAppBar(
+              title: "Create Worker",
+              onBackTap: controller.goToDashboard,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     SizedBox(height: 20.h),
                     ImageProfile(profileImage: controller.profileImage),
-                    SizedBox(height: 20.h),
-
+                    SizedBox(height: 70.h),
                     Container(
-                      width: double.infinity,
-                      constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height - 200.h, // Dynamic Height
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
-                      decoration: BoxDecoration(
-                        color: AppColor.backgroundsetengah,
-                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           Obx(() => CustomTextField(
                             label: "Name",
                             controller: controller.nameController,
                             errorMessage: controller.nameError.value,
+                          )),
+                          SizedBox(height: 15.h),
+
+                          Obx(() => CustomTextField(
+                            label: "Email",
+                            controller: controller.emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            errorMessage: controller.emailError.value,
                           )),
                           SizedBox(height: 15.h),
 
@@ -57,7 +60,6 @@ class CreateAccountWorkerView extends StatelessWidget {
                           )),
                           SizedBox(height: 15.h),
 
-                          
                           Obx(() => CustomTextField(
                             label: "Password",
                             controller: controller.passwordController,
@@ -68,17 +70,36 @@ class CreateAccountWorkerView extends StatelessWidget {
 
                           Obx(() => CustomTextField(
                             label: "Confirm Password",
-                            controller: controller.confirmPasswordController,
+                            controller:
+                            controller.confirmPasswordController,
                             isPassword: true,
-                            errorMessage: controller.confirmPasswordError.value,
+                            errorMessage:
+                            controller.confirmPasswordError.value,
                           )),
-                          SizedBox(height: 40.h),
+                          SizedBox(height: 60.h),
 
-                          CustomButton(
-                            text: "Save",
-                            backgroundColor:AppColor.btnijo,
-                            onPressed: controller.validateForm,
-                            fontSize: 16,
+                          Obx(
+                                () => CustomButton(
+                              text: controller.isLoading.value ? "Loading..." : "Save",
+                              backgroundColor: AppColor.btnoren,
+                              onPressed: controller.isLoading.value ? () {} : controller.validateForm,
+                              fontSize: 16,
+                            ),
+                          ),
+
+                          // Menampilkan pesan error jika ada
+                          Obx(
+                                () => controller.errorMessage.value != null
+                                ? Padding(
+                              padding: EdgeInsets.only(top: 10.h),
+                              child: Text(
+                                controller.errorMessage.value!,
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: 14.sp),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                                : SizedBox(),
                           ),
 
                           SizedBox(height: 20.h),

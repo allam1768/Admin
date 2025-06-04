@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/models/alat_model.dart';
 import '../../../../data/services/alat_service.dart';
-
+import '../../Bottom Nav/bottomnav_controller.dart';
 
 class DetailDataController extends GetxController {
   var traps = <AlatModel>[].obs;
@@ -22,15 +22,12 @@ class DetailDataController extends GetxController {
     }
   }
 
-  void changeMonth(int index) {
-    selectedMonth.value = index;
+  void changeDate(DateTime date) {
+    // Implementasi perubahan tanggal
+    print("Tanggal berubah ke: ${date.toString()}");
   }
 
-
-
-  void updateNote(int index, String value) {
-
-  }
+  void updateNote(int index, String value) {}
 
   List<FlSpot> getChartData(String title) {
     // Dummy chart data
@@ -40,5 +37,11 @@ class DetailDataController extends GetxController {
       FlSpot(3, 7),
       FlSpot(4, 12),
     ];
+  }
+
+  void goToDashboard() {
+    Get.find<BottomNavController>().selectedIndex.value = 0;
+    Get.offNamed(
+        '/bottomnav'); // Ganti dengan nama screen yang ada bottom nav-nya
   }
 }

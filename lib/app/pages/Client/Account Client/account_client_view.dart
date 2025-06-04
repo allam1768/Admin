@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../global component/CustomAppBar.dart';
-import '../../Company/Detail History Screen/widgets/ButtonEdit&Delete.dart';
+import '../../../global component/ButtonEdit&Delete.dart';
 import 'Widgets/InfoCard.dart';
 import 'Widgets/InfoTile.dart';
 import 'account_client_controller.dart';
@@ -22,7 +22,7 @@ class AccountClientView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(title: "Detail"),
+            CustomAppBar(title: "Detail", onBackTap: () => Get.back(),),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),

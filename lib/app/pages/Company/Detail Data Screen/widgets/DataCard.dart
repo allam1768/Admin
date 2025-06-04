@@ -2,6 +2,8 @@ import 'package:admin/values/app_color.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
+
 import '../../../../global component/CustomTextField.dart';
 import 'ChartLine.dart';
 
@@ -50,76 +52,93 @@ class _DataCardState extends State<DataCard> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      margin: EdgeInsets.symmetric(vertical: 8.h),
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: AppColor.backgroundsetengah,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: TextStyle(
-              fontSize: 32.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 20.h),
-
-          LineChartWidget(
-            data: widget.chartData,
-            primaryColor: Colors.blue,
-          ),
-
-          SizedBox(height: 20.h),
-
-          CustomTextField(
-            label: "Catatan",
-            svgIcon: "assets/icons/note_icont.svg",
-            controller: _noteController,
-            errorMessage: _errorText,
-            onChanged: (value) {
-              if (!_noteTouched && value.trim().isNotEmpty) {
-                _noteTouched = true;
-              }
-
-              if (_errorText != null) {
-                setState(() {
-                  _errorText = null;
-                });
-              }
-            },
-          ),
-
-          SizedBox(height: 12.h),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: _handleSave,
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-                backgroundColor: AppColor.btnoren,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.save_rounded, color: Colors.black, size: 18.r),
-                  SizedBox(width: 6.w),
-                  Text(
-                    "Save",
-                    style: TextStyle(fontSize: 14.sp, color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
         ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15.r),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              LineChartWidget(
+                data: widget.chartData,
+                primaryColor: widget.color ?? Colors.blue,
+                title: widget.title,
+              ),
+              SizedBox(height: 20.h),
+              CustomTextField(
+                label: "Catatan",
+                hintText: "isi catatan di sini",
+                svgIcon: "assets/icons/note_icont.svg",
+                controller: _noteController,
+                errorMessage: _errorText,
+                onChanged: (value) {
+                  if (!_noteTouched && value.trim().isNotEmpty) {
+                    _noteTouched = true;
+                  }
+
+                  if (_errorText != null) {
+                    setState(() {
+                      _errorText = null;
+                    });
+                  }
+                },
+              ),
+              SizedBox(height: 12.h),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: _handleSave,
+                  style: ElevatedButton.styleFrom(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    backgroundColor: AppColor.btnoren,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AnimatedSwitcher(
+                        duration: Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.save_rounded,
+                          color: Colors.black87,
+                          size: 18.r,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        "Save",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../../../../values/app_color.dart';
 import '../../../global component/CustomAppBar.dart';
 import '../../../global component/CustomButton.dart';
@@ -20,71 +21,98 @@ class EditAccountWorkerView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Edit Worker"),
+            CustomAppBar(
+              title: "Edit Worker",
+              onBackTap: controller.goBack,
+            ),
+
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     SizedBox(height: 20.h),
-                    ImageProfile(profileImage: controller.profileImage),
-                    SizedBox(height: 25.h),
-                    Container(
-                      width: double.infinity,
-                      constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height - 180.h, // Sesuaikan dengan tinggi layar
+
+                    // Profile Image dengan opsi untuk mengganti
+                    GestureDetector(
+                      child: Stack(
+                        children: [
+                          Obx(() => ImageProfile(
+                            profileImage: controller.profileImage,
+                            // Jika tidak ada profileImage baru, gunakan URL dari worker data
+                            imageUrl: controller.profileImage.value == null
+                                ? controller.currentWorker?.fullImageUrl
+                                : null,
+                          )),
+                        ],
                       ),
-                      color: AppColor.backgroundsetengah,
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    Container(
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
-                          CustomTextField(
+                          // Name Field
+                          Obx(() => CustomTextField(
                             label: "Name",
-                            onChanged: controller.name,
+                            initialValue: controller.name.value,
+                            onChanged: (value) => controller.name.value = value,
                             errorMessage: controller.getErrorMessage("Name"),
-                          ),
+                          )),
                           SizedBox(height: 12.h),
 
-                          CustomTextField(
+                          // Phone Number Field
+                          Obx(() => CustomTextField(
                             label: "Phone number",
-                            onChanged: controller.phoneNumber,
+                            initialValue: controller.phoneNumber.value,
+                            onChanged: (value) => controller.phoneNumber.value = value,
                             isNumber: true,
-                            errorMessage:  controller.getErrorMessage("Phone number"),
-                          ),
+                            errorMessage: controller.getErrorMessage("Phone number"),
+                          )),
                           SizedBox(height: 12.h),
 
-                          CustomTextField(
+                          // Email Field
+                          Obx(() => CustomTextField(
                             label: "Email",
-                            onChanged: controller.email,
-                            errorMessage:  controller.getErrorMessage("Email"),
-                          ),
+                            initialValue: controller.email.value,
+                            onChanged: (value) => controller.email.value = value,
+                            errorMessage: controller.getErrorMessage("Email"),
+                          )),
                           SizedBox(height: 12.h),
 
-                          CustomTextField(
-                            label: "Password",
-                            onChanged: controller.password,
+                          // Password Field (Optional)
+                          Obx(() => CustomTextField(
+                            label: "Password (Kosongkan jika tidak ingin mengubah)",
+                            onChanged: (value) => controller.password.value = value,
                             isPassword: true,
                             errorMessage: controller.getErrorMessage("Password"),
-                          ),
+                          )),
                           SizedBox(height: 12.h),
 
-                          CustomTextField(
+                          // Confirm Password Field (Optional)
+                          Obx(() => CustomTextField(
                             label: "Confirm Password",
-                            onChanged: controller.confirmPassword,
+                            onChanged: (value) => controller.confirmPassword.value = value,
                             isPassword: true,
-                            errorMessage:  controller.getErrorMessage("Confirm Password"),
-                          ),
+                            errorMessage: controller.getErrorMessage("Confirm Password"),
+                          )),
 
-
-                          SizedBox(height: 30.h),
-                          CustomButton(
-                            text: "Save",
-                            backgroundColor: AppColor.btnijo,
-                            onPressed: controller.validateForm,
-                            fontSize: 16,
-                          ),
                           SizedBox(height: 50.h),
+                          Obx(() => CustomButton(
+                            text: controller.isLoading.value
+                                ? "Loading..."
+                                : "Save",
+                            backgroundColor: controller.canSave
+                                ? AppColor.btnoren
+                                : Colors.grey,
+                            onPressed: controller.canSave
+                                ? controller.validateForm
+                                : () {},
+                            fontSize: 16,
+                          )),
+                          SizedBox(height: 20.h),
                         ],
                       ),
                     ),

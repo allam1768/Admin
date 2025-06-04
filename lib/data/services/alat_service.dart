@@ -1,14 +1,14 @@
+// alat_service.dart
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
-
 import '../models/alat_model.dart';
 
 class AlatService {
-  static const String baseUrl = "https://8821-36-81-11-141.ngrok-free.app/api";
+  static const String baseUrl = 'https://hamatech.rplrus.com/api';
 
   static Future<http.Response?> createAlat(AlatModel alat, File imageFile) async {
     try {
@@ -19,12 +19,16 @@ class AlatService {
 
       request.fields['nama_alat'] = alat.namaAlat;
       request.fields['lokasi'] = alat.lokasi;
-      request.fields['detail_lokasi'] = alat.detail_lokasi;
+      request.fields['detail_lokasi'] = alat.detailLokasi;
       request.fields['pest_type'] = alat.pestType;
       request.fields['kondisi'] = alat.kondisi;
       request.fields['kode_qr'] = alat.kodeQr;
 
-      request.files.add(await http.MultipartFile.fromPath('alat_image', imageFile.path));
+      if (imageFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('alat_image', imageFile.path),
+        );
+      }
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
@@ -40,7 +44,12 @@ class AlatService {
   }
 
   static Future<List<AlatModel>> fetchAlat() async {
-    final response = await http.get(Uri.parse('$baseUrl/alat'));
+    final response = await http.get(
+      Uri.parse('$baseUrl/alat'),
+      headers: {
+        'ngrok-skip-browser-warning': '1',
+      },
+    );
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
@@ -52,4 +61,75 @@ class AlatService {
     }
   }
 
+  static Future<http.Response?> deleteAlat(int id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/alat/$id'),
+        headers: {
+          'ngrok-skip-browser-warning': '1',
+        },
+      );
+
+      print('Status: ${response.statusCode}');
+      print('Body: ${response.body}');
+
+      return response;
+    } catch (e) {
+      print('Error saat menghapus alat: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> updateAlat(int id, AlatModel alat, {File? imageFile}) async {
+    try {
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/alat/$id'),
+      );
+
+      request.fields['nama_alat'] = alat.namaAlat;
+      request.fields['lokasi'] = alat.lokasi;
+      request.fields['detail_lokasi'] = alat.detailLokasi;
+      request.fields['pest_type'] = alat.pestType;
+      request.fields['kondisi'] = alat.kondisi;
+      request.fields['kode_qr'] = alat.kodeQr;
+      request.fields['_method'] = 'PUT';
+
+      if (imageFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('alat_image', imageFile.path),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      print('Status: ${response.statusCode}');
+      print('Body: ${response.body}');
+
+      return response;
+    } catch (e) {
+      print('Error update ke API: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> getAlatById(int id) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/alat/$id'),
+        headers: {
+          'ngrok-skip-browser-warning': '1',
+        },
+      );
+
+      print('Status getAlatById: ${response.statusCode}');
+      print('Body: ${response.body}');
+
+      return response;
+    } catch (e) {
+      print('Error getAlatById: $e');
+      return null;
+    }
+  }
 }

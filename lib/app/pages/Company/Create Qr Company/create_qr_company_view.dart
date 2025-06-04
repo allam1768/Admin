@@ -21,7 +21,10 @@ class CreateQrCompanyView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Create Company"),
+            CustomAppBar(
+              title: "Create Company",
+              onBackTap: () => Get.toNamed('/CreateAccountClient'),
+            ),
 
             Expanded(
               child: SingleChildScrollView(
@@ -29,7 +32,7 @@ class CreateQrCompanyView extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 250.h,
+
                       child: Center(
                         child: SvgPicture.asset(
                           'assets/images/company_ilustration.svg',
@@ -37,9 +40,9 @@ class CreateQrCompanyView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(height: 30.h),
 
                     Container(
-                      color: AppColor.backgroundsetengah,
                       padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,18 +81,11 @@ class CreateQrCompanyView extends StatelessWidget {
                             onChanged: (value) => controller.email.value = value,
                             errorMessage: controller.emailError.value.isNotEmpty ? controller.emailError.value : null,
                           )),
-                          SizedBox(height: 15.h),
-
-                          Obx(() => CustomTextField(
-                            label: "Industry",
-                            onChanged: (value) => controller.industry.value = value,
-                            errorMessage: controller.industryError.value.isNotEmpty ? controller.industryError.value : null,
-                          )),
                           SizedBox(height: 40.h),
 
                           CustomButton(
                             text: "Create Qr",
-                            backgroundColor: AppColor.btnijo,
+                            backgroundColor: AppColor.btnoren,
                             onPressed: controller.validateForm,
                             fontSize: 16,
                           ),
