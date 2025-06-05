@@ -153,7 +153,7 @@ class ImageProfile extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 8,
+          bottom: 2,
           right: 8,
           child: GestureDetector(
             onTap: () => _showImageSourceDialog(context),

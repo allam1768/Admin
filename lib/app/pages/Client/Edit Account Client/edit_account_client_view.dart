@@ -13,97 +13,108 @@ class EditAccountClientView extends StatelessWidget {
 
   final EditAccountClientController controller = Get.put(EditAccountClientController());
 
-
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: AppColor.background,
-    body: SafeArea(
-      child: Column(
-        children: [
-          CustomAppBar(title: "Edit Client", onBackTap:() => Get.toNamed('/AccountClient'), ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 20.h),
-                  ImageProfile(profileImage: controller.profileImage),
-                  SizedBox(height: 30.h),
-                  Container(
-                    width: double.infinity,
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height - 180.h, // Sesuaikan dengan tinggi layar
+    return Scaffold(
+      backgroundColor: AppColor.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            CustomAppBar(
+              title: "Edit Client",
+              onBackTap: () => Get.back(),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    GestureDetector(
+                      child: Stack(
+                        children: [
+                          Obx(() => ImageProfile(
+                            profileImage: controller.profileImage,
+                            // Jika tidak ada profileImage baru, gunakan URL dari worker data
+                            imageUrl: controller.profileImage.value == null
+                                ? controller.currentClient?.fullImageUrl
+                                : null,
+                          )),
+                        ],
+                      ),
                     ),
-                    color: AppColor.backgroundsetengah,
-                    padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Obx(() => CustomTextField(
-                          label: "Name",
-                          controller: controller.nameController,
-                          errorMessage: controller.nameError.value,
-                        )),
-                        SizedBox(height: 15.h),
+                    SizedBox(height: 30.h),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 16.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Obx(() => CustomTextField(
+                            label: "Name",
+                            controller: controller.nameController,
+                            errorMessage: controller.nameError.value,
+                          )),
+                          SizedBox(height: 15.h),
 
-                        Obx(() => CustomTextField(
-                          label: "Name Company",
-                          controller: controller.nameCompanyController,
-                          errorMessage: controller.nameCompanyError.value,
-                        )),
+                          Obx(() => CustomTextField(
+                            label: "Phone Number",
+                            controller: controller.phoneController,
+                            keyboardType: TextInputType.phone,
+                            errorMessage: controller.phoneError.value,
+                            hintText: "e.g., 081234567890 or +6281234567890",
+                          )),
+                          SizedBox(height: 15.h),
 
-                        SizedBox(height: 16.h),
+                          Obx(() => CustomTextField(
+                            label: "Email",
+                            controller: controller.emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            errorMessage: controller.emailError.value,
+                          )),
+                          SizedBox(height: 15.h),
 
-                        Obx(() => CustomTextField(
-                          label: "Phone Number",
-                          controller: controller.phoneController,
-                          keyboardType: TextInputType.phone,
-                          errorMessage: controller.phoneError.value,
-                        )),
-                        SizedBox(height: 15.h),
 
-                        Obx(() => CustomTextField(
-                          label: "Email",
-                          controller: controller.emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          errorMessage: controller.emailError.value,
-                        )),
-                        SizedBox(height: 15.h),
+                          Obx(() => CustomTextField(
+                            label: "New Password",
+                            controller: controller.passwordController,
+                            isPassword: true,
+                            errorMessage: controller.passwordError.value,
+                            hintText: "Minimal 6 karakter",
+                          )),
+                          SizedBox(height: 15.h),
 
-                        Obx(() => CustomTextField(
-                          label: "Password",
-                          controller: controller.passwordController,
-                          isPassword: true,
-                          errorMessage: controller.passwordError.value,
-                        )),
-                        SizedBox(height: 15.h),
+                          Obx(() => CustomTextField(
+                            label: "Confirm New Password",
+                            controller: controller.confirmPasswordController,
+                            isPassword: true,
+                            errorMessage: controller.confirmPasswordError.value,
+                          )),
 
-                        Obx(() => CustomTextField(
-                          label: "Confirm Password",
-                          controller: controller.confirmPasswordController,
-                          isPassword: true,
-                          errorMessage: controller.confirmPasswordError.value,
-                        )),
-                        SizedBox(height: 40.h),
 
-                        CustomButton(
-                          text: "Save",
-                          backgroundColor:AppColor.btnijo,
-                          onPressed: controller.validateForm,
-                          fontSize: 16,
-                        ),
-                        SizedBox(height: 50.h),
-                      ],
+                          SizedBox(height: 50.h),
+                          Obx(() => CustomButton(
+                            text: controller.isLoading.value
+                                ? "Loading..."
+                                : "Save",
+                            backgroundColor: controller.canSave
+                                ? AppColor.btnoren
+                                : Colors.grey,
+                            onPressed: controller.canSave
+                                ? controller.validateForm
+                                : () {},
+                            fontSize: 16,
+                          )),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 }
-

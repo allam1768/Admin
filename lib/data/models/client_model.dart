@@ -44,4 +44,15 @@ class ClientModel {
       'created_at': createdAt,
     };
   }
+
+  String? get fullImageUrl {
+    if (image != null && image!.isNotEmpty) {
+      if (image!.startsWith('http')) {
+        return image;
+      } else {
+        return 'https://hamatech.rplrus.com/storage/$image';
+      }
+    }
+    return null;
+  }
 }
