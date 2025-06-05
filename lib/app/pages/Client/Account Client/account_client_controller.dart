@@ -102,8 +102,16 @@ class AccountClientController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
+  // FIXED: Pass both client object and clientId in a map
   void goToEditAccount() {
-    Get.toNamed('/EditAccountClient', arguments: clientData.value);
+    if (clientData.value != null) {
+      Get.toNamed('/EditAccountClient', arguments: {
+        'client': clientData.value,
+        'clientId': clientData.value!.id,
+      });
+    } else {
+      Get.snackbar("Error", "Data client tidak tersedia");
+    }
   }
 
   void deleteAccount() async {

@@ -43,7 +43,7 @@ class CreateAccountClientView extends StatelessWidget {
                         children: [
                           // Name Field
                           Obx(() => CustomTextField(
-                            label: "Full Name",
+                            label: "Name",
                             controller: controller.nameController,
                             errorMessage: controller.nameError.value,
                           )),

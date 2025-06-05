@@ -92,6 +92,7 @@ class WorkerService {
   }
 
   // Metode yang diperbaiki untuk memperbarui pekerja berdasarkan ID
+// Menggunakan POST dengan _method: PUT untuk konsistensi
   Future<LoginResponseModel> updateWorker({
     required String workerId,
     String? name,
@@ -115,91 +116,51 @@ class WorkerService {
         final url = Uri.parse('$baseUrl/users/$workerId');
         print('Request URL: $url');
 
-        // Gunakan HTTP PUT dengan JSON untuk data tanpa file
-        // atau MultipartRequest jika ada file
-        http.Response response;
+        // Selalu gunakan POST dengan _method: PUT untuk konsistensi
+        var request = http.MultipartRequest('POST', url);
 
+        // Tambahkan _method untuk override HTTP method ke PUT
+        request.fields['_method'] = 'PUT';
+
+        // Menambahkan data teks hanya jika disediakan dan tidak kosong
+        if (name != null && name.trim().isNotEmpty) {
+          request.fields['name'] = name.trim();
+        }
+        if (email != null && email.trim().isNotEmpty) {
+          request.fields['email'] = email.trim();
+        }
+        if (phoneNumber != null && phoneNumber.trim().isNotEmpty) {
+          request.fields['phone_number'] = phoneNumber.trim();
+        }
+        if (password != null && password.trim().isNotEmpty) {
+          request.fields['password'] = password.trim();
+        }
+
+        // Pastikan role tetap worker
+        request.fields['role'] = 'worker';
+
+        // Menambahkan file gambar jika ada
         if (profileImage != null) {
-          // Jika ada gambar, gunakan MultipartRequest
-          var request = http.MultipartRequest('POST', url);
-
-          // Tambahkan _method untuk override HTTP method
-          request.fields['_method'] = 'PUT';
-
-          // Menambahkan data teks hanya jika disediakan dan tidak kosong
-          if (name != null && name.trim().isNotEmpty) {
-            request.fields['name'] = name.trim();
-          }
-          if (email != null && email.trim().isNotEmpty) {
-            request.fields['email'] = email.trim();
-          }
-          if (phoneNumber != null && phoneNumber.trim().isNotEmpty) {
-            request.fields['phone_number'] = phoneNumber.trim();
-          }
-          if (password != null && password.trim().isNotEmpty) {
-            request.fields['password'] = password.trim();
-          }
-
-          // Pastikan role tetap worker
-          request.fields['role'] = 'worker';
-
-          // Menambahkan file gambar
           request.files.add(await http.MultipartFile.fromPath(
             'image',
             profileImage.path,
           ));
-
-          print('Sending multipart request with image...');
-          final streamedResponse = await request.send().timeout(
-            const Duration(seconds: 30),
-            onTimeout: () {
-              throw TimeoutException('Koneksi timeout. Silakan coba lagi.');
-            },
-          );
-          response = await http.Response.fromStream(streamedResponse);
-        } else {
-          // Jika tidak ada gambar, gunakan HTTP PUT dengan JSON
-          Map<String, dynamic> updateData = {};
-
-          // Hanya tambahkan field yang tidak null dan tidak kosong
-          if (name != null && name.trim().isNotEmpty) {
-            updateData['name'] = name.trim();
-          }
-          if (email != null && email.trim().isNotEmpty) {
-            updateData['email'] = email.trim();
-          }
-          if (phoneNumber != null && phoneNumber.trim().isNotEmpty) {
-            updateData['phone_number'] = phoneNumber.trim();
-          }
-          if (password != null && password.trim().isNotEmpty) {
-            updateData['password'] = password.trim();
-          }
-
-          // Pastikan role tetap worker
-          updateData['role'] = 'worker';
-
-          print('Sending JSON PUT request...');
-          print('Update data: $updateData');
-
-          // Jika tidak ada data yang diupdate, kirim minimal data role
-          if (updateData.isEmpty || updateData.length == 1) {
-            print('No significant data to update, sending minimal request...');
-          }
-
-          response = await http.put(
-            url,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(updateData),
-          ).timeout(
-            const Duration(seconds: 30),
-            onTimeout: () {
-              throw TimeoutException('Koneksi timeout. Silakan coba lagi.');
-            },
-          );
+          print('Adding profile image to request...');
         }
+
+        print('Sending POST request with _method: PUT...');
+        print('Request fields: ${request.fields}');
+        print('Request files: ${request.files.length} file(s)');
+
+        // Kirim request
+        final streamedResponse = await request.send().timeout(
+          const Duration(seconds: 30),
+          onTimeout: () {
+            throw TimeoutException('Koneksi timeout. Silakan coba lagi.');
+          },
+        );
+
+        final response = await http.Response.fromStream(streamedResponse);
 
         print('Response status for update: ${response.statusCode}');
         print('Response body for update: ${response.body}');
