@@ -136,9 +136,7 @@ class CreateAccountClientController extends GetxController {
         // Delay before navigation to allow user to see success message
         await Future.delayed(Duration(seconds: 1));
 
-        // Navigate back to dashboard
-        Get.find<BottomNavController>().selectedIndex.value = 1;
-        Get.offNamed('/bottomnav');
+        Get.toNamed('/CreateQrCompany');
 
       } else {
         // Handle error response

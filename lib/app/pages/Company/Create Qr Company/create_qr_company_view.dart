@@ -32,7 +32,6 @@ class CreateQrCompanyView extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-
                       child: Center(
                         child: SvgPicture.asset(
                           'assets/images/company_ilustration.svg',
@@ -78,17 +77,18 @@ class CreateQrCompanyView extends StatelessWidget {
 
                           Obx(() => CustomTextField(
                             label: "Email Company",
+                            keyboardType: TextInputType.emailAddress,
                             onChanged: (value) => controller.email.value = value,
                             errorMessage: controller.emailError.value.isNotEmpty ? controller.emailError.value : null,
                           )),
                           SizedBox(height: 40.h),
 
-                          CustomButton(
-                            text: "Create Qr",
+                          Obx(() => CustomButton(
+                            text: controller.isLoading.value ? "Creating..." : "Create Qr",
                             backgroundColor: AppColor.btnoren,
-                            onPressed: controller.validateForm,
+                            onPressed: controller.isLoading.value ? () {} : controller.validateForm,
                             fontSize: 16,
-                          ),
+                          )),
                           SizedBox(height: 20.h),
                         ],
                       ),
