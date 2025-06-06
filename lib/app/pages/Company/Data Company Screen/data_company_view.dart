@@ -53,9 +53,14 @@ class DataCompanyView extends StatelessWidget {
                       itemBuilder: (_, index) {
                         final company = controller.getCompany(index);
                         return CompanyCard(
+                          id: company.id,
                           companyName: company.name,
-                          imagePath: company.imagePath,
                           companyAddress: company.address,
+                          phoneNumber: company.phoneNumber,
+                          email: company.email,
+                          imagePath: company.imagePath,
+                          createdAt: company.createdAt,
+                          updatedAt: company.updatedAt,
                         );
                       },
                     ),

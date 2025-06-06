@@ -3,16 +3,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CompanyCard extends StatelessWidget {
+  final int id; // Tambahkan ID
   final String companyName;
   final String companyAddress;
+  final String phoneNumber; // Tambahkan phone number
+  final String email; // Tambahkan email
   final String? imagePath;
+  final String createdAt; // Tambahkan created at
+  final String updatedAt; // Tambahkan updated at
   final VoidCallback? onMoreTap;
 
   const CompanyCard({
     Key? key,
+    required this.id, // Required ID
     required this.companyName,
     required this.companyAddress,
+    required this.phoneNumber, // Required phone number
+    required this.email, // Required email
     this.imagePath,
+    required this.createdAt, // Required created at
+    required this.updatedAt, // Required updated at
     this.onMoreTap,
   }) : super(key: key);
 
@@ -20,10 +30,16 @@ class CompanyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/detaildata', arguments: {
+        // Navigate ke halaman detail company dengan semua data
+        Get.toNamed('/detailcompany', arguments: {
+          'id': id,
           'name': companyName,
-          'image': imagePath,
           'address': companyAddress,
+          'phoneNumber': phoneNumber,
+          'email': email,
+          'imagePath': imagePath ?? '',
+          'createdAt': createdAt,
+          'updatedAt': updatedAt,
         });
       },
       child: Container(
@@ -50,6 +66,9 @@ class CompanyCard extends StatelessWidget {
                 width: double.infinity,
                 height: 180.h,
                 fit: BoxFit.cover,
+                headers: {
+                  'ngrok-skip-browser-warning': '1',
+                },
                 errorBuilder: (_, __, ___) => _fallbackImage(),
               )
                   : _fallbackImage(),
@@ -86,7 +105,19 @@ class CompanyCard extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: onMoreTap,
+                  onTap: () {
+                    // Navigate ke halaman detail saat titik tiga ditekan
+                    Get.toNamed('/detailcompany', arguments: {
+                      'id': id,
+                      'name': companyName,
+                      'address': companyAddress,
+                      'phoneNumber': phoneNumber,
+                      'email': email,
+                      'imagePath': imagePath ?? '',
+                      'createdAt': createdAt,
+                      'updatedAt': updatedAt,
+                    });
+                  },
                   child: Icon(Icons.more_vert, size: 18.sp, color: Colors.black),
                 ),
               ],
@@ -102,7 +133,7 @@ class CompanyCard extends StatelessWidget {
       width: double.infinity,
       height: 180.h,
       color: Colors.grey.shade400,
-      child: Icon(Icons.image, size: 36.sp, color: Colors.white),
+      child: Icon(Icons.business, size: 36.sp, color: Colors.white),
     );
   }
 }
