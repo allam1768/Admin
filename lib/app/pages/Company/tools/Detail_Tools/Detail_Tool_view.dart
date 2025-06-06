@@ -6,9 +6,10 @@ import '../../../../../routes/routes.dart';
 import '../../../../../values/app_color.dart';
 import '../../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../../global component/CustomAppBar.dart';
-import '../../../Client/Account Client/Widgets/InfoTile.dart';
 import '../../../../global component/ButtonEdit&Delete.dart';
+import '../Qr Detail Tool Screen/qr_detail_tool_view.dart';
 import 'Detail_Tool_controller.dart';
+import 'Widgets/InfoTile.dart';
 
 class DetailToolView extends StatelessWidget {
   DetailToolView({super.key});
@@ -37,8 +38,9 @@ class DetailToolView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Tool Image
                         Obx(
-                          () => Container(
+                              () => Container(
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey, width: 2),
                               borderRadius: BorderRadius.circular(12.r),
@@ -60,13 +62,13 @@ class DetailToolView extends StatelessWidget {
                                   return Center(
                                     child: CircularProgressIndicator(
                                       value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
+                                      loadingProgress.expectedTotalBytes !=
+                                          null
+                                          ? loadingProgress
+                                          .cumulativeBytesLoaded /
+                                          loadingProgress
+                                              .expectedTotalBytes!
+                                          : null,
                                     ),
                                   );
                                 },
@@ -86,7 +88,7 @@ class DetailToolView extends StatelessWidget {
 
                         SizedBox(height: 37.h),
 
-                        // Detail Info Alat
+                        // Tool Details
                         Container(
                           padding: EdgeInsets.all(18.w),
                           decoration: BoxDecoration(
@@ -96,42 +98,52 @@ class DetailToolView extends StatelessWidget {
                           child: Column(
                             children: [
                               Obx(() => InfoTile(
-                                    icon: Icons.build,
-                                    title: "Nama Alat",
-                                    value: controller.namaAlat.value,
-                                  )),
+                                icon: Icons.build,
+                                title: "Nama Alat",
+                                value: controller.namaAlat.value,
+                              )),
                               Obx(() => InfoTile(
-                                    icon: Icons.location_on,
-                                    title: "Lokasi",
-                                    value: controller.lokasi.value,
-                                  )),
+                                icon: Icons.location_on,
+                                title: "Lokasi",
+                                value: controller.lokasi.value,
+                              )),
                               Obx(() => InfoTile(
-                                    icon: Icons.map,
-                                    title: "Detail Lokasi",
-                                    value: controller.detailLokasi.value,
-                                  )),
+                                icon: Icons.map,
+                                title: "Detail Lokasi",
+                                value: controller.detailLokasi.value,
+                              )),
                               Obx(() => InfoTile(
-                                    icon: Icons.info_outline,
-                                    title: "Kondisi",
-                                    value: controller.kondisi.value,
-                                  )),
+                                icon: Icons.info_outline,
+                                title: "Kondisi",
+                                value: controller.kondisi.value,
+                              )),
                               Obx(() => InfoTile(
-                                    icon: Icons.bug_report,
-                                    title: "Pest Type",
-                                    value: controller.pestType.value,
-                                  )),
+                                icon: Icons.bug_report,
+                                title: "Pest Type",
+                                value: controller.pestType.value,
+                              )),
                               Obx(() => InfoTile(
-                                    icon: Icons.qr_code,
-                                    title: "Kode QR",
-                                    value: controller.kodeQr.value,
-                                  )),
+                                icon: Icons.qr_code,
+                                title: "Kode QR",
+                                value: controller.kodeQr.value,
+                                showChevron: true,
+                                onTap: () {
+                                  // Navigate to QR Code page and handle return
+                                  Get.to(() => QrDetailToolView(
+                                    qrData: controller.kodeQr.value,
+                                  ))?.then((_) {
+                                    // Callback when returning from QR page
+                                    controller.refreshToolDetail();
+                                  });
+                                },
+                              )),
                             ],
                           ),
                         ),
 
                         SizedBox(height: 20.h),
 
-                        // Tombol Edit & Delete
+                        // Edit & Delete Buttons
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -158,7 +170,7 @@ class DetailToolView extends StatelessWidget {
                                           namaAlat: controller.namaAlat.value,
                                           lokasi: controller.lokasi.value,
                                           detailLokasi:
-                                              controller.detailLokasi.value,
+                                          controller.detailLokasi.value,
                                           pestType: controller.pestType.value,
                                           kondisi: controller.kondisi.value,
                                           kodeQr: controller.kodeQr.value,

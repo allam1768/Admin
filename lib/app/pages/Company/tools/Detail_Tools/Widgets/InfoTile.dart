@@ -8,6 +8,8 @@ class InfoTile extends StatelessWidget {
   final String value;
   final bool isPassword;
   final VoidCallback? onTogglePassword;
+  final VoidCallback? onTap; // Add general onTap callback
+  final bool showChevron; // Control chevron visibility
 
   const InfoTile({
     super.key,
@@ -16,69 +18,72 @@ class InfoTile extends StatelessWidget {
     required this.value,
     this.isPassword = false,
     this.onTogglePassword,
+    this.onTap,
+    this.showChevron = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(10.w),
-            decoration: const BoxDecoration(
-              color: Color(0xFF9BBB9C),
-              shape: BoxShape.circle,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.w),
+              decoration: const BoxDecoration(
+                color: Color(0xFF9BBB9C),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: Colors.black, size: 20.sp),
             ),
-            child: Icon(icon, color: Colors.black, size: 20.sp),
-          ),
-          SizedBox(width: 20.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        value,
-                        style: TextStyle(fontSize: 14.sp),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    if (isPassword && onTogglePassword != null) ...[
-                      SizedBox(width: 10.w),
-                      GestureDetector(
-                        onTap: onTogglePassword,
-                        child: Icon(
-                          value == "********" ? Icons.visibility : Icons.visibility_off,
-                          size: 18.sp,
-                          color: Colors.black54,
+            SizedBox(width: 20.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          value,
+                          style: TextStyle(fontSize: 14.sp),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ],
-                    if (title == "Kode QR") ...[
-                      SizedBox(width: 10.w),
-                      GestureDetector(
-                        onTap: () => Get.toNamed('/generateQrTool'),
-                        child: Icon(
-                          Icons.chevron_right, // pakai panah kanan
-                          size: 18.sp,
-                          color: Colors.black54,
+                      // Password toggle functionality
+                      if (isPassword && onTogglePassword != null) ...[
+                        SizedBox(width: 10.w),
+                        GestureDetector(
+                          onTap: onTogglePassword,
+                          child: Icon(
+                            value == "********" ? Icons.visibility : Icons.visibility_off,
+                            size: 18.sp,
+                            color: Colors.black54,
+                          ),
                         ),
-                      ),
+                      ],
+                      // General chevron for clickable tiles
+                      if (showChevron || onTap != null) ...[
+                        SizedBox(width: 10.w),
+                        Icon(
+                          Icons.chevron_right,
+                          size: 20.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                      ],
                     ],
-
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

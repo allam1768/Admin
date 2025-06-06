@@ -6,6 +6,7 @@ import 'package:admin/app/pages/Company/tools/Create%20Qr%20Tools/create_qr_tool
 import 'package:admin/app/pages/Company/tools/Edit%20Tools/update_qr_tools_binding.dart';
 import 'package:admin/app/pages/Company/tools/Edit%20Tools/update_qr_tools_view.dart';
 import 'package:admin/app/pages/Company/tools/History/history_tools_binding.dart';
+import 'package:admin/app/pages/Company/tools/Qr%20Detail%20Tool%20Screen/qr_detail_tool_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_binding.dart';
 import 'package:admin/app/pages/Worker/Create%20Account%20Worker/create_account_worker_view.dart';
 import 'package:get/get.dart';
@@ -25,6 +26,7 @@ import '../app/pages/Company/tools/Detail_Tools/Detail_Tool_view.dart';
 import '../app/pages/Company/Edit Data History Screen/edit_data_binding.dart';
 import '../app/pages/Company/Edit Data History Screen/edit_data_view.dart';
 import '../app/pages/Company/tools/History/history_tools_view.dart';
+import '../app/pages/Company/tools/Qr Detail Tool Screen/qr_detail_tool_view.dart';
 import '../app/pages/Login screen/login_view.dart';
 import '../app/pages/Splash screen/splash_binding.dart';
 import '../app/pages/Splash screen/splash_view.dart';
@@ -141,6 +143,7 @@ class Routes {
       page: () => EditToolView(),
       binding: EditToolBinding(),
     ),
+
 
 
     GetPage(

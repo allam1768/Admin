@@ -14,8 +14,7 @@ class InfoTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
-    this.isPassword = false,
-    this.onTogglePassword,
+    this.isPassword = false, this.onTogglePassword,
   });
 
   @override

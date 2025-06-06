@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import '../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../global component/ButtonEdit&Delete.dart';
 import '../../../global component/CustomAppBar.dart';
-import '../../Client/Account Client/Widgets/InfoTile.dart';
 import 'Widgets/InfoCard.dart';
+import 'Widgets/InfoTile.dart';
 import 'account_worker_controller.dart';
 
 class AccountWorkerView extends StatelessWidget {
