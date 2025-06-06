@@ -1,6 +1,7 @@
 import 'package:admin/app/pages/Client/Create%20Account%20Client/create_account_client_view.dart';
 import 'package:admin/app/pages/Company/Create%20Qr%20Company/create_qr_company_binding.dart';
 import 'package:admin/app/pages/Company/Create%20Qr%20Company/create_qr_company_view.dart';
+import 'package:admin/app/pages/Company/Detail_Company/Detail_Company_view.dart';
 import 'package:admin/app/pages/Company/tools/Create%20Qr%20Tools/create_qr_tools_binding.dart';
 import 'package:admin/app/pages/Company/tools/Create%20Qr%20Tools/create_qr_tools_view.dart';
 import 'package:admin/app/pages/Company/tools/Edit%20Tools/update_qr_tools_binding.dart';
@@ -21,6 +22,7 @@ import '../app/pages/Company/Detail Data Screen/detail_data_binding.dart';
 import '../app/pages/Company/Detail Data Screen/detail_data_view.dart';
 import '../app/pages/Company/Detail History Screen/detail_binding.dart';
 import '../app/pages/Company/Detail History Screen/detail_view.dart';
+import '../app/pages/Company/Detail_Company/Detail_Company_binding.dart';
 import '../app/pages/Company/tools/Detail_Tools/Detail_Tool_binding.dart';
 import '../app/pages/Company/tools/Detail_Tools/Detail_Tool_view.dart';
 import '../app/pages/Company/Edit Data History Screen/edit_data_binding.dart';
@@ -53,6 +55,7 @@ class Routes {
   static const String createAccountCompany = '/CreateAccountCompany';
   static const String historytool = '/historytool';
   static const String detailtool = '/detailtool';
+  static const String detailcompany = '/detailcompany';
   static const String updatetool = '/updatetool';
 
 
@@ -137,6 +140,11 @@ class Routes {
       name: Routes.detailtool,
       page: () => DetailToolView(),
       binding: DetailToolBinding(),
+    ),
+    GetPage(
+      name: Routes.detailcompany,
+      page: () => DetailCompanyView(),
+      binding: DetailCompanyBinding(),
     ),
     GetPage(
       name: Routes.updatetool,
