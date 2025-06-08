@@ -7,7 +7,7 @@ import '../models/client_model.dart';
 
 class ClientService {
   static const String baseUrl = 'https://hamatech.rplrus.com/api/clients';
-  static const String createUserUrl = 'https://hamatech.rplrus.com/api/users';
+  static const String createUserUrl = 'https://hamatech.rplrus.com/api/clients/register'; // Updated endpoint
   static const String userDetailUrl = 'https://hamatech.rplrus.com/api/users';
 
   static Future<List<ClientModel>> fetchClients() async {
@@ -56,7 +56,7 @@ class ClientService {
 
   static Future<bool> deleteClient(int clientId) async {
     final response = await http.delete(
-      Uri.parse('$createUserUrl/$clientId'),
+      Uri.parse('https://hamatech.rplrus.com/api/users/$clientId'), // Keep using users endpoint for delete
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -83,17 +83,17 @@ class ClientService {
     File? profileImage,
   }) async {
     try {
-      final url = Uri.parse(createUserUrl); // Menggunakan URL /api/users
+      final url = Uri.parse(createUserUrl); // Using new endpoint /api/clients/register
 
       // Membuat request multipart untuk mengirim data dengan gambar
       var request = http.MultipartRequest('POST', url);
 
-      // Menambahkan data teks
+      // Menambahkan data teks (removed role field)
       request.fields['name'] = username;
       request.fields['email'] = email;
       request.fields['phone_number'] = phoneNumber;
       request.fields['password'] = password;
-      request.fields['role'] = 'client'; // Set role sebagai client
+      // Role field removed as per requirement
 
       // Menambahkan file gambar jika ada
       if (profileImage != null) {
@@ -161,7 +161,7 @@ class ClientService {
         print('Has image: ${profileImage != null}');
 
         // PERBAIKAN: Gunakan endpoint yang sama dengan worker service
-        final url = Uri.parse('$createUserUrl/$clientId'); // Gunakan /api/users seperti worker
+        final url = Uri.parse('https://hamatech.rplrus.com/api/users/$clientId'); // Gunakan /api/users untuk update
         print('Request URL: $url');
 
         // Selalu gunakan POST dengan _method: PUT untuk konsistensi

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/services/client_service.dart';
 import '../../Bottom Nav/bottomnav_controller.dart';
@@ -90,6 +91,32 @@ class CreateAccountClientController extends GetxController {
     }
   }
 
+  // Function to save client data to SharedPreferences
+  Future<void> _saveClientData({
+    required String clientId,
+    required String name,
+    required String email,
+    String? token,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('client_id', clientId);
+      await prefs.setString('client_name', name);
+      await prefs.setString('client_email', email);
+
+      if (token != null && token.isNotEmpty) {
+        await prefs.setString('auth_token', token);
+      }
+
+      print('Client data saved successfully');
+      print('Client ID: $clientId');
+      print('Client Name: $name');
+      print('Client Email: $email');
+    } catch (e) {
+      print('Error saving client data: $e');
+    }
+  }
+
   Future<void> createClient() async {
     try {
       isLoading.value = true;
@@ -107,6 +134,16 @@ class CreateAccountClientController extends GetxController {
       if (response.success) {
         // Store success message
         successMessage.value = response.message;
+
+        // Save client data to SharedPreferences
+        if (response.user != null) {
+          await _saveClientData(
+            clientId: response.user!.id.toString(),
+            name: response.user!.name,
+            email: response.user!.email ?? '',
+            token: response.token,
+          );
+        }
 
         // Show success snackbar with detailed info
         Get.snackbar(

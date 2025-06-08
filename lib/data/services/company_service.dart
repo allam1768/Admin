@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/company_model.dart';
 
 class CompanyService {
@@ -12,6 +13,17 @@ class CompanyService {
       return 'assets/images/example.png';
     }
     return '$imageBaseUrl$imagePath';
+  }
+
+  // Function to get client ID from SharedPreferences
+  Future<String?> getClientId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString('client_id');
+    } catch (e) {
+      print('Error getting client ID: $e');
+      return null;
+    }
   }
 
   Future<List<CompanyModel>> getCompanies() async {
@@ -40,36 +52,45 @@ class CompanyService {
     }
   }
 
-  // Fungsi baru untuk membuat company dengan gambar
+  // Updated function to create company with client ID and image
   Future<CompanyModel> createCompanyWithImage({
     required String name,
     required String address,
     required String phoneNumber,
     required String email,
     File? imageFile,
+    String? clientId, // Optional parameter, will use stored ID if not provided
   }) async {
     try {
+      // Get client ID if not provided
+      String? finalClientId = clientId ?? await getClientId();
+
+      if (finalClientId == null || finalClientId.isEmpty) {
+        throw Exception('Client ID not found. Please login again.');
+      }
+
       var request = http.MultipartRequest(
         'POST',
         Uri.parse('$baseUrl/companies'),
       );
 
-      // Tambahkan headers
+      // Add headers
       request.headers.addAll({
         'Accept': 'application/json',
         'ngrok-skip-browser-warning': '1',
       });
 
-      // Tambahkan field data
+      // Add form fields including client_id
+      request.fields['client_id'] = finalClientId;
       request.fields['name'] = name;
       request.fields['address'] = address;
       request.fields['phone_number'] = phoneNumber;
       request.fields['email'] = email;
 
-      // Tambahkan gambar jika ada
+      // Add image if exists
       if (imageFile != null && imageFile.existsSync()) {
         var multipartFile = await http.MultipartFile.fromPath(
-          'image', // sesuaikan dengan nama field di backend
+          'image', // adjust according to backend field name
           imageFile.path,
         );
         request.files.add(multipartFile);
@@ -77,13 +98,14 @@ class CompanyService {
       }
 
       print('Sending multipart request with data:');
+      print('Client ID: $finalClientId');
       print('Name: $name');
       print('Address: $address');
       print('Phone: $phoneNumber');
       print('Email: $email');
       print('Image: ${imageFile?.path ?? 'No image'}');
 
-      // Kirim request
+      // Send request
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
@@ -126,9 +148,18 @@ class CompanyService {
     }
   }
 
-  // Fungsi lama untuk backward compatibility
+  // Updated function for backward compatibility
   Future<CompanyModel> createCompany(Map<String, dynamic> data) async {
     try {
+      // Get client ID if not provided in data
+      if (!data.containsKey('client_id') || data['client_id'] == null) {
+        String? clientId = await getClientId();
+        if (clientId == null || clientId.isEmpty) {
+          throw Exception('Client ID not found. Please login again.');
+        }
+        data['client_id'] = clientId;
+      }
+
       print('Sending data to API: ${json.encode(data)}');
 
       final response = await http.post(
