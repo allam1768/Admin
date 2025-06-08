@@ -31,7 +31,7 @@ class CompanyCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigate ke halaman detail company dengan semua data
-        Get.toNamed('/detailcompany', arguments: {
+        Get.toNamed('/detaildata', arguments: {
           'id': id,
           'name': companyName,
           'address': companyAddress,
