@@ -37,12 +37,14 @@ class DetailDataView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Company Info Section
-                      
+
 
                       Obx(() => SummarySection(
                         totalAlat: controller.traps.length,
                         totalPengecekan: 4,
-                        onQrTap: () => Get.offNamed('/CreateQrTools'),
+                        onQrTap: () => Get.offNamed('/CreateQrTools', arguments: {
+                          'companyId': controller.companyId.value,
+                        }),
                       )),
                       SizedBox(height: 20.h),
                       MonthSelection(
@@ -95,14 +97,7 @@ class DetailDataView extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: 8.h),
-                                Text(
-                                  "Tools will appear here once they are added to ${controller.companyName.value}",
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+
                               ],
                             ),
                           );

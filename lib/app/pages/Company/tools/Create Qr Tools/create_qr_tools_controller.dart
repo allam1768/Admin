@@ -14,6 +14,9 @@ class CreateQrToolController extends GetxController {
   RxBool isLoading = false.obs;
   var selectedType = Rxn<String>();
 
+  // Company ID - will be passed from DetailDataView
+  var companyId = 0.obs;
+
   // Error states
   RxnString nameError = RxnString(null);
   RxnString areaError = RxnString(null);
@@ -24,6 +27,16 @@ class CreateQrToolController extends GetxController {
 
   // Image
   Rx<File?> imageFile = Rx<File?>(null);
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Get company ID from arguments
+    final arguments = Get.arguments;
+    if (arguments != null && arguments['companyId'] != null) {
+      companyId.value = arguments['companyId'];
+    }
+  }
 
   // Cek ekstensi file
   bool isValidImageFormat(String filePath) {
@@ -36,7 +49,6 @@ class CreateQrToolController extends GetxController {
     final maxSizeInBytes = maxSizeInMB * 1024 * 1024;
     return file.lengthSync() <= maxSizeInBytes;
   }
-
 
   Future<void> takePicture() async {
     final picker = ImagePicker();
@@ -60,7 +72,6 @@ class CreateQrToolController extends GetxController {
     }
   }
 
-
   Future<void> pickFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -83,13 +94,11 @@ class CreateQrToolController extends GetxController {
     }
   }
 
-
   // Validasi form
   void validateForm() {
     nameError.value = name.value.isEmpty ? "Name harus diisi!" : null;
     areaError.value = area.value.isEmpty ? "Lokasi harus diisi!" : null;
-    detailError.value =
-        detail.value.isEmpty ? "Detail lokasi harus diisi!" : null;
+    detailError.value = detail.value.isEmpty ? "Detail lokasi harus diisi!" : null;
     typeError.value = selectedType.value == null ? "Type harus dipilih!" : null;
     imageError.value = imageFile.value == null;
 
@@ -107,11 +116,9 @@ class CreateQrToolController extends GetxController {
   // Generate QR unik
   String generateUniqueQrCode() {
     const prefix = "Hmt-Tool-";
-    const chars =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     final random = Random();
-    final randomCode =
-        List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+    final randomCode = List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
     return "$prefix$randomCode";
   }
 
@@ -132,20 +139,19 @@ class CreateQrToolController extends GetxController {
       kondisi: 'good',
       kodeQr: qrCode,
       id: 0,
+      companyId: companyId.value > 0 ? companyId.value : null, // Include company ID
     );
 
     final response = await AlatService.createAlat(alat, image);
 
     isLoading.value = false;
 
-    if (response != null &&
-        (response.statusCode == 200 || response.statusCode == 201)) {
+    if (response != null && (response.statusCode == 200 || response.statusCode == 201)) {
       Get.off(() => QrToolView(qrData: qrCode))?.then((_) => _resetForm());
     } else {
       Get.snackbar("Gagal", "Gagal mengirim data ke server.");
     }
   }
-
 
   // Reset form
   void _resetForm() {
