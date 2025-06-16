@@ -18,7 +18,12 @@ class HistoryToolView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(() => CustomAppBar(title: controller.getDisplayTitle(), onBackTap: () {  },)),
+            Obx(() => CustomAppBar(
+          title: controller.getDisplayTitle(),
+      onBackTap: () {
+        Get.back(); // Kembali ke halaman sebelumnya
+      },
+    )),
 
             Expanded(
               child: Obx(() {

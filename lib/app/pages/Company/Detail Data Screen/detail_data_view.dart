@@ -36,11 +36,14 @@ class DetailDataView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Company Info Section
+                      
+
                       Obx(() => SummarySection(
-                            totalAlat: controller.traps.length,
-                            totalPengecekan: 4,
-                            onQrTap: () => Get.offNamed('/CreateQrTools'),
-                          )),
+                        totalAlat: controller.traps.length,
+                        totalPengecekan: 4,
+                        onQrTap: () => Get.offNamed('/CreateQrTools'),
+                      )),
                       SizedBox(height: 20.h),
                       MonthSelection(
                         onMonthRangeChanged: (startDate, endDate) {},
@@ -75,26 +78,57 @@ class DetailDataView extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 25.h),
-                      Obx(() => ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: controller.traps.length,
-                            separatorBuilder: (_, __) => SizedBox(height: 12.h),
-                            itemBuilder: (_, index) {
-                              final item = controller.traps[index];
-                              return ToolCard(
-                                toolName: item.namaAlat,
-                                imagePath: item.imagePath ?? "",
-                                location: item.lokasi,
-                                locationDetail: item.detailLokasi,
-                                historyItems: [],
-                                kondisi: item.kondisi,
-                                pest_type: item.pestType,
-                                kode_qr: item.kodeQr,
-                                alatId: item.id.toString(),
-                              );
-                            },
-                          )),
+                      Obx(() {
+                        if (controller.traps.isEmpty) {
+                          return Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(32.w),
+                            child: Column(
+                              children: [
+
+                                Text(
+                                  "No tools found for this company",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.grey.shade600,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  "Tools will appear here once they are added to ${controller.companyName.value}",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: controller.traps.length,
+                          separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                          itemBuilder: (_, index) {
+                            final item = controller.traps[index];
+                            return ToolCard(
+                              toolName: item.namaAlat,
+                              imagePath: item.imagePath ?? "",
+                              location: item.lokasi,
+                              locationDetail: item.detailLokasi,
+                              historyItems: [],
+                              kondisi: item.kondisi,
+                              pest_type: item.pestType,
+                              kode_qr: item.kodeQr,
+                              alatId: item.id.toString(),
+                            );
+                          },
+                        );
+                      }),
                       SizedBox(height: 25.h),
                     ],
                   ),
