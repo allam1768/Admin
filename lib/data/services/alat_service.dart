@@ -43,9 +43,17 @@ class AlatService {
     }
   }
 
-  static Future<List<AlatModel>> fetchAlat() async {
+  // Modified fetchAlat to accept optional companyId parameter
+  static Future<List<AlatModel>> fetchAlat({int? companyId}) async {
+    String url = '$baseUrl/alat';
+
+    // Add company_id parameter if provided
+    if (companyId != null) {
+      url += '?company_id=$companyId';
+    }
+
     final response = await http.get(
-      Uri.parse('$baseUrl/alat'),
+      Uri.parse(url),
       headers: {
         'ngrok-skip-browser-warning': '1',
       },
@@ -59,6 +67,11 @@ class AlatService {
     } else {
       throw Exception('Gagal mengambil data alat (${response.statusCode})');
     }
+  }
+
+  // New method specifically for fetching alat by company
+  static Future<List<AlatModel>> fetchAlatByCompany(int companyId) async {
+    return await fetchAlat(companyId: companyId);
   }
 
   static Future<http.Response?> deleteAlat(int id) async {

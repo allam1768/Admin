@@ -154,24 +154,6 @@ class DetailCompanyView extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: CustomButtonDetail(
-                                    icon: Icons.edit,
-                                    color: AppColor.btnijo,
-                                    text: 'Edit',
-                                    onPressed: () {
-                                      // Untuk update nanti
-                                      Get.snackbar(
-                                        'Info',
-                                        'Fitur edit akan segera tersedia',
-                                        snackPosition: SnackPosition.TOP,
-                                        backgroundColor: Colors.blue,
-                                        colorText: Colors.white,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: CustomButtonDetail(
                                     text: "Delete",
                                     icon: Icons.delete,
                                     color: Colors.red.shade700,
