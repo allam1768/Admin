@@ -8,6 +8,7 @@ class AlatModel {
   final String kondisi;
   final String kodeQr;
   final String? imagePath;
+  final int? companyId; // Added company ID field
 
   AlatModel({
     required this.id,
@@ -18,6 +19,7 @@ class AlatModel {
     required this.kondisi,
     required this.kodeQr,
     this.imagePath,
+    this.companyId, // Added company ID parameter
   });
 
   factory AlatModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class AlatModel {
       imagePath: json['alat_image'] != null && json['alat_image'].toString().isNotEmpty
           ? 'https://hamatech.rplrus.com/storage/${json['alat_image']}'
           : null,
+      companyId: json['company_id'], // Added company ID from JSON
     );
   }
 
@@ -45,6 +48,7 @@ class AlatModel {
       'kondisi': kondisi,
       'kode_qr': kodeQr,
       'alat_image': imagePath,
+      'company_id': companyId, // Added company ID to JSON
     };
   }
 }

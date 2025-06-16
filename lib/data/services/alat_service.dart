@@ -24,6 +24,11 @@ class AlatService {
       request.fields['kondisi'] = alat.kondisi;
       request.fields['kode_qr'] = alat.kodeQr;
 
+      // Add company_id field if it exists
+      if (alat.companyId != null) {
+        request.fields['company_id'] = alat.companyId.toString();
+      }
+
       if (imageFile != null) {
         request.files.add(
           await http.MultipartFile.fromPath('alat_image', imageFile.path),
@@ -107,6 +112,11 @@ class AlatService {
       request.fields['kondisi'] = alat.kondisi;
       request.fields['kode_qr'] = alat.kodeQr;
       request.fields['_method'] = 'PUT';
+
+      // Add company_id field if it exists
+      if (alat.companyId != null) {
+        request.fields['company_id'] = alat.companyId.toString();
+      }
 
       if (imageFile != null) {
         request.files.add(
