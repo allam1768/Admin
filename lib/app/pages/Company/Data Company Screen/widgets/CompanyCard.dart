@@ -3,26 +3,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CompanyCard extends StatelessWidget {
-  final int id; // Tambahkan ID
+  final int id;
   final String companyName;
   final String companyAddress;
-  final String phoneNumber; // Tambahkan phone number
-  final String email; // Tambahkan email
+  final String phoneNumber;
+  final String email;
   final String? imagePath;
-  final String createdAt; // Tambahkan created at
-  final String updatedAt; // Tambahkan updated at
+  final String createdAt;
+  final String updatedAt;
+  final String companyQr; // ✅ Tambahkan ini
   final VoidCallback? onMoreTap;
 
   const CompanyCard({
     Key? key,
-    required this.id, // Required ID
+    required this.id,
     required this.companyName,
     required this.companyAddress,
-    required this.phoneNumber, // Required phone number
-    required this.email, // Required email
+    required this.phoneNumber,
+    required this.email,
     this.imagePath,
-    required this.createdAt, // Required created at
-    required this.updatedAt, // Required updated at
+    required this.createdAt,
+    required this.updatedAt,
+    required this.companyQr, // ✅ Tambahkan ini
     this.onMoreTap,
   }) : super(key: key);
 
@@ -30,7 +32,7 @@ class CompanyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate ke halaman detail company dengan semua data
+        // ✅ Kirim juga companyQr ke /detaildata
         Get.toNamed('/detaildata', arguments: {
           'id': id,
           'name': companyName,
@@ -40,6 +42,7 @@ class CompanyCard extends StatelessWidget {
           'imagePath': imagePath ?? '',
           'createdAt': createdAt,
           'updatedAt': updatedAt,
+          'companyQr': companyQr, // ✅
         });
       },
       child: Container(
@@ -57,7 +60,6 @@ class CompanyCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Gambar dengan tinggi 180.h
             ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: imagePath != null && imagePath!.isNotEmpty
@@ -66,16 +68,12 @@ class CompanyCard extends StatelessWidget {
                 width: double.infinity,
                 height: 180.h,
                 fit: BoxFit.cover,
-                headers: {
-                  'ngrok-skip-browser-warning': '1',
-                },
+                headers: {'ngrok-skip-browser-warning': '1'},
                 errorBuilder: (_, __, ___) => _fallbackImage(),
               )
                   : _fallbackImage(),
             ),
             SizedBox(height: 10.h),
-
-            // Nama + alamat + titik tiga
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -106,7 +104,7 @@ class CompanyCard extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigate ke halaman detail saat titik tiga ditekan
+                    // ✅ Kirim juga companyQr ke /detailcompany
                     Get.toNamed('/detailcompany', arguments: {
                       'id': id,
                       'name': companyName,
@@ -116,6 +114,7 @@ class CompanyCard extends StatelessWidget {
                       'imagePath': imagePath ?? '',
                       'createdAt': createdAt,
                       'updatedAt': updatedAt,
+                      'companyQr': companyQr, // ✅
                     });
                   },
                   child: Icon(Icons.more_vert, size: 18.sp, color: Colors.black),

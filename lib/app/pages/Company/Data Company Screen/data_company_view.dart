@@ -61,6 +61,7 @@ class DataCompanyView extends StatelessWidget {
                           imagePath: company.imagePath,
                           createdAt: company.createdAt,
                           updatedAt: company.updatedAt,
+                          companyQr: company.companyQr ?? '',
                         );
                       },
                     ),

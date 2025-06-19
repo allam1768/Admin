@@ -9,6 +9,7 @@ class DetailCompanyController extends GetxController {
   final phoneNumber = "".obs;
   final email = "".obs;
   final imagePath = "".obs;
+  final companyQr = "".obs; // Added QR field
   final createdAt = "".obs;
   final updatedAt = "".obs;
   final id = 0.obs;
@@ -50,6 +51,7 @@ class DetailCompanyController extends GetxController {
     phoneNumber.value = args['phoneNumber'] ?? '';
     email.value = args['email'] ?? '';
     imagePath.value = args['imagePath'] ?? '';
+    companyQr.value = args['companyQr'] ?? ''; // Set QR value
     createdAt.value = args['createdAt'] ?? '';
     updatedAt.value = args['updatedAt'] ?? '';
   }
