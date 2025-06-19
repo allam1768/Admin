@@ -99,37 +99,50 @@ class CreateQrCompanyController extends GetxController {
     try {
       isLoading.value = true;
 
-      // Gunakan multipart request untuk mengirim gambar
+      // Generate QR unik untuk dikirim ke server
+      String qrContent = generateUniqueQrCode();
+
+      // Gunakan multipart request untuk mengirim gambar dan QR code
       CompanyModel createdCompany = await _companyService.createCompanyWithImage(
         name: name.value,
         address: address.value,
         phoneNumber: phoneNumber.value,
         email: email.value,
         imageFile: imageFile.value,
+        companyQr: qrContent, // Kirim QR code yang sudah dibuat
       );
 
       // Tampilkan notifikasi sukses
       Get.snackbar(
         'Success',
         'Company berhasil dibuat!',
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.green,
         colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 3),
       );
 
-      // Generate QR unik
-      String qrContent = generateUniqueQrCode();
+      // Gunakan QR code dari response server (jika ada) atau yang kita generate
+      String finalQrContent = createdCompany.companyQr ?? qrContent;
 
-      // Navigasi ke tampilan QR
-      Get.off(() => QrCompanyView(qrData: qrContent));
+      print('Company created successfully:');
+      print('Company ID: ${createdCompany.id}');
+      print('Company QR: ${createdCompany.companyQr}');
+      print('Client Info: ${createdCompany.client?.name} (${createdCompany.client?.email})');
+
+      // Navigasi ke tampilan QR dengan data yang lengkap
+      Get.off(() => QrCompanyView(
+        qrData: finalQrContent
+      ));
     } catch (e) {
       // Tampilkan pesan error
       Get.snackbar(
         'Error',
         'Gagal membuat company: ${e.toString()}',
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 5),
       );
       print('Error creating company: $e');
     } finally {
@@ -139,10 +152,10 @@ class CreateQrCompanyController extends GetxController {
 
   // Fungsi untuk menghasilkan QR unik
   String generateUniqueQrCode() {
-    const prefix = "Hmt-Tool-";
+    const prefix = "company-";
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     final random = Random();
-    final randomCode = List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+    final randomCode = List.generate(8, (index) => chars[random.nextInt(chars.length)]).join();
     return "$prefix$randomCode";
   }
 
