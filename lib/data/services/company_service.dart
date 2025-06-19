@@ -52,7 +52,7 @@ class CompanyService {
     }
   }
 
-  // Updated function to create company with client ID and image
+  // Updated function to create company with client ID and image, including company_qr generation
   Future<CompanyModel> createCompanyWithImage({
     required String name,
     required String address,
@@ -60,6 +60,7 @@ class CompanyService {
     required String email,
     File? imageFile,
     String? clientId, // Optional parameter, will use stored ID if not provided
+    String? companyQr, // Optional QR code, server will generate if not provided
   }) async {
     try {
       // Get client ID if not provided
@@ -87,6 +88,11 @@ class CompanyService {
       request.fields['phone_number'] = phoneNumber;
       request.fields['email'] = email;
 
+      // Add company QR if provided (let server generate if not provided)
+      if (companyQr != null && companyQr.isNotEmpty) {
+        request.fields['company_qr'] = companyQr;
+      }
+
       // Add image if exists
       if (imageFile != null && imageFile.existsSync()) {
         var multipartFile = await http.MultipartFile.fromPath(
@@ -103,6 +109,7 @@ class CompanyService {
       print('Address: $address');
       print('Phone: $phoneNumber');
       print('Email: $email');
+      print('Company QR: ${companyQr ?? 'Server will generate'}');
       print('Image: ${imageFile?.path ?? 'No image'}');
 
       // Send request
