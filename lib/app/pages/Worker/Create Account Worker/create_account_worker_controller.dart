@@ -88,7 +88,7 @@ class CreateAccountWorkerController extends GetxController {
           'Akun worker berhasil dibuat',
           backgroundColor: Colors.green,
           colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
         );
 
         // Navigasi ke halaman yang sesuai
