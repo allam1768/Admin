@@ -24,8 +24,8 @@ class DataCompanyView extends StatelessWidget {
             CustomAppBar(
               title: "Company",
               showBackButton: false,
-              rightIcon: "",
-              rightOnTap: () {},
+              rightIcon: "", // tambahkan ikon kalau mau ada tombol tambah
+              rightOnTap: () {}, // navigasi ke form tambah data
               onBackTap: () {},
             ),
             Expanded(
@@ -39,8 +39,19 @@ class DataCompanyView extends StatelessWidget {
                   }
 
                   if (controller.companies.isEmpty) {
-                    return const Center(
-                      child: Text('Tidak ada data perusahaan'),
+                    return RefreshIndicator(
+                      onRefresh: controller.fetchCompanies,
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: const Center(
+                              child: Text('Tidak ada data perusahaan'),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   }
 
@@ -59,7 +70,7 @@ class DataCompanyView extends StatelessWidget {
                         return SizedBox(height: 20.h);
                       },
                       itemBuilder: (_, index) {
-                        // Show loading indicator at bottom when loading more
+                        // Tampilkan loading tambahan di bawah saat scroll
                         if (index == controller.companyCount) {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 20.h),

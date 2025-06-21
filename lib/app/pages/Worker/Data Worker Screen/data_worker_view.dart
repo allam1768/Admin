@@ -27,54 +27,70 @@ class DataWorkerView extends StatelessWidget {
               onBackTap: () {},
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+              child: RefreshIndicator(
+                onRefresh: controller.fetchWorkers,
                 child: Obx(() {
+                  // Loading state
                   if (controller.isLoading.value) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      ],
                     );
                   }
 
+                  // Empty state
                   if (controller.workers.isEmpty) {
-                    return const Center(
-                      child: Text('Tidak ada data worker'),
+                    return ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: const Center(
+                            child: Text("Belum ada data worker."),
+                          ),
+                        ),
+                      ],
                     );
                   }
 
-                  return RefreshIndicator(
-                    onRefresh: controller.fetchWorkers,
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                      padding: EdgeInsets.zero,
-                      itemCount: controller.workers.length,
-                      separatorBuilder: (_, __) => SizedBox(height: 20.h),
-                      itemBuilder: (_, index) {
-                        final worker = controller.workers[index];
+                  // Data available
+                  return ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                    itemCount: controller.workers.length,
+                    separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                    itemBuilder: (_, index) {
+                      final worker = controller.workers[index];
 
-                        String? imageUrl;
-                        bool isNetworkImage = false;
+                      String? imageUrl;
+                      bool isNetworkImage = false;
 
-                        if (worker.image != null && worker.image!.isNotEmpty) {
-                          // Jika worker.image sudah berupa URL lengkap
-                          if (worker.image!.startsWith('http')) {
-                            imageUrl = worker.image;
-                            isNetworkImage = true;
-                          }
-                          // Jika worker.image hanya nama file, gabungkan dengan base URL
-                          else {
-                            imageUrl = 'https://hamatech.rplrus.com/storage/${worker.image}';
-                            isNetworkImage = true;
-                          }
+                      if (worker.image != null && worker.image!.isNotEmpty) {
+                        // Jika worker.image sudah berupa URL lengkap
+                        if (worker.image!.startsWith('http')) {
+                          imageUrl = worker.image;
+                          isNetworkImage = true;
                         }
+                        // Jika worker.image hanya nama file, gabungkan dengan base URL
+                        else {
+                          imageUrl = 'https://hamatech.rplrus.com/storage/${worker.image}';
+                          isNetworkImage = true;
+                        }
+                      }
 
-                        return WorkerCard(
-                          worker: worker, // Pass worker model lengkap
-                          imagePath: imageUrl,
-                          isNetworkImage: isNetworkImage,
-                        );
-                      },
-                    ),
+                      return WorkerCard(
+                        worker: worker, // Pass worker model lengkap
+                        imagePath: imageUrl,
+                        isNetworkImage: isNetworkImage,
+                      );
+                    },
                   );
                 }),
               ),
