@@ -47,10 +47,28 @@ class DataCompanyView extends StatelessWidget {
                   return RefreshIndicator(
                     onRefresh: controller.fetchCompanies,
                     child: ListView.separated(
+                      controller: controller.scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: controller.companyCount,
-                      separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                      itemCount: controller.companyCount +
+                          (controller.isLoadingMore.value ? 1 : 0),
+                      separatorBuilder: (_, index) {
+                        if (index == controller.companyCount - 1 &&
+                            controller.isLoadingMore.value) {
+                          return const SizedBox();
+                        }
+                        return SizedBox(height: 20.h);
+                      },
                       itemBuilder: (_, index) {
+                        // Show loading indicator at bottom when loading more
+                        if (index == controller.companyCount) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
                         final company = controller.getCompany(index);
                         return CompanyCard(
                           id: company.id,

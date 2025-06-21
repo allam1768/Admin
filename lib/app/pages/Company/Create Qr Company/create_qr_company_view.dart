@@ -48,7 +48,6 @@ class CreateQrCompanyView extends StatelessWidget {
                         children: [
                           ImageUpload(
                             imageFile: controller.imageFile,
-                            imageError: controller.imageError,
                             showButton: false,
                           ),
                           SizedBox(height: 15.h),
