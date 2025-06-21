@@ -38,8 +38,12 @@ class DataClientView extends StatelessWidget {
                       ? ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: [
-                      SizedBox(height: 100.h),
-                      Center(child: Text("Belum ada data client.")),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7, // atur agar vertikal tengah
+                        child: const Center(
+                          child: Text("Belum ada data client."),
+                        ),
+                      ),
                     ],
                   )
                       : ListView.separated(
