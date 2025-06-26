@@ -16,32 +16,35 @@ class _MonthSelectionState extends State<MonthSelection> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
+  @override
+  void initState() {
+    super.initState();
+    // Set initial start date to beginning of current month
+    startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+    // Set initial end date to end of current month
+    endDate = DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
+
+    // Call the callback with initial dates
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onMonthRangeChanged(startDate, endDate);
+    });
+  }
+
   Future<void> _selectStartMonth(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await _showMonthYearPicker(
       context: context,
       initialDate: startDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialDatePickerMode: DatePickerMode.year,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColor.ijomuda,
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
+      title: 'Select Start Month',
     );
 
     if (picked != null) {
       setState(() {
-        startDate = DateTime(picked.year, picked.month);
+        // Set to first day of selected month
+        startDate = DateTime(picked.year, picked.month, 1);
+
+        // If start date is after end date, adjust end date
         if (startDate.isAfter(endDate)) {
-          endDate = DateTime(picked.year, picked.month);
+          endDate = DateTime(picked.year, picked.month + 1, 0); // Last day of same month
         }
       });
       widget.onMonthRangeChanged(startDate, endDate);
@@ -49,32 +52,151 @@ class _MonthSelectionState extends State<MonthSelection> {
   }
 
   Future<void> _selectEndMonth(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await _showMonthYearPicker(
       context: context,
       initialDate: endDate,
+      title: 'Select End Month',
       firstDate: startDate,
-      lastDate: DateTime(2101),
-      initialDatePickerMode: DatePickerMode.year,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColor.ijomuda,
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
 
     if (picked != null) {
       setState(() {
-        endDate = DateTime(picked.year, picked.month);
+        // Set to last day of selected month
+        endDate = DateTime(picked.year, picked.month + 1, 0);
       });
       widget.onMonthRangeChanged(startDate, endDate);
     }
+  }
+
+  Future<DateTime?> _showMonthYearPicker({
+    required BuildContext context,
+    required DateTime initialDate,
+    required String title,
+    DateTime? firstDate,
+  }) async {
+    DateTime selectedDate = initialDate;
+
+    return showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(title),
+              content: Container(
+                width: 300,
+                height: 400,
+                child: Column(
+                  children: [
+                    // Year Selection
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedDate = DateTime(selectedDate.year - 1, selectedDate.month);
+                            });
+                          },
+                          icon: Icon(Icons.keyboard_arrow_left),
+                        ),
+                        Text(
+                          selectedDate.year.toString(),
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedDate = DateTime(selectedDate.year + 1, selectedDate.month);
+                            });
+                          },
+                          icon: Icon(Icons.keyboard_arrow_right),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    // Month Selection Grid
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 2,
+                        ),
+                        itemCount: 12,
+                        itemBuilder: (context, index) {
+                          final month = index + 1;
+                          final monthDate = DateTime(selectedDate.year, month);
+                          final isSelected = selectedDate.month == month;
+
+                          // Check if this month is disabled (before firstDate)
+                          final isDisabled = firstDate != null &&
+                              monthDate.isBefore(DateTime(firstDate.year, firstDate.month));
+
+                          return GestureDetector(
+                            onTap: isDisabled ? null : () {
+                              setState(() {
+                                selectedDate = DateTime(selectedDate.year, month);
+                              });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppColor.ijomuda
+                                    : isDisabled
+                                    ? Colors.grey.shade200
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColor.ijomuda
+                                      : Colors.grey.shade300,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  DateFormat('MMM').format(DateTime(2024, month)),
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : isDisabled
+                                        ? Colors.grey.shade400
+                                        : Colors.black87,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(selectedDate),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.ijomuda,
+                  ),
+                  child: Text('OK', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
