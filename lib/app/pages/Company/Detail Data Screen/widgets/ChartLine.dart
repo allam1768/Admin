@@ -7,38 +7,156 @@ class LineChartWidget extends StatelessWidget {
   final List<FlSpot> data;
   final Color primaryColor;
   final String title;
+  final bool isLoading;
 
   const LineChartWidget({
     Key? key,
     required this.data,
     required this.title,
     this.primaryColor = AppColor.btnoren,
+    this.isLoading = false,
   }) : super(key: key);
+
+  double get maxY {
+    if (data.isEmpty) return 10;
+    double max = data.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
+    // Ensure minimum of 10 for better visualization, but don't apply to zero data
+    if (max == 0) return 10;
+    return max < 10 ? 10 : max * 1.2; // Add 20% padding
+  }
+
+  double get maxX {
+    if (data.isEmpty) return 5;
+    double max = data.map((spot) => spot.x).reduce((a, b) => a > b ? a : b);
+    return max == 0 ? 1 : max + 0.5; // Better padding for X axis
+  }
+
+  bool get hasValidData {
+    if (data.isEmpty) return false;
+    // Check if it's not just the default [0,0] point
+    if (data.length == 1 && data.first.x == 0 && data.first.y == 0) return false;
+    // Check if all points are zero
+    bool allZero = data.every((spot) => spot.y == 0);
+    return !allZero;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(25.w),
       margin: EdgeInsets.symmetric(vertical: 8.h),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+          Row(
+            children: [
+              Container(
+                width: 4.w,
+                height: 20.h,
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              Spacer(),
+              if (isLoading) ...[
+                SizedBox(
+                  width: 16.w,
+                  height: 16.h,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                  ),
+                ),
+              ] else if (hasValidData) ...[
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Text(
+                    'Total: ${data.map((e) => e.y.toInt()).reduce((a, b) => a + b)}',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
           SizedBox(height: 16.h),
-          SizedBox(
+          Container(
             height: 250.h,
-            child: LineChart(
+            child: isLoading
+                ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Loading chart data...',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            )
+                : !hasValidData
+                ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.analytics_outlined,
+                    size: 48.w,
+                    color: Colors.grey.shade400,
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'No data available',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Data will appear when catches are recorded',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey.shade500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+                : LineChart(
               LineChartData(
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: true,
+                  horizontalInterval: maxY > 10 ? maxY / 5 : 2, // Better grid spacing
+                  verticalInterval: maxX > 1 ? 1 : 0.5,
                   getDrawingHorizontalLine: (value) => FlLine(
                     color: Colors.grey.withOpacity(0.15),
                     strokeWidth: 1.w,
@@ -49,9 +167,11 @@ class LineChartWidget extends StatelessWidget {
                   ),
                 ),
                 titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                leftTitles: AxisTitles(
+    sideTitles: SideTitles(showTitles: false),
+    ),
+
+
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
@@ -61,16 +181,19 @@ class LineChartWidget extends StatelessWidget {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 22.h,
+                      reservedSize: 35.h,
+                      interval: 1,
                       getTitlesWidget: (value, meta) {
-                        if (value % 1 == 0) {
+                        // Show X-axis labels based on actual data points
+                        int intValue = value.toInt();
+                        if (value == intValue && intValue >= 0 && intValue < data.length) {
                           return Padding(
-                            padding: EdgeInsets.only(top: 5.h),
+                            padding: EdgeInsets.only(top: 8.h),
                             child: Text(
-                              'Week ${value.toInt()}',
+                              'Week ${intValue + 1}',
                               style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
                                 fontSize: 10.sp,
                               ),
                             ),
@@ -81,11 +204,22 @@ class LineChartWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                borderData: FlBorderData(show: false),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(
+                    color: Colors.grey.withOpacity(0.2),
+                    width: 1.5,
+                  ),
+                ),
+                minX: 0,
+                maxX: maxX,
+                minY: 0,
+                maxY: maxY,
                 lineBarsData: [
                   LineChartBarData(
                     spots: data,
-                    isCurved: false,
+                    isCurved: true,
+                    curveSmoothness: 0.35,
                     color: primaryColor,
                     barWidth: 3.w,
                     isStrokeCapRound: true,
@@ -93,11 +227,12 @@ class LineChartWidget extends StatelessWidget {
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          primaryColor.withOpacity(0.2),
+                          primaryColor.withOpacity(0.3),
+                          primaryColor.withOpacity(0.15),
                           primaryColor.withOpacity(0.05),
                           Colors.transparent,
                         ],
-                        stops: const [0.1, 0.5, 0.9],
+                        stops: const [0.0, 0.3, 0.7, 1.0],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -108,21 +243,37 @@ class LineChartWidget extends StatelessWidget {
                         return FlDotCirclePainter(
                           radius: 5.r,
                           color: primaryColor,
-                          strokeWidth: 2.5.w,
+                          strokeWidth: 2.w,
                           strokeColor: Colors.white,
                         );
                       },
                     ),
-                    shadow: Shadow(
-                      color: primaryColor.withOpacity(0.2),
-                      offset: const Offset(0, 3),
-                      blurRadius: 8,
-                    ),
+
                   ),
                 ],
               ),
             ),
           ),
+          if (hasValidData) ...[
+            SizedBox(height: 12.h),
+            Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 16.w,
+                  color: Colors.grey.shade600,
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  'Showing ${data.length} data points for selected range',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

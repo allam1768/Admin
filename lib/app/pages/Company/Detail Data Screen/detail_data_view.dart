@@ -37,36 +37,57 @@ class DetailDataView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Company Info Section
-
-
                       Obx(() => SummarySection(
                         totalAlat: controller.traps.length,
-                        totalPengecekan: 4,
+                        totalPengecekan: controller.totalPengecekan,
                         onQrTap: () => Get.offNamed('/CreateQrTools', arguments: {
                           'companyId': controller.companyId.value,
                         }),
                       )),
                       SizedBox(height: 20.h),
+
+                      // Month Selection with callback
                       MonthSelection(
-                        onMonthRangeChanged: (startDate, endDate) {},
+                        onMonthRangeChanged: controller.onDateRangeChanged,
                       ),
                       SizedBox(height: 20.h),
-                      DataCard(
+
+                      // Loading indicator for charts
+                      Obx(() {
+                        if (controller.isLoadingChart.value) {
+                          return Container(
+                            height: 100.h,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColor.ijomuda,
+                              ),
+                            ),
+                          );
+                        }
+                        return SizedBox.shrink();
+                      }),
+
+                      // Land Chart
+              Obx(() =>DataCard(
                         title: "Land",
                         chartData: controller.getChartData("Land"),
                         onNoteChanged: (text) => controller.updateNote(0, text),
                         onSave: () => print("Data Land disimpan!"),
                         color: AppColor.ijomuda,
-                      ),
+                      ),),
                       SizedBox(height: 25.h),
-                      DataCard(
+
+                      // Fly Chart
+              Obx(() =>DataCard(
                         title: "Fly",
                         chartData: controller.getChartData("Fly"),
                         onNoteChanged: (text) => controller.updateNote(1, text),
                         onSave: () => print("Data Fly disimpan!"),
-                        color: AppColor.ijomuda,
-                      ),
+                        color: AppColor.btnoren,
+                      ),),
                       SizedBox(height: 35.h),
+
+                      // History Section
                       Row(
                         children: [
                           Text(
@@ -80,6 +101,8 @@ class DetailDataView extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 25.h),
+
+                      // Tools List
                       Obx(() {
                         if (controller.traps.isEmpty) {
                           return Container(
@@ -87,7 +110,12 @@ class DetailDataView extends StatelessWidget {
                             padding: EdgeInsets.all(32.w),
                             child: Column(
                               children: [
-
+                                Icon(
+                                  Icons.inventory_2_outlined,
+                                  size: 64.w,
+                                  color: Colors.grey.shade400,
+                                ),
+                                SizedBox(height: 16.h),
                                 Text(
                                   "No tools found for this company",
                                   style: TextStyle(
@@ -97,7 +125,13 @@ class DetailDataView extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: 8.h),
-
+                                Text(
+                                  "Tools will appear here once they are added",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
                               ],
                             ),
                           );
