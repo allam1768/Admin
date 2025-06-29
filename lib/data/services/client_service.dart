@@ -153,12 +153,6 @@ class ClientService {
 
     while (retryCount < maxRetries) {
       try {
-        print('=== UPDATE CLIENT REQUEST ===');
-        print('Client ID: $clientId');
-        print('Name: $name');
-        print('Email: $email');
-        print('Phone: $phoneNumber');
-        print('Has image: ${profileImage != null}');
 
         // PERBAIKAN: Gunakan endpoint yang sama dengan worker service
         final url = Uri.parse('https://hamatech.rplrus.com/api/users/$clientId'); // Gunakan /api/users untuk update
@@ -201,10 +195,7 @@ class ClientService {
           print('Adding profile image to request...');
         }
 
-        print('Sending POST request with _method: PUT...');
-        print('Request fields: ${request.fields}');
-        print('Request files: ${request.files.length} file(s)');
-        print('Request headers: ${request.headers}');
+
 
         // Kirim request
         final streamedResponse = await request.send().timeout(
@@ -216,9 +207,7 @@ class ClientService {
 
         final response = await http.Response.fromStream(streamedResponse);
 
-        print('Response status for update: ${response.statusCode}');
-        print('Response headers: ${response.headers}');
-        print('Response body for update: ${response.body}');
+
 
         // PERBAIKAN: Handle redirect 302 secara eksplisit
         if (response.statusCode == 302) {

@@ -73,12 +73,10 @@ class DataWorkerView extends StatelessWidget {
                       bool isNetworkImage = false;
 
                       if (worker.image != null && worker.image!.isNotEmpty) {
-                        // Jika worker.image sudah berupa URL lengkap
                         if (worker.image!.startsWith('http')) {
                           imageUrl = worker.image;
                           isNetworkImage = true;
                         }
-                        // Jika worker.image hanya nama file, gabungkan dengan base URL
                         else {
                           imageUrl = 'https://hamatech.rplrus.com/storage/${worker.image}';
                           isNetworkImage = true;
@@ -86,7 +84,7 @@ class DataWorkerView extends StatelessWidget {
                       }
 
                       return WorkerCard(
-                        worker: worker, // Pass worker model lengkap
+                        worker: worker,
                         imagePath: imageUrl,
                         isNetworkImage: isNetworkImage,
                       );

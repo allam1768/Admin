@@ -32,13 +32,11 @@ class EditAccountWorkerView extends StatelessWidget {
                   children: [
                     SizedBox(height: 20.h),
 
-                    // Profile Image dengan opsi untuk mengganti
                     GestureDetector(
                       child: Stack(
                         children: [
                           Obx(() => ImageProfile(
                             profileImage: controller.profileImage,
-                            // Jika tidak ada profileImage baru, gunakan URL dari worker data
                             imageUrl: controller.profileImage.value == null
                                 ? controller.currentWorker?.fullImageUrl
                                 : null,
@@ -54,7 +52,6 @@ class EditAccountWorkerView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Name Field
                           Obx(() => CustomTextField(
                             label: "Name",
                             initialValue: controller.name.value,
@@ -63,7 +60,6 @@ class EditAccountWorkerView extends StatelessWidget {
                           )),
                           SizedBox(height: 12.h),
 
-                          // Phone Number Field
                           Obx(() => CustomTextField(
                             label: "Phone number",
                             initialValue: controller.phoneNumber.value,
@@ -73,7 +69,6 @@ class EditAccountWorkerView extends StatelessWidget {
                           )),
                           SizedBox(height: 12.h),
 
-                          // Email Field
                           Obx(() => CustomTextField(
                             label: "Email",
                             initialValue: controller.email.value,
@@ -82,7 +77,6 @@ class EditAccountWorkerView extends StatelessWidget {
                           )),
                           SizedBox(height: 12.h),
 
-                          // Password Field (Optional)
                           Obx(() => CustomTextField(
                             label: "Password (Kosongkan jika tidak ingin mengubah)",
                             onChanged: (value) => controller.password.value = value,
@@ -91,7 +85,6 @@ class EditAccountWorkerView extends StatelessWidget {
                           )),
                           SizedBox(height: 12.h),
 
-                          // Confirm Password Field (Optional)
                           Obx(() => CustomTextField(
                             label: "Confirm Password",
                             onChanged: (value) => controller.confirmPassword.value = value,

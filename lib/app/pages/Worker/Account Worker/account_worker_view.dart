@@ -30,7 +30,6 @@ class AccountWorkerView extends StatelessWidget {
 
             Expanded(
               child: Obx(() {
-                // Show loading indicator
                 if (controller.isLoading.value) {
                   return Center(
                     child: CircularProgressIndicator(
@@ -46,7 +45,6 @@ class AccountWorkerView extends StatelessWidget {
                     children: [
                       SizedBox(height: 30.h),
 
-                      // User Card - menggunakan data dari controller
                       Obx(() => UserInfoCard(
                         name: controller.userName.value,
                         email: controller.userEmail.value,
@@ -55,7 +53,6 @@ class AccountWorkerView extends StatelessWidget {
 
                       SizedBox(height: 37.h),
 
-                      // Detail Info
                       Container(
                         padding: EdgeInsets.all(18.w),
                         decoration: BoxDecoration(

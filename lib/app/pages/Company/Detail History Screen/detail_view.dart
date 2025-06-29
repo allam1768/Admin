@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../values/app_color.dart';
-import '../../../dialogs/ConfirmDeleteDialog.dart';
-import '../../../global component/ButtonEdit&Delete.dart';
 import '../../../global component/CustomAppBar.dart';
 import 'detail_controller.dart';
 

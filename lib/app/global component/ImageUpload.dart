@@ -4,23 +4,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'CustomButton.dart'; // tombol custom kamu
-import '../../values/app_color.dart'; // warna dari project kamu
-
 class ImageUpload extends StatelessWidget {
   final Rx<File?> imageFile;
-  final RxBool? imageError; // opsional sekarang
+  final RxBool? imageError;
   final String title;
   final bool showButton;
   final String? imageUrl;
 
-  ImageUpload({
+  const ImageUpload({
+    Key? key,
     required this.imageFile,
-    this.imageError, // nggak wajib
+    this.imageError,
     this.title = "Upload Image",
     this.showButton = true,
     this.imageUrl,
-  });
+  }) : super(key: key);
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -37,15 +35,19 @@ class ImageUpload extends StatelessWidget {
           children: [
             Text(
               "Pilih Gambar",
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildPickButton(Icons.camera_alt, "Camera", () async {
                   final pickedFile =
-                      await picker.pickImage(source: ImageSource.camera);
+                  await picker.pickImage(source: ImageSource.camera);
                   if (pickedFile != null) {
                     imageFile.value = File(pickedFile.path);
                     imageError?.value = false;
@@ -54,7 +56,7 @@ class ImageUpload extends StatelessWidget {
                 }),
                 _buildPickButton(Icons.image, "Gallery", () async {
                   final pickedFile =
-                      await picker.pickImage(source: ImageSource.gallery);
+                  await picker.pickImage(source: ImageSource.gallery);
                   if (pickedFile != null) {
                     imageFile.value = File(pickedFile.path);
                     imageError?.value = false;
@@ -63,6 +65,7 @@ class ImageUpload extends StatelessWidget {
                 }),
               ],
             ),
+            SizedBox(height: 20.h),
           ],
         ),
       ),
@@ -72,16 +75,32 @@ class ImageUpload extends StatelessWidget {
   Widget _buildPickButton(IconData icon, String label, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30.r,
-            backgroundColor: Colors.grey.shade200,
-            child: Icon(icon, size: 30.sp, color: Colors.black54),
-          ),
-          SizedBox(height: 5.h),
-          Text(label, style: TextStyle(fontSize: 14.sp)),
-        ],
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 28.r,
+              backgroundColor: Colors.grey.shade200,
+              child: Icon(icon, size: 28.sp, color: Colors.black54),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -99,14 +118,14 @@ class ImageUpload extends StatelessWidget {
           child: Center(
             child: InteractiveViewer(
               panEnabled: true,
-              boundaryMargin: const EdgeInsets.all(20),
+              boundaryMargin: EdgeInsets.all(20.w),
               minScale: 1,
               maxScale: 4,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 child: Image.file(
                   imageFile.value!,
-                  width: 300,
+                  width: 300.w,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -123,86 +142,179 @@ class ImageUpload extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-        SizedBox(height: 10.h),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        SizedBox(height: 12.h),
         GestureDetector(
           onTap: () => pickImage(),
           child: Container(
-            height: 150.h,
+            height: 180.h,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: Colors.grey[100],
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: imageError?.value == true
                     ? Colors.red
-                    : Colors.grey.shade400,
-                width: 2,
+                    : Colors.grey.shade300,
+                width: 2.w,
               ),
             ),
             child: Obx(() => imageFile.value != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(10.r),
-                    child: Image.file(imageFile.value!, fit: BoxFit.cover),
-                  )
+                ? Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: Image.file(
+                    imageFile.value!,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  top: 8.h,
+                  right: 8.w,
+                  child: GestureDetector(
+                    onTap: showPreview,
+                    child: Container(
+                      padding: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Icon(
+                        Icons.fullscreen,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
                 : imageUrl != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10.r),
-                        child: Image.network(
-                          imageUrl!.trim().replaceAll(' ', ''),
-                          fit: BoxFit.cover,
-                          headers: {
-                            'Accept': 'image/*',
-                            'ngrok-skip-browser-warning': '1',
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) => Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.error_outline, color: Colors.red),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Gambar tidak tersedia',
-                                  style: TextStyle(color: Colors.red),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  'Coba refresh halaman',
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 12),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
+                ? ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: Image.network(
+                imageUrl!.trim().replaceAll(' ', ''),
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+                headers: {
+                  'Accept': 'image/*',
+                  'ngrok-skip-browser-warning': '1',
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          strokeWidth: 3.w,
+                          value: loadingProgress.expectedTotalBytes !=
+                              null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          'Loading...',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.grey.shade600,
                           ),
                         ),
-                      )
-                    : Icon(Icons.camera_alt, size: 50, color: Colors.grey)),
+                      ],
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 48.sp,
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        'Gambar tidak tersedia',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Coba refresh halaman',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+                : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.camera_alt,
+                  size: 64.sp,
+                  color: Colors.grey.shade400,
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  'Tap untuk upload gambar',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            )),
           ),
         ),
         if (imageError != null)
           Obx(() => imageError!.value
               ? Padding(
-                  padding: EdgeInsets.only(top: 4.h, left: 4.w),
-                  child: Text(
-                    'Gambar harus diisi',
-                    style: TextStyle(color: Colors.red, fontSize: 12.sp),
+            padding: EdgeInsets.only(top: 8.h, left: 4.w),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 16.sp,
+                ),
+                SizedBox(width: 4.w),
+                Text(
+                  'Gambar harus diisi',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
                   ),
-                )
-              : SizedBox()),
+                ),
+              ],
+            ),
+          )
+              : const SizedBox()),
       ],
     );
   }

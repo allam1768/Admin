@@ -15,7 +15,7 @@ class BottomNavView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.background,
       body: Obx(
-        () => AnimatedSwitcher(
+            () => AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           switchInCurve: Curves.easeInOut,
           switchOutCurve: Curves.easeInOut,
@@ -23,7 +23,12 @@ class BottomNavView extends StatelessWidget {
             return FadeTransition(
               opacity: animation,
               child: ScaleTransition(
-                scale: Tween<double>(begin: 0.98, end: 1.0).animate(animation),
+                scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutBack,
+                  ),
+                ),
                 child: child,
               ),
             );
@@ -34,19 +39,29 @@ class BottomNavView extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(bottom: 10.h),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom + 10.h,
+          top: 10.h,
+        ),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           margin: EdgeInsets.symmetric(horizontal: 20.w),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(20.r),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 20.r,
+                spreadRadius: 0,
+                offset: Offset(0, 8.h),
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 8.r,
+                spreadRadius: 0,
+                offset: Offset(0, 2.h),
               ),
             ],
           ),
@@ -57,51 +72,71 @@ class BottomNavView extends StatelessWidget {
                 final isActive = controller.isActive(index);
                 return GestureDetector(
                   onTap: () => controller.changeTab(index),
+                  behavior: HitTestBehavior.opaque,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    height: isActive ? 60.r : 50.r,
-                    width: isActive ? 60.r : 50.r,
+                    duration: const Duration(milliseconds: 350),
+                    curve: Curves.easeInOutCubic,
+                    height: 56.h,
+                    width: 56.w,
                     decoration: BoxDecoration(
                       gradient: isActive
                           ? LinearGradient(
-                              colors: [
-                                AppColor.oren.withOpacity(0.8),
-                                AppColor.oren,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
+                        colors: [
+                          AppColor.oren.withOpacity(0.9),
+                          AppColor.oren,
+                          AppColor.oren.withOpacity(0.8),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        stops: const [0.0, 0.5, 1.0],
+                      )
                           : null,
-                      color: isActive ? null : Colors.white,
-                      borderRadius: BorderRadius.circular(15.r),
+                      color: isActive ? null : Colors.transparent,
+                      borderRadius: BorderRadius.circular(16.r),
                       boxShadow: isActive
                           ? [
-                              BoxShadow(
-                                color: AppColor.oren.withOpacity(0.3),
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 4),
-                              ),
-                            ]
+                        BoxShadow(
+                          color: AppColor.oren.withOpacity(0.35),
+                          blurRadius: 12.r,
+                          spreadRadius: 0,
+                          offset: Offset(0, 6.h),
+                        ),
+                        BoxShadow(
+                          color: AppColor.oren.withOpacity(0.2),
+                          blurRadius: 6.r,
+                          spreadRadius: 0,
+                          offset: Offset(0, 2.h),
+                        ),
+                      ]
                           : null,
                     ),
                     child: Center(
                       child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) =>
-                            ScaleTransition(
-                          scale: animation,
+                        duration: const Duration(milliseconds: 250),
+                        transitionBuilder: (child, animation) => ScaleTransition(
+                          scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOutBack,
+                            ),
+                          ),
                           child: FadeTransition(
                             opacity: animation,
                             child: child,
                           ),
                         ),
-                        child: SvgPicture.asset(
-                          controller.icons[index],
-                          key: ValueKey<bool>(isActive),
-                          color: isActive ? Colors.white : Colors.grey,
-                          width: isActive ? 24.w : 20.w,
+                        child: Transform.scale(
+                          scale: isActive ? 1.0 : 0.9,
+                          child: SvgPicture.asset(
+                            controller.icons[index],
+                            key: ValueKey<bool>(isActive),
+                            colorFilter: ColorFilter.mode(
+                              isActive ? Colors.white : Colors.grey.shade600,
+                              BlendMode.srcIn,
+                            ),
+                            width: isActive ? 26.w : 24.w,
+                            height: isActive ? 26.h : 24.h,
+                          ),
                         ),
                       ),
                     ),

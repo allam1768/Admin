@@ -76,17 +76,14 @@ class UserInfoCard extends StatelessWidget {
       return null;
     }
 
-    // Jika image path mengandung "http", gunakan NetworkImage
     if (imagePath.contains("http")) {
       return NetworkImage(imagePath);
     }
 
-    // Jika tidak, gunakan AssetImage
     return AssetImage(imagePath);
   }
 
   bool _shouldShowFallback() {
-    // Show fallback icon if imagePath is empty or if it's a placeholder asset
     return imagePath.isEmpty || imagePath == "assets/images/example.png";
   }
 }

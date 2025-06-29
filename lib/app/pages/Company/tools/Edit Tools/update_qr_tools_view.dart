@@ -1,5 +1,3 @@
-// edit_tool_view.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -81,7 +79,6 @@ class _EditToolViewState extends State<EditToolView> {
                           ),
                           SizedBox(height: 15.h),
 
-                          // ⬇️ Ganti ke CustomDropdown - Tipe
                           GetX<EditToolController>(
                             builder: (c) => CustomDropdown(
                               label: "Tipe",
@@ -99,7 +96,6 @@ class _EditToolViewState extends State<EditToolView> {
 
                           SizedBox(height: 15.h),
 
-                          // ⬇️ Ganti ke CustomDropdown - Kondisi
                           GetX<EditToolController>(
                             builder: (c) => CustomDropdown(
                               label: "Kondisi",

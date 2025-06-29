@@ -103,14 +103,7 @@ class CompanyService {
         print('Image added to request: ${imageFile.path}');
       }
 
-      print('Sending multipart request with data:');
-      print('Client ID: $finalClientId');
-      print('Name: $name');
-      print('Address: $address');
-      print('Phone: $phoneNumber');
-      print('Email: $email');
-      print('Company QR: ${companyQr ?? 'Server will generate'}');
-      print('Image: ${imageFile?.path ?? 'No image'}');
+
 
       // Send request
       var streamedResponse = await request.send();

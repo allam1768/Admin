@@ -14,7 +14,7 @@ class ToolCard extends StatelessWidget {
   final String kondisi;
   final String kode_qr;
   final String pest_type;
-  final String alatId; // Added from second version
+  final String alatId;
   final List<Map<String, dynamic>> historyItems;
 
   const ToolCard({
@@ -27,7 +27,7 @@ class ToolCard extends StatelessWidget {
     required this.kondisi,
     required this.kode_qr,
     required this.pest_type,
-    required this.alatId, // Added parameter
+    required this.alatId,
   });
 
   @override
@@ -53,7 +53,7 @@ class ToolCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
           onTap: () => Get.toNamed('/historytool', arguments: {
-            'alatId': alatId, // Using alatId from second version
+            'alatId': alatId,
             'toolName': toolName,
             'location': location,
             'locationDetail': locationDetail,

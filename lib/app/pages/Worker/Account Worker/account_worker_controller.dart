@@ -19,7 +19,6 @@ class AccountWorkerController extends GetxController {
   final isPasswordVisible = false.obs;
   final isLoading = true.obs;
 
-  // Base URL untuk server - sama seperti client controller
   static const String baseUrl = "https://hamatech.rplrus.com";
 
   @override

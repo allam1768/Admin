@@ -11,7 +11,7 @@ class CompanyCard extends StatelessWidget {
   final String? imagePath;
   final String createdAt;
   final String updatedAt;
-  final String companyQr; // ✅ Tambahkan ini
+  final String companyQr;
   final VoidCallback? onMoreTap;
 
   const CompanyCard({
@@ -24,7 +24,7 @@ class CompanyCard extends StatelessWidget {
     this.imagePath,
     required this.createdAt,
     required this.updatedAt,
-    required this.companyQr, // ✅ Tambahkan ini
+    required this.companyQr,
     this.onMoreTap,
   }) : super(key: key);
 
@@ -32,7 +32,6 @@ class CompanyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // ✅ Kirim juga companyQr ke /detaildata
         Get.toNamed('/detaildata', arguments: {
           'id': id,
           'name': companyName,
@@ -42,7 +41,7 @@ class CompanyCard extends StatelessWidget {
           'imagePath': imagePath ?? '',
           'createdAt': createdAt,
           'updatedAt': updatedAt,
-          'companyQr': companyQr, // ✅
+          'companyQr': companyQr,
         });
       },
       child: Container(
@@ -104,7 +103,6 @@ class CompanyCard extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // ✅ Kirim juga companyQr ke /detailcompany
                     Get.toNamed('/detailcompany', arguments: {
                       'id': id,
                       'name': companyName,
@@ -114,7 +112,7 @@ class CompanyCard extends StatelessWidget {
                       'imagePath': imagePath ?? '',
                       'createdAt': createdAt,
                       'updatedAt': updatedAt,
-                      'companyQr': companyQr, // ✅
+                      'companyQr': companyQr,
                     });
                   },
                   child: Icon(Icons.more_vert, size: 18.sp, color: Colors.black),

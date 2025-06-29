@@ -73,7 +73,6 @@ class EditAccountClientView extends StatelessWidget {
                           )),
                           SizedBox(height: 15.h),
 
-
                           Obx(() => CustomTextField(
                             label: "New Password",
                             controller: controller.passwordController,
@@ -90,7 +89,6 @@ class EditAccountClientView extends StatelessWidget {
                             errorMessage: controller.confirmPasswordError.value,
                           )),
 
-
                           SizedBox(height: 50.h),
                           Obx(() => CustomButton(
                             text: controller.isLoading.value
@@ -102,7 +100,7 @@ class EditAccountClientView extends StatelessWidget {
                             onPressed: controller.canSave
                                 ? controller.validateForm
                                 : () {},
-                            fontSize: 16,
+                            fontSize: 16.sp,
                           )),
                           SizedBox(height: 20.h),
                         ],
