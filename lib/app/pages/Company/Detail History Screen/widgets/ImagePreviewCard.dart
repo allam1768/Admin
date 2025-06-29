@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class ImagePreviewCard extends StatelessWidget {
@@ -19,11 +20,10 @@ class ImagePreviewCard extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.25,
+        height: 0.25.sh,
         decoration: BoxDecoration(
           color: Colors.grey[300],
-          borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width * 0.025),
+          borderRadius: BorderRadius.circular(25.r),
           image: DecorationImage(
             image: _getImageProvider(imageUrl),
             fit: BoxFit.cover,
@@ -44,45 +44,44 @@ class ImagePreviewCard extends StatelessWidget {
   void _showImagePreview(BuildContext context, String imageUrl) {
     Get.dialog(
       Dialog(
-        backgroundColor: Colors.transparent, // Biar nggak ada background putih
+        backgroundColor: Colors.transparent,
         insetPadding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.05,
-            vertical: MediaQuery.of(context).size.height * 0.03),
+            horizontal: 50.w,
+            vertical: 30.h),
         child: ClipRRect(
-          borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width * 0.025),
+          borderRadius: BorderRadius.circular(25.r),
           child: imageUrl.startsWith('http')
               ? Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          size: 64,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : Image.asset(
-                  imageUrl,
-                  fit: BoxFit.cover,
+            imageUrl,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                      : null,
                 ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: Colors.grey[300],
+                child: Center(
+                  child: Icon(
+                    Icons.broken_image,
+                    size: 64.sp,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              );
+            },
+          )
+              : Image.asset(
+            imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
       barrierDismissible: true,

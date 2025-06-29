@@ -39,9 +39,12 @@ class DataClientView extends StatelessWidget {
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7, // atur agar vertikal tengah
-                        child: const Center(
-                          child: Text("Belum ada data client."),
+                        height: 0.7.sh, // Using ScreenUtil for screen height
+                        child: Center(
+                          child: Text(
+                            "Belum ada data client.",
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
                         ),
                       ),
                     ],

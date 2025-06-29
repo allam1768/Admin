@@ -25,14 +25,14 @@ class DetailController extends GetxController {
   final catchId = 0.obs;
 
   final canEdit = true.obs;
-  final editTimeExpired = false.obs; // NEW: Track if edit time has expired
+  final editTimeExpired = false.obs;
   final isLoading = false.obs;
   final catchData = <String, dynamic>{}.obs;
 
   // Constants
   static const String baseUrl = 'https://hamatech.rplrus.com';
   static const String storageUrl = '$baseUrl/storage/';
-  static const int editTimeLimit = 4 * 60; // 4 hours in minutes
+  static const int editTimeLimit = 4 * 60;
 
   // HTTP client with timeout
   late final http.Client _httpClient;

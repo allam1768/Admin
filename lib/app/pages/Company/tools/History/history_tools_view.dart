@@ -21,7 +21,7 @@ class HistoryToolView extends StatelessWidget {
             Obx(() => CustomAppBar(
           title: controller.getDisplayTitle(),
       onBackTap: () {
-        Get.back(); // Kembali ke halaman sebelumnya
+        Get.back();
       },
     )),
 
@@ -110,7 +110,6 @@ class HistoryToolView extends StatelessWidget {
                 var groupedHistory = controller.groupByMonth();
                 var sortedKeys = groupedHistory.keys.toList()
                   ..sort((a, b) {
-                    // Sort by year.month in descending order (newest first)
                     List<String> aParts = a.split('.');
                     List<String> bParts = b.split('.');
                     int aYear = int.parse(aParts[1]);
@@ -132,7 +131,6 @@ class HistoryToolView extends StatelessWidget {
                     children: sortedKeys.map((monthKey) {
                       var items = groupedHistory[monthKey]!;
 
-                      // Sort items by date (newest first)
                       items.sort((a, b) {
                         DateTime dateA = _parseDate(a["date"]);
                         DateTime dateB = _parseDate(b["date"]);
@@ -143,12 +141,11 @@ class HistoryToolView extends StatelessWidget {
                           ? GroupedHistoryCard(
                         month: monthKey,
                         items: items,
-                        isToolGroup: false, // This is month grouping
+                        isToolGroup: false,
                       )
                           : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Month header for single items
                           Container(
                             width: double.infinity,
                             margin: EdgeInsets.only(top: 10.h, bottom: 5.h),
@@ -184,9 +181,9 @@ class HistoryToolView extends StatelessWidget {
     try {
       List<String> parts = dateString.split('.');
       return DateTime(
-        int.parse(parts[2]), // year
-        int.parse(parts[1]), // month
-        int.parse(parts[0]), // day
+        int.parse(parts[2]),
+        int.parse(parts[1]),
+        int.parse(parts[0]),
       );
     } catch (e) {
       return DateTime.now();

@@ -29,7 +29,6 @@ class SingleHistoryCard extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(12.r),
             onTap: () {
-              // Pass the catch data to detail page
               Get.toNamed('/detailhistory', arguments: item);
             },
             child: Container(
@@ -66,44 +65,6 @@ class SingleHistoryCard extends StatelessWidget {
                         ),
                         SizedBox(height: 6.h),
 
-                        // Pest info
-                        // Row(
-                        //   children: [
-                        //     Icon(
-                        //       Icons.bug_report_outlined,
-                        //       size: 14.sp,
-                        //       color: Colors.black54,
-                        //     ),
-                        //     SizedBox(width: 4.w),
-                        //     Text(
-                        //       "${item['jenis_hama']} (${item['jumlah']})",
-                        //       style: TextStyle(
-                        //         fontSize: 13.sp,
-                        //         color: Colors.black87,
-                        //         fontWeight: FontWeight.w500,
-                        //       ),
-                        //     ),
-                        //     SizedBox(width: 8.w),
-                        //     Container(
-                        //       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                        //       decoration: BoxDecoration(
-                        //         color: _getStatusColor(item["kondisi"]).withOpacity(0.1),
-                        //         borderRadius: BorderRadius.circular(4.r),
-                        //       ),
-                        //       child: Text(
-                        //         item["kondisi"].toString().toUpperCase(),
-                        //         style: TextStyle(
-                        //           fontSize: 10.sp,
-                        //           color: _getStatusColor(item["kondisi"]),
-                        //           fontWeight: FontWeight.w600,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        // SizedBox(height: 6.h),
-
-                        // Date, time and recorded by
                         Row(
                           children: [
                             Icon(
@@ -173,8 +134,6 @@ class SingleHistoryCard extends StatelessWidget {
         return Colors.green;
       case 'broken':
         return Colors.red;
-      case 'maintenance':
-        return Colors.orange;
       default:
         return AppColor.ijomuda;
     }

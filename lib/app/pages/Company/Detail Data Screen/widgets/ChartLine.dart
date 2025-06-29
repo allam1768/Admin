@@ -20,22 +20,19 @@ class LineChartWidget extends StatelessWidget {
   double get maxY {
     if (data.isEmpty) return 10;
     double max = data.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
-    // Ensure minimum of 10 for better visualization, but don't apply to zero data
     if (max == 0) return 10;
-    return max < 10 ? 10 : max * 1.2; // Add 20% padding
+    return max < 10 ? 10 : max * 1.2;
   }
 
   double get maxX {
     if (data.isEmpty) return 5;
     double max = data.map((spot) => spot.x).reduce((a, b) => a > b ? a : b);
-    return max == 0 ? 1 : max + 0.5; // Better padding for X axis
+    return max == 0 ? 1 : max + 0.5;
   }
 
   bool get hasValidData {
     if (data.isEmpty) return false;
-    // Check if it's not just the default [0,0] point
     if (data.length == 1 && data.first.x == 0 && data.first.y == 0) return false;
-    // Check if all points are zero
     bool allZero = data.every((spot) => spot.y == 0);
     return !allZero;
   }
@@ -155,7 +152,7 @@ class LineChartWidget extends StatelessWidget {
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: true,
-                  horizontalInterval: maxY > 10 ? maxY / 5 : 2, // Better grid spacing
+                  horizontalInterval: maxY > 10 ? maxY / 5 : 2,
                   verticalInterval: maxX > 1 ? 1 : 0.5,
                   getDrawingHorizontalLine: (value) => FlLine(
                     color: Colors.grey.withOpacity(0.15),
@@ -184,7 +181,6 @@ class LineChartWidget extends StatelessWidget {
                       reservedSize: 35.h,
                       interval: 1,
                       getTitlesWidget: (value, meta) {
-                        // Show X-axis labels based on actual data points
                         int intValue = value.toInt();
                         if (value == intValue && intValue >= 0 && intValue < data.length) {
                           return Padding(

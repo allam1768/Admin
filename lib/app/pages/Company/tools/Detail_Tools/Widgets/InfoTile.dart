@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class InfoTile extends StatelessWidget {
   final IconData icon;
@@ -8,8 +7,8 @@ class InfoTile extends StatelessWidget {
   final String value;
   final bool isPassword;
   final VoidCallback? onTogglePassword;
-  final VoidCallback? onTap; // Add general onTap callback
-  final bool showChevron; // Control chevron visibility
+  final VoidCallback? onTap;
+  final bool showChevron;
 
   const InfoTile({
     super.key,

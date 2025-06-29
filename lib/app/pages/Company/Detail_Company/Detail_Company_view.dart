@@ -5,7 +5,6 @@ import '../../../../../values/app_color.dart';
 import '../../../dialogs/ConfirmDeleteDialog.dart';
 import '../../../global component/ButtonEdit&Delete.dart';
 import '../../../global component/CustomAppBar.dart';
-import '../Qr Company Screen/qr_company_view.dart';
 import '../Qr Detail company Screen/qr_detail_company_view.dart';
 import 'Detail_Company_controller.dart';
 import 'Widgets/InfoTile.dart';
@@ -132,7 +131,6 @@ class DetailCompanyView extends StatelessWidget {
                                 value: controller.companyQr.value,
                                 showChevron: true,
                                 onTap: () {
-                                  // Navigate to QR Code page and handle return
                                   Get.to(() => QrDetailCompanyView(
                                     qrData: controller.companyQr.value,
                                   ))?.then((_) {
@@ -215,7 +213,7 @@ class DetailCompanyView extends StatelessWidget {
       final date = DateTime.parse(dateString);
       return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
     } catch (e) {
-      return dateString; // Return original string if parsing fails
+      return dateString;
     }
   }
 }

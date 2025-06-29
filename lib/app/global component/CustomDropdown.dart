@@ -1,4 +1,3 @@
-// custom_dropdown.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,8 +22,10 @@ class CustomDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+        ),
         SizedBox(height: 8.h),
         Container(
           height: 48.h,

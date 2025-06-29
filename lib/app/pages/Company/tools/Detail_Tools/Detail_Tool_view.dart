@@ -143,7 +143,6 @@ class DetailToolView extends StatelessWidget {
 
                         SizedBox(height: 20.h),
 
-                        // Edit & Delete Buttons
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

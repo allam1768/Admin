@@ -106,12 +106,7 @@ class WorkerService {
 
     while (retryCount < maxRetries) {
       try {
-        print('=== UPDATE WORKER REQUEST ===');
-        print('Worker ID: $workerId');
-        print('Name: $name');
-        print('Email: $email');
-        print('Phone: $phoneNumber');
-        print('Has image: ${profileImage != null}');
+
 
         final url = Uri.parse('$baseUrl/users/$workerId');
         print('Request URL: $url');

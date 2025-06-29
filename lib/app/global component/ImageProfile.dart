@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageProfile extends StatelessWidget {
   final Rx<File?> profileImage;
-  final String? imageUrl; // URL gambar dari server
-  final Function(ImageSource)? onImagePicked; // Callback untuk handle image picking
+  final String? imageUrl;
+  final Function(ImageSource)? onImagePicked;
 
   const ImageProfile({
     super.key,
@@ -22,7 +22,7 @@ class ImageProfile extends StatelessWidget {
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile = await picker.pickImage(
         source: source,
-        imageQuality: 70, // Kompresi kualitas gambar untuk mengurangi ukuran
+        imageQuality: 70,
         maxWidth: 800,
         maxHeight: 800,
       );
@@ -66,32 +66,32 @@ class ImageProfile extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) => Container(
-        padding: EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Pilih Sumber Gambar',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
             ListTile(
-              leading: Icon(Icons.camera_alt, color: AppColor.oren),
-              title: Text('Ambil dari Kamera'),
+              leading: Icon(Icons.camera_alt, color: AppColor.oren, size: 24.sp),
+              title: Text('Ambil dari Kamera', style: TextStyle(fontSize: 16.sp)),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.camera);
               },
             ),
             ListTile(
-              leading: Icon(Icons.image, color: AppColor.oren),
-              title: Text('Pilih dari Galeri'),
+              leading: Icon(Icons.image, color: AppColor.oren, size: 24.sp),
+              title: Text('Pilih dari Galeri', style: TextStyle(fontSize: 16.sp)),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.gallery);
@@ -100,8 +100,8 @@ class ImageProfile extends StatelessWidget {
             // Add option to remove image if there's an existing one
             if (profileImage.value != null || (imageUrl != null && imageUrl!.isNotEmpty))
               ListTile(
-                leading: Icon(Icons.delete, color: Colors.red),
-                title: Text('Hapus Gambar'),
+                leading: Icon(Icons.delete, color: Colors.red, size: 24.sp),
+                title: Text('Hapus Gambar', style: TextStyle(fontSize: 16.sp)),
                 onTap: () {
                   Navigator.pop(context);
                   profileImage.value = null;
@@ -115,7 +115,7 @@ class ImageProfile extends StatelessWidget {
                   );
                 },
               ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
           ],
         ),
       ),
@@ -135,14 +135,14 @@ class ImageProfile extends StatelessWidget {
               height: 120.r,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey[500]!, width: 3),
+                border: Border.all(color: Colors.grey[500]!, width: 3.w),
                 // Add shadow for better visual
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 2),
+                    spreadRadius: 2.r,
+                    blurRadius: 5.r,
+                    offset: Offset(0, 2.h),
                   ),
                 ],
               ),
@@ -153,8 +153,8 @@ class ImageProfile extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 2,
-          right: 8,
+          bottom: 2.h,
+          right: 8.w,
           child: GestureDetector(
             onTap: () => _showImageSourceDialog(context),
             child: Container(
@@ -163,13 +163,13 @@ class ImageProfile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColor.oren, width: 2),
+                border: Border.all(color: AppColor.oren, width: 2.w),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(0, 1),
+                    spreadRadius: 1.r,
+                    blurRadius: 3.r,
+                    offset: Offset(0, 1.h),
                   ),
                 ],
               ),
@@ -181,9 +181,7 @@ class ImageProfile extends StatelessWidget {
     );
   }
 
-  // Helper method untuk menampilkan gambar profil
   Widget _buildProfileImage() {
-    // Jika ada file gambar yang dipilih, tampilkan itu
     if (profileImage.value != null) {
       return ClipOval(
         child: Image.file(
@@ -195,7 +193,6 @@ class ImageProfile extends StatelessWidget {
       );
     }
 
-    // Jika tidak ada file tapi ada URL gambar, tampilkan dari URL
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return ClipOval(
         child: Image.network(
@@ -212,7 +209,7 @@ class ImageProfile extends StatelessWidget {
                     loadingProgress.expectedTotalBytes!
                     : null,
                 color: AppColor.oren,
-                strokeWidth: 2,
+                strokeWidth: 2.w,
               ),
             );
           },
@@ -224,7 +221,6 @@ class ImageProfile extends StatelessWidget {
       );
     }
 
-    // Jika tidak ada keduanya, tampilkan ikon default
     return Icon(
       Icons.person,
       size: 60.r,

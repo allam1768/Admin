@@ -20,19 +20,6 @@ class WorkerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('=== WORKER CARD ON TAP DEBUG ===');
-        print('Worker being sent:');
-        print('- ID: ${worker.id}');
-        print('- Name: ${worker.name}');
-        print('- Email: "${worker.email}"');
-        print('- Phone: ${worker.phoneNumber}');
-        print('- Role: ${worker.role}');
-        print('- Image: ${worker.image}');
-        print('- Created At: ${worker.createdAt}');
-        print('- Worker JSON: ${worker.toJson()}');
-        print('================================');
-
-        // Kirim data worker ke halaman AccountWorker
         Get.toNamed('/AccountWorker', arguments: worker);
       },
       child: Container(
@@ -80,7 +67,6 @@ class WorkerCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Tambahkan arrow icon untuk menunjukkan bisa diklik
             Icon(
               Icons.arrow_forward_ios,
               size: 16.sp,
@@ -93,7 +79,6 @@ class WorkerCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    // Jika tidak ada imagePath atau imagePath kosong
     if (imagePath == null || imagePath!.isEmpty) {
       return Icon(
         Icons.person,
@@ -102,7 +87,6 @@ class WorkerCard extends StatelessWidget {
       );
     }
 
-    // Jika ini adalah network image (dari server)
     if (isNetworkImage) {
       return Image.network(
         imagePath!,
@@ -130,7 +114,6 @@ class WorkerCard extends StatelessWidget {
       );
     }
 
-    // Jika ini adalah asset image
     return Image.asset(
       imagePath!,
       fit: BoxFit.cover,

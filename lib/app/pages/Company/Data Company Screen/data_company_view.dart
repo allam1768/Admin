@@ -24,8 +24,8 @@ class DataCompanyView extends StatelessWidget {
             CustomAppBar(
               title: "Company",
               showBackButton: false,
-              rightIcon: "", // tambahkan ikon kalau mau ada tombol tambah
-              rightOnTap: () {}, // navigasi ke form tambah data
+              rightIcon: "",
+              rightOnTap: () {},
               onBackTap: () {},
             ),
             Expanded(

@@ -29,8 +29,8 @@ class ClientCard extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: Offset(0, 2),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
             ),
           ],
         ),
@@ -41,7 +41,7 @@ class ClientCard extends StatelessWidget {
               height: 60.r,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Color(0xFF275637), width: 2),
+                border: Border.all(color: Color(0xFF275637), width: 2.w),
                 color: Colors.white,
               ),
               child: ClipRRect(
@@ -97,7 +97,7 @@ class ClientCard extends StatelessWidget {
                   ? loadingProgress.cumulativeBytesLoaded /
                   loadingProgress.expectedTotalBytes!
                   : null,
-              strokeWidth: 2,
+              strokeWidth: 2.w,
             ),
           );
         },

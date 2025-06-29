@@ -90,7 +90,7 @@ class CreateAccountClientView extends StatelessWidget {
                               text: controller.isLoading.value ? "Loading..." : "Save",
                               backgroundColor: AppColor.btnoren,
                               onPressed: controller.isLoading.value ? () {} : controller.validateForm,
-                              fontSize: 16,
+                              fontSize: 16.sp,
                             ),
                           ),
 
@@ -104,6 +104,7 @@ class CreateAccountClientView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8.r),
                               border: Border.all(
                                 color: Colors.red.withOpacity(0.3),
+                                width: 1.w,
                               ),
                             ),
                             child: Row(

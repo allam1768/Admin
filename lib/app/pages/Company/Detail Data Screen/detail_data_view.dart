@@ -87,7 +87,6 @@ class DetailDataView extends StatelessWidget {
                       ),),
                       SizedBox(height: 35.h),
 
-                      // History Section
                       Row(
                         children: [
                           Text(
@@ -102,7 +101,6 @@ class DetailDataView extends StatelessWidget {
                       ),
                       SizedBox(height: 25.h),
 
-                      // Tools List
                       Obx(() {
                         if (controller.traps.isEmpty) {
                           return Container(

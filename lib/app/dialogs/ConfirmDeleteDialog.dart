@@ -34,13 +34,13 @@ class ConfirmDeleteDialog extends StatelessWidget {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
-                        blurRadius: 12,
-                        spreadRadius: 2,
+                        blurRadius: 12.r,
+                        spreadRadius: 2.r,
                       ),
                     ],
                     border: Border.all(
                       color: Colors.white.withOpacity(0.2),
-                      width: 1.5,
+                      width: 1.5.w,
                     ),
                   ),
                   child: Column(
@@ -61,8 +61,8 @@ class ConfirmDeleteDialog extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.red.withOpacity(0.3),
-                              blurRadius: 8,
-                              spreadRadius: 2,
+                              blurRadius: 8.r,
+                              spreadRadius: 2.r,
                             ),
                           ],
                         ),
