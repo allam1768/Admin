@@ -27,6 +27,7 @@ class LoginController extends GetxController {
 
     if (name.isEmpty || password.isEmpty) {
       loginError.value = "Username atau password tidak boleh kosong";
+      isLoading.value = false;
       return;
     }
 
@@ -54,11 +55,41 @@ class LoginController extends GetxController {
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userData', jsonEncode(result.user!.toJson()));
 
+      // Simpan token ke SharedPreferences
+      if (result.token != null && result.token!.isNotEmpty) {
+        await prefs.setString('token', result.token!);
+        print('✅ Login berhasil!');
+        print('📱 Token berhasil disimpan: ${result.token!}');
+        print('👤 User: ${result.user!.name}');
+        print('🔑 Role: ${result.user!.role}');
+      } else {
+        print('⚠️ Login berhasil tapi token tidak ditemukan atau kosong');
+      }
+
       Get.snackbar("Login Berhasil", result.message,
           snackPosition: SnackPosition.TOP);
       Get.offNamed(Routes.botomnav);
     } else {
       loginError.value = result.message;
     }
+  }
+
+  // Method untuk mengambil token dari SharedPreferences
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  // Method untuk menghapus token saat logout
+  static Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+  }
+
+  // Method untuk mengecek apakah token masih ada
+  static Future<bool> hasToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    return token != null && token.isNotEmpty;
   }
 }

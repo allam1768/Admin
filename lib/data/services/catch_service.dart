@@ -1,10 +1,31 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../../app/pages/Login screen/login_controller.dart';
 import '../models/catch_model.dart';
 
 class CatchService {
   static const String baseUrl = 'https://hamatech.rplrus.com/api';
   static const String storageUrl = 'https://hamatech.rplrus.com/storage';
+
+  // Helper method to get the authorization headers for JSON requests
+  static Future<Map<String, String>> _getAuthHeaders() async {
+    final token = await LoginController.getToken();
+    return {
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
+  // Helper method to get the authorization headers for multipart requests
+  static Future<Map<String, String>> _getMultipartAuthHeaders() async {
+    final token = await LoginController.getToken();
+    return {
+      'Accept': 'application/json', // Accept header might be needed for some APIs
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
 
   // ========== CREATE OPERATIONS ==========
 
@@ -12,6 +33,9 @@ class CatchService {
   Future<CatchModel> createCatch(CatchModel catchData) async {
     try {
       var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/catches'));
+
+      // Add auth headers for multipart request
+      request.headers.addAll(await _getMultipartAuthHeaders());
 
       // Add text fields
       request.fields['alat_id'] = catchData.alatId;
@@ -48,14 +72,13 @@ class CatchService {
 
   // ========== READ OPERATIONS ==========
 
-  /// Fetch all catches data (for list view) - UPDATED with better image handling
+  /// Fetch all catches data (for list view) - UPDATED with better image handling and token
   static Future<List<Map<String, dynamic>>> fetchCatchesData() async {
     try {
+      final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.get(
         Uri.parse('$baseUrl/catches'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
@@ -100,14 +123,13 @@ class CatchService {
     }
   }
 
-  /// Fetch detailed catch data by ID - UPDATED
+  /// Fetch detailed catch data by ID - UPDATED with token
   static Future<Map<String, dynamic>> fetchCatchDetail(int id) async {
     try {
+      final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.get(
         Uri.parse('$baseUrl/catches/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
@@ -128,17 +150,16 @@ class CatchService {
 
   // ========== UPDATE OPERATIONS ==========
 
-  /// Update a catch record (text fields only)
+  /// Update a catch record (text fields only) with token
   static Future<Map<String, dynamic>> updateCatch(
       int id,
       Map<String, dynamic> updateData,
       ) async {
     try {
+      final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.put(
         Uri.parse('$baseUrl/catches/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: jsonEncode(updateData),
       );
 
@@ -158,7 +179,7 @@ class CatchService {
     }
   }
 
-  /// Update catch with multipart data (including image)
+  /// Update catch with multipart data (including image) with token
   static Future<Map<String, dynamic>> updateCatchWithImage(
       int id,
       Map<String, String> fields,
@@ -169,6 +190,9 @@ class CatchService {
         'POST',
         Uri.parse('$baseUrl/catches/$id'),
       );
+
+      // Add auth headers for multipart request
+      request.headers.addAll(await _getMultipartAuthHeaders());
 
       request.fields['_method'] = 'PUT';
       request.fields.addAll(fields);
@@ -202,14 +226,13 @@ class CatchService {
 
   // ========== DELETE OPERATIONS ==========
 
-  /// Delete a catch record by ID
+  /// Delete a catch record by ID with token
   static Future<bool> deleteCatch(int id) async {
     try {
+      final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.delete(
         Uri.parse('$baseUrl/catches/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
       );
 
       if (response.statusCode == 200 || response.statusCode == 204) {
@@ -222,13 +245,7 @@ class CatchService {
     }
   }
 
-  // ========== HELPER METHODS - UPDATED ==========
-
-  /// Helper method to format image URL - DEPRECATED, use CatchModel.getDisplayImageUrl instead
-  @deprecated
-  static String getFullImageUrl(String imagePath) {
-    return CatchModel.getDisplayImageUrl(imagePath);
-  }
+  // ========== HELPER METHODS - UPDATED (No auth needed for helpers) ==========
 
   /// Helper method to format condition text
   static String formatCondition(String condition) {
@@ -267,7 +284,7 @@ class CatchService {
     }
   }
 
-  // ========== EDIT VALIDATION METHODS ==========
+  // ========== EDIT VALIDATION METHODS (No auth needed for these client-side checks) ==========
 
   static bool canEditRecord(String dateTimeString) {
     try {

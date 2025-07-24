@@ -34,7 +34,9 @@ class DataCompanyView extends StatelessWidget {
                 child: Obx(() {
                   if (controller.isLoading.value) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: AppColor.btnijo,
+                      ),
                     );
                   }
 
