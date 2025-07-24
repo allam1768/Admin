@@ -24,6 +24,7 @@ dependencies:
   fl_chart: ^0.64.0
   intl: ^0.18.1
   flutter_launcher_icons: ^0.13.1
+  flutter_secure_storage: ^9.0.0
 
   path_provider: ^2.1.2
   image: ^4.1.3

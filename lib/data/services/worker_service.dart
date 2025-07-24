@@ -2,20 +2,38 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../../app/pages/Login screen/login_controller.dart';
 import '../models/worker_model.dart';
 import '../models/LoginResponse_model.dart';
 
 class WorkerService {
   static const String baseUrl = 'https://hamatech.rplrus.com/api';
 
+  // Helper method to get the authorization headers for JSON requests
+  static Future<Map<String, String>> _getAuthHeaders() async {
+    final token = await LoginController.getToken();
+    return {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
+  // Helper method to get the authorization headers for multipart requests
+  static Future<Map<String, String>> _getMultipartAuthHeaders() async {
+    final token = await LoginController.getToken();
+    return {
+      'Accept': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
   Future<List<WorkerModel>> getWorkers() async {
     try {
+      final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.get(
         Uri.parse('$baseUrl/workers'),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
@@ -41,8 +59,11 @@ class WorkerService {
     try {
       final url = Uri.parse('$baseUrl/users');
 
-      // Membuat request multipart jika ada gambar
+      // Membuat request multipart
       var request = http.MultipartRequest('POST', url);
+
+      // Add auth headers for multipart request
+      request.headers.addAll(await _getMultipartAuthHeaders());
 
       // Menambahkan data teks
       request.fields['name'] = name;
@@ -91,8 +112,6 @@ class WorkerService {
     }
   }
 
-  // Metode yang diperbaiki untuk memperbarui pekerja berdasarkan ID
-// Menggunakan POST dengan _method: PUT untuk konsistensi
   Future<LoginResponseModel> updateWorker({
     required String workerId,
     String? name,
@@ -106,18 +125,16 @@ class WorkerService {
 
     while (retryCount < maxRetries) {
       try {
-
-
         final url = Uri.parse('$baseUrl/users/$workerId');
         print('Request URL: $url');
 
-        // Selalu gunakan POST dengan _method: PUT untuk konsistensi
         var request = http.MultipartRequest('POST', url);
 
-        // Tambahkan _method untuk override HTTP method ke PUT
+        // Add auth headers for multipart request
+        request.headers.addAll(await _getMultipartAuthHeaders());
+
         request.fields['_method'] = 'PUT';
 
-        // Menambahkan data teks hanya jika disediakan dan tidak kosong
         if (name != null && name.trim().isNotEmpty) {
           request.fields['name'] = name.trim();
         }
@@ -131,10 +148,8 @@ class WorkerService {
           request.fields['password'] = password.trim();
         }
 
-        // Pastikan role tetap worker
         request.fields['role'] = 'worker';
 
-        // Menambahkan file gambar jika ada
         if (profileImage != null) {
           request.files.add(await http.MultipartFile.fromPath(
             'image',
@@ -147,7 +162,6 @@ class WorkerService {
         print('Request fields: ${request.fields}');
         print('Request files: ${request.files.length} file(s)');
 
-        // Kirim request
         final streamedResponse = await request.send().timeout(
           const Duration(seconds: 30),
           onTimeout: () {
@@ -160,7 +174,6 @@ class WorkerService {
         print('Response status for update: ${response.statusCode}');
         print('Response body for update: ${response.body}');
 
-        // Parsing response yang lebih robust
         Map<String, dynamic> data;
         try {
           data = jsonDecode(response.body);
@@ -169,28 +182,23 @@ class WorkerService {
           throw Exception('Server response tidak valid');
         }
 
-        // Handle berbagai status code sukses
         if (response.statusCode == 200 || response.statusCode == 201) {
           return LoginResponseModel.fromJson({
             'success': true,
             'message': data['message'] ?? 'Worker berhasil diperbarui',
-            'user': data['data'] ?? data['user'], // Coba kedua kemungkinan key
-            'token': data['token'], // Token mungkin tidak ada pada update
+            'user': data['data'] ?? data['user'],
+            'token': data['token'],
           });
         } else if (response.statusCode == 422) {
-          // Validation error
           String errorMessage = 'Validation error';
           if (data['message'] != null) {
             errorMessage = data['message'];
           } else if (data['errors'] != null) {
-            // Format error dari Laravel validation
             List<String> errors = [];
             Map<String, dynamic> validationErrors = data['errors'];
             validationErrors.forEach((key, value) {
-              // Skip error jika itu tentang email yang sudah ada tapi tidak diubah
               if (key == 'email' && value is List) {
                 List<String> emailErrors = value.cast<String>();
-                // Filter out "email already taken" jika email tidak diubah
                 if (email == null) {
                   print('Email field not being updated, skipping email validation errors');
                   return;
@@ -204,7 +212,7 @@ class WorkerService {
             if (errors.isNotEmpty) {
               errorMessage = errors.join(', ');
             } else {
-              errorMessage = 'Data berhasil diperbarui'; // Jika tidak ada error yang relevan
+              errorMessage = 'Data berhasil diperbarui';
               return LoginResponseModel.fromJson({
                 'success': true,
                 'message': errorMessage,
@@ -226,24 +234,16 @@ class WorkerService {
       } catch (e) {
         print('Error updating worker (attempt ${retryCount + 1}): $e');
         retryCount++;
-
-        // Jika masih ada kesempatan retry, tunggu sebentar lalu coba lagi
         if (retryCount < maxRetries) {
-          await Future.delayed(Duration(seconds: 2 * retryCount)); // Backoff strategy
+          await Future.delayed(Duration(seconds: 2 * retryCount));
           continue;
         }
-
-        // Jika sudah mencapai batas retry, kembalikan error
         String errorMessage = 'Terjadi kesalahan saat menghubungi server.';
-
         if (e.toString().contains('timeout') || e is TimeoutException) {
           errorMessage = 'Koneksi timeout. Silakan coba lagi.';
-        } else if (e.toString().contains('Failed host lookup')) {
-          errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
-        } else if (e.toString().contains('SocketException')) {
+        } else if (e.toString().contains('Failed host lookup') || e.toString().contains('SocketException')) {
           errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
         }
-
         return LoginResponseModel(
           success: false,
           message: errorMessage,
@@ -251,8 +251,6 @@ class WorkerService {
         );
       }
     }
-
-    // Fallback jika semua retry gagal (seharusnya tidak pernah sampai sini)
     return LoginResponseModel(
       success: false,
       message: 'Gagal terhubung ke server setelah beberapa percobaan.',
@@ -262,12 +260,10 @@ class WorkerService {
 
   static Future<bool> deleteWorker(String workerId) async {
     try {
+      final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.delete(
         Uri.parse('$baseUrl/users/$workerId'),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
