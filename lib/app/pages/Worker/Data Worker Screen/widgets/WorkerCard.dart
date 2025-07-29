@@ -1,78 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../data/models/worker_model.dart';
 import '../../../../../values/app_color.dart';
 
 class WorkerCard extends StatelessWidget {
-  final WorkerModel worker;
+  final WorkerModel? worker;
   final String? imagePath;
   final bool isNetworkImage;
+  final bool isLoading;
 
   const WorkerCard({
     super.key,
-    required this.worker,
+    this.worker,
     this.imagePath,
     this.isNetworkImage = false,
+    this.isLoading = false,
   });
+
+  // Factory constructor untuk membuat skeleton card
+  factory WorkerCard.skeleton() {
+    return const WorkerCard(
+      worker: null,
+      imagePath: '',
+      isNetworkImage: false,
+      isLoading: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed('/AccountWorker', arguments: worker);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        decoration: BoxDecoration(
-          color: AppColor.ijomuda.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 60.r,
-              height: 60.r,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Color(0xFF275637), width: 2),
-                color: Colors.white,
+    return Skeletonizer(
+      enabled: isLoading,
+      effect: const ShimmerEffect(
+        baseColor: Colors.grey,
+        highlightColor: Color(0xFFE0E0E0),
+      ),
+      child: GestureDetector(
+        onTap: isLoading ? null : () {
+          if (worker != null) {
+            Get.toNamed('/AccountWorker', arguments: worker);
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 6,
+                offset: const Offset(2, 2),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50.r),
-                child: _buildImage(),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 60.r,
+                height: 60.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey, width: 2.w),
+                  color: Colors.white,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.r),
+                  child: isLoading ? _skeletonImage() : _buildImage(),
+                ),
               ),
-            ),
-            SizedBox(width: 15.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    worker.name,
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+              SizedBox(width: 15.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isLoading ? 'Worker Name Placeholder' : (worker?.name ?? ''),
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4.h),
-                ],
+                    SizedBox(height: 4.h),
+                  ],
+                ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.sp,
-              color: Colors.grey[600],
-            ),
-          ],
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16.sp,
+                color: Colors.grey[600],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -99,7 +121,7 @@ class WorkerCard extends StatelessWidget {
                   ? loadingProgress.cumulativeBytesLoaded /
                   loadingProgress.expectedTotalBytes!
                   : null,
-              strokeWidth: 2,
+              strokeWidth: 2.w,
             ),
           );
         },
@@ -125,6 +147,22 @@ class WorkerCard extends StatelessWidget {
           color: Colors.grey[600],
         );
       },
+    );
+  }
+
+  Widget _skeletonImage() {
+    return Container(
+      width: 60.r,
+      height: 60.r,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.grey.shade300,
+      ),
+      child: Icon(
+        Icons.person,
+        size: 40.r,
+        color: Colors.white54,
+      ),
     );
   }
 }

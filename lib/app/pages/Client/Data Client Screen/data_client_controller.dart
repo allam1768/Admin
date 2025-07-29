@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import '../../../../data/models/client_model.dart';
 import '../../../../data/services/client_service.dart';
 
-
 class DataClientController extends GetxController {
   final clients = <ClientModel>[].obs;
   final isLoading = false.obs;
@@ -16,6 +15,10 @@ class DataClientController extends GetxController {
   Future<void> fetchClients() async {
     try {
       isLoading.value = true;
+
+      // Simulasi delay untuk melihat skeleton loading (opsional, bisa dihapus)
+      await Future.delayed(const Duration(milliseconds: 500));
+
       final data = await ClientService.fetchClients();
       clients.value = data;
     } catch (e) {

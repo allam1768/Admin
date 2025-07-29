@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../values/app_color.dart';
 import '../../../global component/CustomAppBar.dart';
 import '../../../../data/services/company_service.dart';
@@ -32,14 +33,16 @@ class DataCompanyView extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                 child: Obx(() {
+                  // Loading state dengan skeleton
                   if (controller.isLoading.value) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColor.btnijo,
-                      ),
+                    return ListView.separated(
+                      itemCount: 3, // Tampilkan 3 skeleton cards
+                      separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                      itemBuilder: (_, __) => CompanyCard.skeleton(),
                     );
                   }
 
+                  // Empty state
                   if (controller.companies.isEmpty) {
                     return RefreshIndicator(
                       onRefresh: controller.fetchCompanies,
@@ -57,6 +60,7 @@ class DataCompanyView extends StatelessWidget {
                     );
                   }
 
+                  // Data loaded state
                   return RefreshIndicator(
                     onRefresh: controller.fetchCompanies,
                     child: ListView.separated(
@@ -72,13 +76,11 @@ class DataCompanyView extends StatelessWidget {
                         return SizedBox(height: 20.h);
                       },
                       itemBuilder: (_, index) {
-                        // Tampilkan loading tambahan di bawah saat scroll
+                        // Loading more indicator di bawah
                         if (index == controller.companyCount) {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 20.h),
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                            child: CompanyCard.skeleton(), // Gunakan skeleton untuk loading more
                           );
                         }
 
@@ -93,6 +95,7 @@ class DataCompanyView extends StatelessWidget {
                           createdAt: company.createdAt,
                           updatedAt: company.updatedAt,
                           companyQr: company.companyQr ?? '',
+                          isLoading: false, // Data sudah dimuat
                         );
                       },
                     ),

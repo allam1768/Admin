@@ -39,6 +39,10 @@ class DataCompanyController extends GetxController {
   Future<void> fetchCompanies() async {
     try {
       isLoading.value = true;
+
+      // Simulasi delay untuk melihat skeleton loading (opsional, bisa dihapus)
+      await Future.delayed(const Duration(milliseconds: 500));
+
       final companiesList = await _companyService.getCompanies();
       companies.assignAll(companiesList);
     } catch (e) {
@@ -52,6 +56,10 @@ class DataCompanyController extends GetxController {
   Future<void> refreshOnScroll() async {
     try {
       isLoadingMore.value = true;
+
+      // Simulasi delay untuk melihat skeleton loading (opsional, bisa dihapus)
+      await Future.delayed(const Duration(milliseconds: 300));
+
       final companiesList = await _companyService.getCompanies();
       companies.assignAll(companiesList);
 

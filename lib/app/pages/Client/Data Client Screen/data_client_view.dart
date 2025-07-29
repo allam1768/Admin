@@ -4,6 +4,7 @@ import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../global component/CustomAppBar.dart';
 
 class DataClientView extends StatelessWidget {
@@ -28,10 +29,14 @@ class DataClientView extends StatelessWidget {
             ),
             Expanded(
               child: Obx(() {
+                // Loading state dengan skeleton
                 if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator(
-                    color: AppColor.btnijo,
-                  ),);
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                    itemCount: 3, // Tampilkan 3 skeleton cards
+                    separatorBuilder: (_, __) => SizedBox(height: 20.h),
+                    itemBuilder: (_, __) => ClientCard.skeleton(),
+                  );
                 }
 
                 return RefreshIndicator(
@@ -78,6 +83,7 @@ class DataClientView extends StatelessWidget {
                         client: clientData.name,
                         imagePath: imageUrl,
                         isNetworkImage: isNetworkImage,
+                        isLoading: false, // Data sudah dimuat
                       );
                     },
                   ),

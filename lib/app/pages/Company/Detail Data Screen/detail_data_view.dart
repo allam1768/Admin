@@ -52,22 +52,6 @@ class DetailDataView extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
 
-                      // Loading indicator for charts
-                      Obx(() {
-                        if (controller.isLoadingChart.value) {
-                          return Container(
-                            height: 100.h,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColor.ijomuda,
-                              ),
-                            ),
-                          );
-                        }
-                        return SizedBox.shrink();
-                      }),
-
-                      // Land Chart
               Obx(() =>DataCard(
                         title: "Land",
                         chartData: controller.getChartData("Land"),

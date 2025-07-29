@@ -23,7 +23,6 @@ class ImagePreviewCard extends StatelessWidget {
         height: 0.25.sh,
         decoration: BoxDecoration(
           color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(25.r),
           image: DecorationImage(
             image: _getImageProvider(imageUrl),
             fit: BoxFit.cover,
