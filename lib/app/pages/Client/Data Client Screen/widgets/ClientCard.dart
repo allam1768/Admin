@@ -1,76 +1,96 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../values/app_color.dart';
 
 class ClientCard extends StatelessWidget {
   final String client;
   final String? imagePath;
   final bool isNetworkImage;
+  final bool isLoading;
 
   const ClientCard({
     super.key,
     required this.client,
     this.imagePath,
     this.isNetworkImage = false,
+    this.isLoading = false,
   });
+
+  // Factory constructor untuk membuat skeleton card
+  factory ClientCard.skeleton() {
+    return ClientCard(
+      client: 'Client Name Placeholder',
+      imagePath: '',
+      isNetworkImage: false,
+      isLoading: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed('/AccountClient', arguments: client);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        decoration: BoxDecoration(
-          color: AppColor.ijomuda.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8.r,
-              offset: Offset(0, 2.h),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 60.r,
-              height: 60.r,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Color(0xFF275637), width: 2.w),
-                color: Colors.white,
+    return Skeletonizer(
+      enabled: isLoading,
+      effect: const ShimmerEffect(
+        baseColor: Colors.grey,
+        highlightColor: Color(0xFFE0E0E0),
+      ),
+      child: GestureDetector(
+        onTap: isLoading ? null : () {
+          Get.toNamed('/AccountClient', arguments: client);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 6,
+                offset: const Offset(2, 2),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50.r),
-                child: _buildImage(),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 60.r,
+                height: 60.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey, width: 2.w),
+                  color: Colors.white,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.r),
+                  child: isLoading ? _skeletonImage() : _buildImage(),
+                ),
               ),
-            ),
-            SizedBox(width: 15.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    client,
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+              SizedBox(width: 15.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      client,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.sp,
-              color: Colors.grey[600],
-            ),
-          ],
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16.sp,
+                color: Colors.grey[600],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -123,6 +143,22 @@ class ClientCard extends StatelessWidget {
           color: Colors.grey[600],
         );
       },
+    );
+  }
+
+  Widget _skeletonImage() {
+    return Container(
+      width: 60.r,
+      height: 60.r,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.grey.shade300,
+      ),
+      child: Icon(
+        Icons.person,
+        size: 40.r,
+        color: Colors.white54,
+      ),
     );
   }
 }

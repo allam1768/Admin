@@ -4,7 +4,7 @@ import '../../../../data/services/worker_service.dart';
 
 class DataWorkerController extends GetxController {
   final workers = <WorkerModel>[].obs;
-  final isLoading = true.obs;
+  final isLoading = false.obs;
   final WorkerService _workerService = WorkerService();
 
   @override
@@ -16,6 +16,10 @@ class DataWorkerController extends GetxController {
   Future<void> fetchWorkers() async {
     try {
       isLoading.value = true;
+
+      // Simulasi delay untuk melihat skeleton loading (opsional, bisa dihapus)
+      await Future.delayed(const Duration(milliseconds: 500));
+
       final workersList = await _workerService.getWorkers();
       workers.assignAll(workersList);
     } catch (e) {

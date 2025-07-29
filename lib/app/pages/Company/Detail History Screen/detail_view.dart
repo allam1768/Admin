@@ -20,7 +20,7 @@ class DetailView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Obx(() => CustomAppBar(title:controller.title.value, onBackTap: () {  },)),
+            Obx(() => CustomAppBar(title:controller.title.value, onBackTap: () => Get.back(),)),
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
