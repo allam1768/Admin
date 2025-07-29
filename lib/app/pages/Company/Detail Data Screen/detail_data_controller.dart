@@ -91,7 +91,6 @@ class DetailDataController extends GetxController {
       landChartData.value = _convertToFlSpots(landData);
       flyChartData.value = _convertToFlSpots(flyData);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load chart data");
       landChartData.value = [FlSpot(0, 0)];
       flyChartData.value = [FlSpot(0, 0)];
     } finally {

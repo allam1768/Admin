@@ -5,17 +5,47 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/alat_model.dart';
 
 class AlatService {
   static const String baseUrl = 'https://hamatech.rplrus.com/api';
 
+  // Method untuk mengambil token dari SharedPreferences
+  static Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  // Method untuk membuat headers dengan Bearer token
+  static Future<Map<String, String>> _getHeaders() async {
+    final token = await _getToken();
+    final headers = <String, String>{
+      'ngrok-skip-browser-warning': '1',
+      'Content-Type': 'application/json',
+    };
+
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    return headers;
+  }
+
   static Future<http.Response?> createAlat(AlatModel alat, File imageFile) async {
     try {
+      final token = await _getToken();
+
       final request = http.MultipartRequest(
         'POST',
         Uri.parse('$baseUrl/alat'),
       );
+
+      // Add Bearer token to headers
+      if (token != null && token.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      request.headers['ngrok-skip-browser-warning'] = '1';
 
       request.fields['nama_alat'] = alat.namaAlat;
       request.fields['lokasi'] = alat.lokasi;
@@ -48,7 +78,7 @@ class AlatService {
     }
   }
 
-  // Modified fetchAlat to accept optional companyId parameter
+  // Modified fetchAlat to accept optional companyId parameter and use Bearer token
   static Future<List<AlatModel>> fetchAlat({int? companyId}) async {
     String url = '$baseUrl/alat';
 
@@ -57,18 +87,24 @@ class AlatService {
       url += '?company_id=$companyId';
     }
 
+    final headers = await _getHeaders();
+
     final response = await http.get(
       Uri.parse(url),
-      headers: {
-        'ngrok-skip-browser-warning': '1',
-      },
+      headers: headers,
     );
+
+    print('Fetch Alat - Status: ${response.statusCode}');
+    print('Fetch Alat - Headers: $headers');
+    print('Fetch Alat - Body: ${response.body}');
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List dataList = jsonData['data'];
 
       return dataList.map((json) => AlatModel.fromJson(json)).toList();
+    } else if (response.statusCode == 401) {
+      throw Exception('Token tidak valid atau sudah kadaluarsa (401)');
     } else {
       throw Exception('Gagal mengambil data alat (${response.statusCode})');
     }
@@ -81,15 +117,15 @@ class AlatService {
 
   static Future<http.Response?> deleteAlat(int id) async {
     try {
+      final headers = await _getHeaders();
+
       final response = await http.delete(
         Uri.parse('$baseUrl/alat/$id'),
-        headers: {
-          'ngrok-skip-browser-warning': '1',
-        },
+        headers: headers,
       );
 
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
+      print('Delete Alat - Status: ${response.statusCode}');
+      print('Delete Alat - Body: ${response.body}');
 
       return response;
     } catch (e) {
@@ -100,10 +136,18 @@ class AlatService {
 
   static Future<http.Response?> updateAlat(int id, AlatModel alat, {File? imageFile}) async {
     try {
+      final token = await _getToken();
+
       final request = http.MultipartRequest(
         'POST',
         Uri.parse('$baseUrl/alat/$id'),
       );
+
+      // Add Bearer token to headers
+      if (token != null && token.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      request.headers['ngrok-skip-browser-warning'] = '1';
 
       request.fields['nama_alat'] = alat.namaAlat;
       request.fields['lokasi'] = alat.lokasi;
@@ -127,8 +171,8 @@ class AlatService {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
+      print('Update Alat - Status: ${response.statusCode}');
+      print('Update Alat - Body: ${response.body}');
 
       return response;
     } catch (e) {
@@ -139,20 +183,37 @@ class AlatService {
 
   static Future<http.Response?> getAlatById(int id) async {
     try {
+      final headers = await _getHeaders();
+
       final response = await http.get(
         Uri.parse('$baseUrl/alat/$id'),
-        headers: {
-          'ngrok-skip-browser-warning': '1',
-        },
+        headers: headers,
       );
 
-      print('Status getAlatById: ${response.statusCode}');
-      print('Body: ${response.body}');
+      print('Get Alat By ID - Status: ${response.statusCode}');
+      print('Get Alat By ID - Body: ${response.body}');
 
       return response;
     } catch (e) {
       print('Error getAlatById: $e');
       return null;
+    }
+  }
+
+  // Method untuk mengecek apakah token masih valid
+  static Future<bool> checkTokenValidity() async {
+    try {
+      final headers = await _getHeaders();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/user/profile'), // endpoint untuk cek token
+        headers: headers,
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print('Error checking token validity: $e');
+      return false;
     }
   }
 }
