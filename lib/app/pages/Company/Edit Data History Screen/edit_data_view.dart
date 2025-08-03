@@ -1,69 +1,68 @@
+import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomButtonEdit.dart';
+import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomTextFieldEdit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../values/app_color.dart';
 import '../../../global component/CustomAppBar.dart';
-import '../../../global component/CustomButton.dart';
-import '../../../global component/CustomTextField.dart';
 import '../../../global component/ImageUpload.dart';
 import 'edit_data_controller.dart';
+import 'dart:io';
 
-class EditDataHistoryView extends StatelessWidget {
-  EditDataHistoryView({super.key});
+class EditDataView extends StatelessWidget {
+  EditDataView({super.key});
 
-  final EditDataHistoryController controller = Get.put(EditDataHistoryController());
+  final EditDataController controller = Get.put(EditDataController());
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    // Ambil nama alat dari arguments
+    final String namaAlat = Get.arguments?['name'] ??
+        Get.arguments?['nama_alat'] ??
+        'Edit Data';
+
     return Scaffold(
       backgroundColor: AppColor.background,
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(
-              title: "Edit Data",
-              onBackTap: () => Get.toNamed('/detailhistory'),
-            ),
+            CustomAppBar(title: "Edit $namaAlat", onBackTap:Get.back,),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    // Header Image
                     Container(
-                      height: 250.h,
+                      height: screenHeight * 0.15,
                       alignment: Alignment.center,
                       child: SvgPicture.asset(
-                        'assets/images/input_illustration.svg',
-                        width: 310.w,
+                        'assets/images/input.svg',
+                        width: screenWidth * 0.6,
                       ),
                     ),
+                    SizedBox(height: screenHeight * 0.02),
+
+                    // Form Container
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                      width: double.infinity,
-                      child: Text(
-                        "Fly 01 Utara",
-                        style: TextStyle(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      color: AppColor.backgroundsetengah,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05,
+                          vertical: screenHeight * 0.02),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Condition Section
                           Text(
                             "Condition",
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: screenWidth * 0.035,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(width: 6.w),
                           Obx(() => Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -71,44 +70,54 @@ class EditDataHistoryView extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      margin: EdgeInsets.only(right: 6.w),
-                                      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
+                                      margin: EdgeInsets.only(
+                                          right: screenWidth * 0.015),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: screenHeight * 0.008,
+                                          horizontal: screenWidth * 0.015),
                                       decoration: BoxDecoration(
-                                        color: controller.selectedCondition.value == "Baik"
-                                            ? AppColor.oren.withOpacity(0.08)
+                                        color: controller.selectedCondition
+                                            .value ==
+                                            "Good"
+                                            ? AppColor.oren
+                                            .withOpacity(0.08)
                                             : Colors.white,
                                         border: Border.all(
-                                          color: controller.showError.value && controller.selectedCondition.value.isEmpty
+                                          color: controller.conditionError
+                                              .value.isNotEmpty
                                               ? Colors.red
-                                              : (controller.selectedCondition.value == "Baik"
+                                              : (controller
+                                              .selectedCondition
+                                              .value ==
+                                              "Good"
                                               ? AppColor.oren
                                               : Colors.grey.shade300),
                                           width: 1,
                                         ),
-                                        borderRadius: BorderRadius.circular(10.r),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            offset: Offset(0, 2),
-                                          ),
-                                        ],
+                                        borderRadius:
+                                        BorderRadius.circular(10),
                                       ),
                                       child: Row(
                                         children: [
                                           Radio<String>(
-                                            value: "Baik",
-                                            groupValue: controller.selectedCondition.value,
-                                            onChanged: controller.setCondition,
+                                            value: "Good",
+                                            groupValue: controller
+                                                .selectedCondition.value,
+                                            onChanged:
+                                            controller.setCondition,
                                             activeColor: AppColor.oren,
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            visualDensity: VisualDensity.compact,
+                                            materialTapTargetSize:
+                                            MaterialTapTargetSize
+                                                .shrinkWrap,
+                                            visualDensity:
+                                            VisualDensity.compact,
                                           ),
-                                          SizedBox(width: 4.w),
+                                          SizedBox(
+                                              width: screenWidth * 0.01),
                                           Text(
-                                            "Baik",
+                                            "Aktif",
                                             style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: screenWidth * 0.035,
                                               fontWeight: FontWeight.w500,
                                               color: Colors.black87,
                                             ),
@@ -119,44 +128,54 @@ class EditDataHistoryView extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      margin: EdgeInsets.only(left: 6.w),
-                                      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
+                                      margin: EdgeInsets.only(
+                                          left: screenWidth * 0.015),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: screenHeight * 0.008,
+                                          horizontal: screenWidth * 0.015),
                                       decoration: BoxDecoration(
-                                        color: controller.selectedCondition.value == "Rusak"
-                                            ? AppColor.oren.withOpacity(0.08)
+                                        color: controller.selectedCondition
+                                            .value ==
+                                            "Broken"
+                                            ? AppColor.oren
+                                            .withOpacity(0.08)
                                             : Colors.white,
                                         border: Border.all(
-                                          color: controller.showError.value && controller.selectedCondition.value.isEmpty
+                                          color: controller.conditionError
+                                              .value.isNotEmpty
                                               ? Colors.red
-                                              : (controller.selectedCondition.value == "Rusak"
+                                              : (controller
+                                              .selectedCondition
+                                              .value ==
+                                              "Broken"
                                               ? AppColor.oren
                                               : Colors.grey.shade300),
                                           width: 1,
                                         ),
-                                        borderRadius: BorderRadius.circular(10.r),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            offset: Offset(0, 2),
-                                          ),
-                                        ],
+                                        borderRadius:
+                                        BorderRadius.circular(10),
                                       ),
                                       child: Row(
                                         children: [
                                           Radio<String>(
-                                            value: "Rusak",
-                                            groupValue: controller.selectedCondition.value,
-                                            onChanged: controller.setCondition,
+                                            value: "Broken",
+                                            groupValue: controller
+                                                .selectedCondition.value,
+                                            onChanged:
+                                            controller.setCondition,
                                             activeColor: AppColor.oren,
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            visualDensity: VisualDensity.compact,
+                                            materialTapTargetSize:
+                                            MaterialTapTargetSize
+                                                .shrinkWrap,
+                                            visualDensity:
+                                            VisualDensity.compact,
                                           ),
-                                          SizedBox(width: 4.w),
+                                          SizedBox(
+                                              width: screenWidth * 0.01),
                                           Text(
-                                            "Rusak",
+                                            "Tidak Aktif",
                                             style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: screenWidth * 0.035,
                                               fontWeight: FontWeight.w500,
                                               color: Colors.black87,
                                             ),
@@ -167,59 +186,142 @@ class EditDataHistoryView extends StatelessWidget {
                                   ),
                                 ],
                               ),
-
-                              // Error message
-                              if (controller.showError.value && controller.selectedCondition.value.isEmpty)
-                                Padding(
-                                  padding: EdgeInsets.only(left: 8.w, top: 6.h),
-                                  child: Text(
-                                    "Kondisi harus dipilih!",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                              Obx(() =>
+                              controller.conditionError.value.isNotEmpty
+                                  ? Padding(
+                                padding: EdgeInsets.only(
+                                    left: screenWidth * 0.02,
+                                    top: screenHeight * 0.008),
+                                child: Text(
+                                  controller.conditionError.value,
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: screenWidth * 0.03,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                              )
+                                  : const SizedBox.shrink()),
                             ],
                           )),
-
-                          SizedBox(height: 15.h),
-
-                          Obx(() => CustomTextField(
-                            label: "Amount",
-                            isNumber: true,
-                            onChanged: controller.setAmount,
-                            errorMessage: controller.showError.value && controller.amount.value.isEmpty
-                                ? "Amount harus diisi!"
-                                : null,
+                          SizedBox(height: screenHeight * 0.01),
+                          Obx(() => CustomTextFieldEdit(
+                            label: "Jumlah",
+                            initialValue: controller.jumlah.value,
+                            onChanged: controller.setJumlah,
+                            errorMessage: controller.jumlahError,
+                            keyboardType: TextInputType.number,
                           )),
-                          SizedBox(height: 15.h),
+                          SizedBox(height: screenHeight * 0.015),
 
-                          Obx(() => CustomTextField(
-                            label: "Information",
-                            onChanged: controller.setInformation,
-                            errorMessage: controller.showError.value && controller.information.value.isEmpty
-                                ? "Information harus diisi!"
-                                : null,
+                          // --- UPDATED: Jenis Hama Section with Dropdown ---
+                          Text(
+                            "Jenis Hama",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Obx(() => DropdownButtonFormField<String>(
+                            value: controller.selectedPest.value.isEmpty ? null : controller.selectedPest.value,
+                            items: [
+                              ...controller.pestOptions.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              DropdownMenuItem<String>(
+                                value: "Lainnya (ketik manual)", // Value for custom input
+                                child: Text("Lainnya (ketik manual)"),
+                              ),
+                            ],
+                            onChanged: (String? newValue) {
+                              if (newValue != "Lainnya (ketik manual)") {
+                                controller.setJenisHama(newValue!);
+                                controller.showCustomPestField.value = false;
+                              } else {
+                                controller.showCustomPestField.value = true;
+                                controller.setJenisHama('');
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelStyle: TextStyle(color: Colors.grey.shade600),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: controller.jenisHamaError.value.isNotEmpty ? Colors.red : Colors.grey.shade300,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: controller.jenisHamaError.value.isNotEmpty ? Colors.red : Colors.grey.shade300,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: Color(0xFF275637),
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: screenHeight * 0.02,
+                                horizontal: screenWidth * 0.04,
+                              ),
+                              errorText: controller.jenisHamaError.value.isNotEmpty ? controller.jenisHamaError.value : null,
+                            ),
                           )),
-                          SizedBox(height: 15.h),
+                          // Field input for Other Pest Type
+                          Obx(() => controller.showCustomPestField.value
+                              ? Padding(
+                            padding: EdgeInsets.only(top: screenHeight * 0.01),
+                            child: CustomTextFieldEdit(
+                              label: "Jenis Hama Lainnya",
+                              initialValue: controller.jenisHama.value,
+                              onChanged: controller.setJenisHama,
+                              errorMessage: controller.jenisHamaError,
+                            ),
+                          )
+                              : const SizedBox.shrink()),
+                          // --- END UPDATED SECTION ---
 
+                          SizedBox(height: screenHeight * 0.015),
 
-                          ImageUpload(
+                          // Catatan Field
+                          Obx(() => CustomTextFieldEdit(
+                            label: "Catatan",
+                            initialValue: controller.catatan.value,
+                            onChanged: controller.setCatatan,
+                            errorMessage: controller.catatanError,
+                          )),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // Image Upload with existing image URL
+                          Obx(() => ImageUpload(
                             imageFile: controller.imageFile,
                             imageError: controller.imageError,
-                          ),
-                          SizedBox(height: 20.h),
+                            title: "Foto Dokumentasi",
+                            imageUrl: controller.getCurrentImageUrl(),
+                          )),
+                          SizedBox(height: screenHeight * 0.03),
 
-                          CustomButton(
-                            text: "Save",
-                            backgroundColor:AppColor.btnijo,
-                            onPressed: controller.validateForm,
-                            fontSize: 16,
-                          ),
-
-                          SizedBox(height: 50.h),
+                          // Save Button
+                          Obx(() => CustomButtonEdit(
+                            text: controller.isSaving.value ? "Menyimpan..." : "Simpan Perubahan",
+                            backgroundColor: controller.isSaving.value
+                                ? Colors.grey
+                                : AppColor.btnoren,
+                            onPressed: controller.isSaving.value
+                                ? null
+                                : controller.saveCatch,
+                            fontSize: screenWidth * 0.04,
+                          )),
+                          SizedBox(height: screenHeight * 0.06),
                         ],
                       ),
                     ),

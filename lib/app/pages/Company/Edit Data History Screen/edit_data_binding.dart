@@ -4,6 +4,6 @@ import 'edit_data_controller.dart';
 class EditDataHistoryBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<EditDataHistoryController>(() => EditDataHistoryController());
+    Get.lazyPut<EditDataController>(() => EditDataController());
   }
 }

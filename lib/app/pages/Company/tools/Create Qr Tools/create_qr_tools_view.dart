@@ -132,13 +132,26 @@ class CreateQrToolView extends StatelessWidget {
                                           },
                                           items: const [
                                             DropdownMenuItem(
-                                              value: 'Land',
-                                              child: Text('Darat'),
+                                              value: 'Rodent Bait Station',
+                                              child: Text('Rodent Bait Station'),
                                             ),
                                             DropdownMenuItem(
-                                              value: 'Flying',
-                                              child: Text('Terbang'),
+                                              value: 'Rodent Glue Traps',
+                                              child: Text('Rodent Glue Traps'),
                                             ),
+                                            DropdownMenuItem(
+                                              value: 'Rodent Life Trap',
+                                              child: Text('Rodent Life Trap'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Fly Catchers Lamp',
+                                              child: Text('Fly Catchers Lamp'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Fly Trap Glue Stick',
+                                              child: Text('Fly Trap Glue Stick'),
+                                            ),
+                                            
                                           ],
                                         ),
                                       ),

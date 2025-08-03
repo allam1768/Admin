@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import '../../../../data/models/catch_model.dart';
+import '../../../../routes/routes.dart';
 
 class DetailController extends GetxController {
   // Observable variables
@@ -24,19 +25,16 @@ class DetailController extends GetxController {
   final namaAlat = "".obs;
   final catchId = 0.obs;
 
-  final canEdit = true.obs;
-  final editTimeExpired = false.obs;
+  final canEdit = true.obs; // Selalu true
   final isLoading = false.obs;
   final catchData = <String, dynamic>{}.obs;
 
   // Constants
   static const String baseUrl = 'https://hamatech.rplrus.com';
   static const String storageUrl = '$baseUrl/storage/';
-  static const int editTimeLimit = 4 * 60;
 
-  // HTTP client with timeout
+  // HTTP client
   late final http.Client _httpClient;
-  Timer? _editTimer;
 
   @override
   void onInit() {
@@ -48,11 +46,9 @@ class DetailController extends GetxController {
   @override
   void onClose() {
     _httpClient.close();
-    _editTimer?.cancel();
     super.onClose();
   }
 
-  /// Load initial data from route arguments
   void loadDataFromArguments() {
     final arguments = Get.arguments;
 
@@ -71,7 +67,6 @@ class DetailController extends GetxController {
     }
   }
 
-  /// Fetch detailed data from API with improved error handling
   Future<void> fetchDetailData(int id) async {
     try {
       _setLoadingState(true);
@@ -99,31 +94,25 @@ class DetailController extends GetxController {
     }
   }
 
-  /// Handle API errors gracefully
   void _handleApiError(String error) {
     debugPrint('API Error: $error');
     updateDataFromArguments();
     _showErrorSnackbar('Failed to load latest data, showing cached version');
   }
 
-  /// Update data from API response
   void _updateDataFromAPI(Map<String, dynamic> data) {
     try {
-      // Basic info
       title.value = data['alat']?['nama_alat'] ?? 'Unknown Tool';
       namaKaryawan.value = data['dicatat_oleh'] ?? 'Unknown';
       nomorKaryawan.value = "ID: ${data['alat_id'] ?? 'N/A'}";
 
-      // Date and time formatting
       _formatDateTime(data['tanggal'], data['created_at']);
 
-      // Catch details
       kondisi.value = _formatCondition(data['kondisi']);
       jumlah.value = data['jumlah']?.toString() ?? '0';
       jenisHama.value = data['jenis_hama'] ?? 'Unknown';
       informasi.value = data['catatan'] ?? 'No notes available';
 
-      // Tool information
       final alatData = data['alat'] as Map<String, dynamic>?;
       if (alatData != null) {
         namaAlat.value = alatData['nama_alat'] ?? 'Unknown Tool';
@@ -132,22 +121,18 @@ class DetailController extends GetxController {
         kodeQR.value = alatData['kode_qr'] ?? '';
       }
 
-      // IMPROVED: Use processed image URL from API response if available
       if (data['image_url'] != null) {
         imagePath.value = data['image_url'];
       } else {
         _setImagePath(data['foto_dokumentasi']);
       }
 
-      // Check edit permissions using created_at from API
-      _checkEditTimeLimitFromAPI(data['created_at']);
     } catch (e) {
       debugPrint('Error updating data from API: $e');
       updateDataFromArguments();
     }
   }
 
-  /// Update data from cached arguments
   void updateDataFromArguments() {
     final arguments = catchData.value;
 
@@ -166,89 +151,13 @@ class DetailController extends GetxController {
     tanggal.value = arguments['date'] ?? 'N/A';
     namaAlat.value = arguments['name'] ?? 'Unknown Tool';
 
-    // IMPROVED: Use processed image URL if available, otherwise process the original path
     if (arguments['image_url'] != null) {
       imagePath.value = arguments['image_url'];
     } else {
       _setImagePath(arguments['foto_dokumentasi']);
     }
-
-    _checkEditTimeLimitFromArguments();
   }
 
-  /// NEW: Check edit time limit using API created_at
-  void _checkEditTimeLimitFromAPI(String? createdAtStr) {
-    try {
-      if (createdAtStr != null && createdAtStr.isNotEmpty) {
-        final createdAt = DateTime.parse(createdAtStr);
-        final now = DateTime.now();
-        final difference = now.difference(createdAt);
-
-        // Check if more than 4 hours have passed
-        editTimeExpired.value = difference.inHours >= 4;
-        canEdit.value = difference.inHours < 4;
-
-        // Setup timer to update status when 4 hours pass
-        if (!editTimeExpired.value) {
-          final remainingTime = Duration(hours: 4) - difference;
-          if (remainingTime.inMilliseconds > 0) {
-            _editTimer?.cancel();
-            _editTimer = Timer(remainingTime, () {
-              editTimeExpired.value = true;
-              canEdit.value = false;
-            });
-          }
-        }
-      } else {
-        // If no created_at, don't allow editing
-        editTimeExpired.value = true;
-        canEdit.value = false;
-      }
-    } catch (e) {
-      debugPrint('Error checking edit time limit from API: $e');
-      editTimeExpired.value = true;
-      canEdit.value = false;
-    }
-  }
-
-  /// NEW: Check edit time limit from cached arguments
-  void _checkEditTimeLimitFromArguments() {
-    try {
-      final arguments = catchData.value;
-      final createdAtStr = arguments['created_at'];
-
-      if (createdAtStr != null && createdAtStr.toString().isNotEmpty) {
-        final createdAt = DateTime.parse(createdAtStr.toString());
-        final now = DateTime.now();
-        final difference = now.difference(createdAt);
-
-        // Check if more than 4 hours have passed
-        editTimeExpired.value = difference.inHours >= 4;
-        canEdit.value = difference.inHours < 4;
-
-        // Setup timer to update status when 4 hours pass
-        if (!editTimeExpired.value) {
-          final remainingTime = Duration(hours: 4) - difference;
-          if (remainingTime.inMilliseconds > 0) {
-            _editTimer?.cancel();
-            _editTimer = Timer(remainingTime, () {
-              editTimeExpired.value = true;
-              canEdit.value = false;
-            });
-          }
-        }
-      } else {
-        // Fallback to old method if no created_at available
-        _checkEditStatus();
-      }
-    } catch (e) {
-      debugPrint('Error checking edit time limit from arguments: $e');
-      // Fallback to old method
-      _checkEditStatus();
-    }
-  }
-
-  /// Format date and time from API response
   void _formatDateTime(String? dateStr, String? createdAtStr) {
     if (dateStr?.isNotEmpty == true && createdAtStr?.isNotEmpty == true) {
       try {
@@ -273,17 +182,14 @@ class DetailController extends GetxController {
     }
   }
 
-  /// Set image path with proper URL handling using CatchModel
   void _setImagePath(String? imageUrl) {
     if (imageUrl?.isNotEmpty == true) {
-      // Use CatchModel's image processing method
       imagePath.value = CatchModel.getDisplayImageUrl(imageUrl);
     } else {
       imagePath.value = "assets/images/example.png";
     }
   }
 
-  /// Load fallback dummy data
   void _loadFallbackData() {
     title.value = "Fly 01 Utara";
     namaKaryawan.value = "Budi";
@@ -299,18 +205,16 @@ class DetailController extends GetxController {
     kodeQR.value = "FLY001";
     tanggal.value = "13.05.2025";
     namaAlat.value = "Fly 01 Utara";
-    _checkEditStatus();
   }
 
-  /// Format condition text
   String _formatCondition(String? condition) {
     if (condition == null) return 'Unknown';
 
     switch (condition.toLowerCase()) {
       case 'good':
-        return 'Baik';
+        return 'Aktif';
       case 'broken':
-        return 'Rusak';
+        return 'Tidak Aktif';
       case 'maintenance':
         return 'Maintenance';
       default:
@@ -318,106 +222,6 @@ class DetailController extends GetxController {
     }
   }
 
-  /// Check if data can still be edited (OLD METHOD - kept as fallback)
-  void _checkEditStatus() {
-    try {
-      final parts = tanggalJam.value.split('   ');
-      if (parts.length != 2) {
-        canEdit.value = false;
-        editTimeExpired.value = true;
-        return;
-      }
-
-      final datePart = parts[0];
-      final timePart = parts[1];
-      final dateComponents = datePart.split('.');
-
-      if (dateComponents.length != 3) {
-        canEdit.value = false;
-        editTimeExpired.value = true;
-        return;
-      }
-
-      final formatted =
-          "${dateComponents[2]}-${dateComponents[1]}-${dateComponents[0]} $timePart";
-      final inputTime = DateTime.parse(formatted);
-      final difference = DateTime.now().difference(inputTime);
-
-      editTimeExpired.value = difference.inHours >= 4;
-      canEdit.value = difference.inMinutes < editTimeLimit;
-
-      // Set up timer to update edit status
-      _setupEditTimer(inputTime);
-    } catch (e) {
-      debugPrint("Error checking edit status: $e");
-      canEdit.value = false;
-      editTimeExpired.value = true;
-    }
-  }
-
-  /// Setup timer to automatically update edit status
-  void _setupEditTimer(DateTime inputTime) {
-    _editTimer?.cancel();
-
-    final timeLeft =
-        editTimeLimit - DateTime.now().difference(inputTime).inMinutes;
-    if (timeLeft > 0) {
-      _editTimer = Timer(Duration(minutes: timeLeft), () {
-        canEdit.value = false;
-        editTimeExpired.value = true;
-      });
-    }
-  }
-
-  /// Get remaining edit time as formatted string
-  String getRemainingEditTime() {
-    try {
-      final arguments = catchData.value;
-      final createdAtStr = arguments['created_at'];
-
-      if (createdAtStr != null) {
-        final createdAt = DateTime.parse(createdAtStr.toString());
-        final now = DateTime.now();
-        final difference = now.difference(createdAt);
-        final remainingTime = Duration(hours: 4) - difference;
-
-        if (remainingTime.inMinutes > 0) {
-          final hours = remainingTime.inHours;
-          final minutes = remainingTime.inMinutes % 60;
-          return "Can edit for $hours hours $minutes minutes";
-        } else {
-          return "Edit time expired";
-        }
-      }
-
-      // Fallback to old method
-      final parts = tanggalJam.value.split('   ');
-      if (parts.length == 2) {
-        final datePart = parts[0];
-        final timePart = parts[1];
-        final dateComponents = datePart.split('.');
-
-        if (dateComponents.length == 3) {
-          final formatted =
-              "${dateComponents[2]}-${dateComponents[1]}-${dateComponents[0]} $timePart";
-          final inputTime = DateTime.parse(formatted);
-          final difference = DateTime.now().difference(inputTime);
-          final remainingMinutes = editTimeLimit - difference.inMinutes;
-
-          if (remainingMinutes > 0) {
-            final hours = remainingMinutes ~/ 60;
-            final minutes = remainingMinutes % 60;
-            return "Can edit for $hours hours $minutes minutes";
-          }
-        }
-      }
-    } catch (e) {
-      debugPrint("Error calculating remaining time: $e");
-    }
-    return "Edit time expired";
-  }
-
-  /// Update detail data (called from edit screen)
   void updateDetailData(String newCondition, String newAmount,
       String newInformation, String newImage) {
     kondisi.value = newCondition;
@@ -426,7 +230,6 @@ class DetailController extends GetxController {
     imagePath.value = newImage;
   }
 
-  /// Delete catch data
   Future<void> deleteData() async {
     try {
       _setLoadingState(true);
@@ -451,24 +254,20 @@ class DetailController extends GetxController {
     }
   }
 
-  /// Navigate to edit screen
   void editData() {
-    Get.toNamed('/EditData', arguments: catchData.value);
+    Get.toNamed(Routes.editDataHistory, arguments: catchData.value);
   }
 
-  /// Get full image URL using CatchModel's method
   String getFullImageUrl(String imagePath) {
     return CatchModel.getDisplayImageUrl(imagePath);
   }
 
-  /// Refresh data from API
   Future<void> refreshData() async {
     if (catchId.value > 0) {
       await fetchDetailData(catchId.value);
     }
   }
 
-  /// Debug method for testing image processing
   void debugImageInfo() {
     print('=== IMAGE DEBUG INFO ===');
     print('Original path: ${catchData.value['foto_dokumentasi']}');
@@ -480,7 +279,6 @@ class DetailController extends GetxController {
     print('========================');
   }
 
-  // Helper methods
   void _setLoadingState(bool loading) {
     isLoading.value = loading;
   }

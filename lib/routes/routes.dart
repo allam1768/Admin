@@ -23,12 +23,17 @@ import '../app/pages/Company/Detail Data Screen/detail_data_view.dart';
 import '../app/pages/Company/Detail History Screen/detail_binding.dart';
 import '../app/pages/Company/Detail History Screen/detail_view.dart';
 import '../app/pages/Company/Detail_Company/Detail_Company_binding.dart';
+import '../app/pages/Company/Report/History Report Screen/history_report_binding.dart';
+import '../app/pages/Company/Report/History Report Screen/history_report_view.dart';
+import '../app/pages/Company/Report/Report Detail Screen/report_detail_binding.dart';
+import '../app/pages/Company/Report/Report Detail Screen/report_detail_view.dart';
+import '../app/pages/Company/Report/Report Input Screen/report_input_binding.dart';
+import '../app/pages/Company/Report/Report Input Screen/report_input_view.dart';
 import '../app/pages/Company/tools/Detail_Tools/Detail_Tool_binding.dart';
 import '../app/pages/Company/tools/Detail_Tools/Detail_Tool_view.dart';
 import '../app/pages/Company/Edit Data History Screen/edit_data_binding.dart';
 import '../app/pages/Company/Edit Data History Screen/edit_data_view.dart';
 import '../app/pages/Company/tools/History/history_tools_view.dart';
-import '../app/pages/Company/tools/Qr Detail Tool Screen/qr_detail_tool_view.dart';
 import '../app/pages/Login screen/login_view.dart';
 import '../app/pages/Splash screen/splash_binding.dart';
 import '../app/pages/Splash screen/splash_view.dart';
@@ -63,8 +68,9 @@ class Routes {
   static const String createAccountWorker = '/CreateAccountWorker';
   static const String accountWorker = '/AccountWorker';
 
-
-
+  static const historyReport = '/HistoryReport';
+  static const reportDetail = '/ReportDetail';
+  static const reportInput = '/ReportInput';
 
 
   static final List<GetPage> pages = [
@@ -118,7 +124,7 @@ class Routes {
     ),
     GetPage(
       name: Routes.editDataHistory,
-      page: () => EditDataHistoryView(),
+      page: () => EditDataView(),
       binding: EditDataHistoryBinding(),
     ),
     GetPage(
@@ -170,5 +176,21 @@ class Routes {
       binding: AccountWorkerBinding(),
     ),
 
+
+    GetPage(
+      name: Routes.historyReport,
+      page: () => HistoryReportView(),
+      binding: HistoryReportBinding(),
+    ),
+    GetPage(
+      name: Routes.reportDetail,
+      page: () => ReportDetailView(),
+      binding: ReportDetailBinding(),
+    ),
+    GetPage(
+      name: Routes.reportInput,
+      page: () => ReportInputView(),
+      binding: ReportInputBinding(),
+    ),
   ];
 }

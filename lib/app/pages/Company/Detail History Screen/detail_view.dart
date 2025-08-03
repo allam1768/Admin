@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../values/app_color.dart';
+import '../../../dialogs/ConfirmDeleteDialog.dart';
+import '../../../global component/ButtonEdit&Delete.dart';
 import '../../../global component/CustomAppBar.dart';
 import 'detail_controller.dart';
 
@@ -155,6 +157,49 @@ class DetailView extends StatelessWidget {
                                             ? "No notes available"
                                             : controller.informasi.value,
                                       )),
+                                      SizedBox(height: 16.h),
+
+                                      // Action Buttons
+                                      // Ganti bagian Row dengan action buttons:
+                                      Row(
+                                        children: [
+                                          Obx(() => controller.canEdit.value
+                                              ? Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(right: 8.w),
+                                              child: CustomButtonDetail(
+                                                icon: Icons.edit,
+                                                color: AppColor.btnijo,
+                                                text: 'Edit',
+                                                onPressed: controller.editData,
+                                              ),
+                                            ),
+                                          )
+                                              : const SizedBox()),
+
+                                          Expanded(
+                                            child: CustomButtonDetail(
+                                              text: "Delete",
+                                              icon: Icons.delete,
+                                              color: Colors.red.shade700,
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) => ConfirmDeleteDialog(
+                                                    onCancelTap: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    onDeleteTap: () {
+                                                      Navigator.of(context).pop();
+                                                      controller.deleteData();
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -263,6 +308,8 @@ class DetailView extends StatelessWidget {
       case 'rusak':
       case 'broken':
         return Colors.red;
+      case 'maintenance':
+        return Colors.orange;
       default:
         return Colors.black87;
     }
