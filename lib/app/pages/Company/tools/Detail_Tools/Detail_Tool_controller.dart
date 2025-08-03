@@ -16,6 +16,15 @@ class DetailToolController extends GetxController {
   final imagePath = "".obs;
   final id = 0.obs;
 
+  // Method untuk memfilter kondisi alat
+  String filterKondisiAlat(String kondisiFromApi) {
+    if (kondisiFromApi.toLowerCase() == 'good') {
+      return 'Aktif';
+    } else {
+      return 'Tidak Aktif';
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -50,19 +59,32 @@ class DetailToolController extends GetxController {
     kodeQr.value = args['kodeQr'] ?? '';
     lokasi.value = args['location'] ?? '';
     detailLokasi.value = args['locationDetail'] ?? '';
-    kondisi.value = args['kondisi'] ?? '';
+    // Filter kondisi dari API sebelum menampilkan
+    kondisi.value = filterKondisiAlat(args['kondisi'] ?? '');
     pestType.value = args['pestType'] ?? '';
     imagePath.value = args['imagePath'] ?? 'assets/images/broken.png';
   }
 
   Future<void> refreshToolDetail() async {
     try {
-      final response = await AlatService.getAlatById(1);
+      final response = await AlatService.getAlatById(id.value);
       if (response != null && response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final data = jsonData['data'];
         final alat = AlatModel.fromJson(data);
+
+        // Update data dengan filter kondisi
+        namaAlat.value = alat.namaAlat ?? '';
+        kodeQr.value = alat.kodeQr ?? '';
+        lokasi.value = alat.lokasi ?? '';
+        detailLokasi.value = alat.detailLokasi ?? '';
+        kondisi.value = filterKondisiAlat(alat.kondisi ?? '');
+        pestType.value = alat.pestType ?? '';
+        imagePath.value = alat.imagePath ?? 'assets/images/broken.png';
+
         print('Nama alat: ${alat.namaAlat}');
+        print('Kondisi original: ${alat.kondisi}');
+        print('Kondisi filtered: ${kondisi.value}');
       }
     } catch (e) {
       print('Error refreshing tool detail: $e');

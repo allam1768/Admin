@@ -1,7 +1,9 @@
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ChartTool.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DataCard.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ToolCard.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DateSelection.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/SummarySection.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,6 +17,33 @@ class DetailDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final List<FlSpot> nyamukData = [ FlSpot(0, 50), FlSpot(1, 60), FlSpot(2, 55), FlSpot(3, 70), FlSpot(4, 85) ];
+    final List<FlSpot> lalatData = [ FlSpot(0, 30), FlSpot(1, 45), FlSpot(2, 40), FlSpot(3, 50), FlSpot(4, 55) ];
+    final List<FlSpot> ngengatData = [ FlSpot(0, 20), FlSpot(1, 25), FlSpot(2, 30), FlSpot(3, 28), FlSpot(4, 35) ];
+    final List<FlSpot> phoridsData = [ FlSpot(0, 15), FlSpot(1, 20), FlSpot(2, 18), FlSpot(3, 22), FlSpot(4, 20) ];
+
+    // Combine all data into a single list
+    final List<List<FlSpot>> allChartData = [
+      nyamukData,
+      lalatData,
+      ngengatData,
+      phoridsData,
+    ];
+
+    // Define different colors for each line
+    final List<Color> allColors = [
+      Colors.blue,    // Mosquitoes
+      Colors.red,     // Flies
+      Colors.purple,  // Moths
+      Colors.orange,  // Phorids
+      Colors.teal,    // Others
+    ];
+
+
+
+
     final controller = Get.find<DetailDataController>();
 
     return Scaffold(
@@ -26,6 +55,8 @@ class DetailDataView extends StatelessWidget {
             CustomAppBar(
               title: "Detail Data",
               onBackTap: controller.goToDashboard,
+              rightIcon: "assets/icons/report.svg",
+              rightOnTap: () => Get.to('ReportInput'),
             ),
             Expanded(
               child: RefreshIndicator(
@@ -51,6 +82,15 @@ class DetailDataView extends StatelessWidget {
                         onMonthRangeChanged: controller.onDateRangeChanged,
                       ),
                       SizedBox(height: 20.h),
+
+                    ChartTool(
+                        title: "Fly Catchers Lamp",
+                        chartData: allChartData,
+                        onNoteChanged: (text) => controller.updateNote(0, text),
+                        onSave: () => print("Data Land disimpan!"),
+                          colors: allColors
+                      ),
+                      SizedBox(height: 25.h),
 
               Obx(() =>DataCard(
                         title: "Land",
