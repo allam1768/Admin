@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CompanyCard extends StatelessWidget {
   final int id;
@@ -47,6 +48,17 @@ class CompanyCard extends StatelessWidget {
     );
   }
 
+  // Method untuk menyimpan company ID ke SharedPreferences
+  Future<void> _saveCompanyId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('companyid', id);
+      print('Company ID $id saved to SharedPreferences');
+    } catch (e) {
+      print('Error saving company ID: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Skeletonizer(
@@ -56,9 +68,11 @@ class CompanyCard extends StatelessWidget {
         highlightColor: Color(0xFFE0E0E0),
       ),
       child: GestureDetector(
-        onTap: isLoading ? null : () {
+        onTap: isLoading ? null : () async {
+          // Simpan company ID ke SharedPreferences sebelum navigasi
+          await _saveCompanyId();
+
           Get.toNamed('/detaildata', arguments: {
-            'id': id,
             'name': companyName,
             'address': companyAddress,
             'phoneNumber': phoneNumber,
@@ -129,7 +143,10 @@ class CompanyCard extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: isLoading ? null : () {
+                    onTap: isLoading ? null : () async {
+                      // Simpan company ID ke SharedPreferences sebelum navigasi ke detail company
+                      await _saveCompanyId();
+
                       Get.toNamed('/detailcompany', arguments: {
                         'id': id,
                         'name': companyName,

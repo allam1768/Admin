@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import '../../../../data/models/alat_model.dart';
 import '../../../../data/models/chart_model.dart';
 import '../../../../data/services/alat_service.dart';
@@ -30,9 +31,9 @@ class DetailDataController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
     final arguments = Get.arguments;
     if (arguments != null) {
-      companyId.value = arguments['id'] ?? 0;
       companyName.value = arguments['name'] ?? '';
       companyAddress.value = arguments['address'] ?? '';
       companyPhoneNumber.value = arguments['phoneNumber'] ?? '';
@@ -46,10 +47,17 @@ class DetailDataController extends GetxController {
     startDate.value = DateTime(now.year, now.month, 1);
     endDate.value = DateTime(now.year, now.month + 1, 0);
 
-    fetchData();
+    _loadCompanyId(); // fetchData dipanggil di dalam sini
   }
 
-
+  Future<void> _loadCompanyId() async {
+    final prefs = await SharedPreferences.getInstance();
+    companyId.value = prefs.getInt('companyid') ?? 0;
+    print('Loaded Company ID from SharedPreferences: ${companyId.value}');
+    if (companyId.value > 0) {
+      fetchData(); // Fetch data after ID is loaded
+    }
+  }
 
   Future<void> fetchData() async {
     try {
@@ -57,7 +65,9 @@ class DetailDataController extends GetxController {
         traps.value = await AlatService.fetchAlatByCompany(companyId.value);
         await fetchChartData();
       } else {
-        traps.value = await AlatService.fetchAlat();
+        // Handle case where companyId is not available
+        traps.value = [];
+        Get.snackbar("Error", "Company ID not found. Please select a company.");
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());
