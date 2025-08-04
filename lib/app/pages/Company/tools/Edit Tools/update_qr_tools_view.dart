@@ -86,9 +86,26 @@ class _EditToolViewState extends State<EditToolView> {
                               hintText: "Pilih tipe...",
                               items: const [
                                 DropdownMenuItem(
-                                    value: 'Land', child: Text('Darat')),
+                                  value: 'Rodent Bait Station',
+                                  child: Text('Rodent Bait Station'),
+                                ),
                                 DropdownMenuItem(
-                                    value: 'Flying', child: Text('Terbang')),
+                                  value: 'Rodent Glue Traps',
+                                  child: Text('Rodent Glue Traps'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Rodent Life Trap',
+                                  child: Text('Rodent Life Trap'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Fly Catchers Lamp',
+                                  child: Text('Fly Catchers Lamp'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'Fly Trap Glue Stick',
+                                  child: Text('Fly Trap Glue Stick'),
+                                ),
+
                               ],
                               onChanged: (val) => c.selectedType.value = val,
                             ),
@@ -103,9 +120,9 @@ class _EditToolViewState extends State<EditToolView> {
                               hintText: "Pilih kondisi...",
                               items: const [
                                 DropdownMenuItem(
-                                    value: 'good', child: Text('Baik')),
+                                    value: 'good', child: Text('Aktif')),
                                 DropdownMenuItem(
-                                    value: 'broken', child: Text('Rusak')),
+                                    value: 'broken', child: Text('Tidak aktiif')),
                               ],
                               onChanged: (val) => c.selectedKondisi.value = val,
                             ),

@@ -29,14 +29,45 @@ class EditToolController extends GetxController {
   var lokasiError = ''.obs;
   var detailLokasiError = ''.obs;
 
-  // Init with alat data
   void init(AlatModel alat) {
     currentAlat = alat;
     namaController.text = alat.namaAlat;
     lokasiController.text = alat.lokasi;
     detailLokasiController.text = alat.detailLokasi;
     selectedType.value = alat.pestType;
-    selectedKondisi.value = alat.kondisi;
+
+    // ✅ Map kondisi dari model ke dropdown value
+    selectedKondisi.value = mapKondisiFromModel(alat.kondisi);
+
+    // ✅ Debug print untuk troubleshooting
+    print('Original kondisi: ${alat.kondisi}');
+    print('Mapped kondisi: ${selectedKondisi.value}');
+  }
+
+  // BARU - Method untuk mapping kondisi dari model ke dropdown
+  String? mapKondisiFromModel(String? kondisi) {
+    switch (kondisi?.toLowerCase()) {
+      case 'aktif':
+      case 'baik':
+        return 'good';
+      case 'rusak':
+      case 'broken':
+        return 'broken';
+      default:
+        return null;
+    }
+  }
+
+// BARU - Method untuk mapping kondisi dari dropdown ke model
+  String? mapKondisiToModel(String? kondisi) {
+    switch (kondisi) {
+      case 'good':
+        return 'good';
+      case 'broken':
+        return 'broken';
+      default:
+        return kondisi;
+    }
   }
 
   // Pick image

@@ -73,6 +73,7 @@ class _ToolCardState extends State<ToolCard> {
             'toolName': widget.toolName,
             'location': widget.location,
             'locationDetail': widget.locationDetail,
+
           }),
           child: Padding(
             padding: EdgeInsets.all(12.w),

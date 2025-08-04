@@ -17,33 +17,6 @@ class DetailDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-    final List<FlSpot> nyamukData = [ FlSpot(0, 50), FlSpot(1, 60), FlSpot(2, 55), FlSpot(3, 70), FlSpot(4, 85) ];
-    final List<FlSpot> lalatData = [ FlSpot(0, 30), FlSpot(1, 45), FlSpot(2, 40), FlSpot(3, 50), FlSpot(4, 55) ];
-    final List<FlSpot> ngengatData = [ FlSpot(0, 20), FlSpot(1, 25), FlSpot(2, 30), FlSpot(3, 28), FlSpot(4, 35) ];
-    final List<FlSpot> phoridsData = [ FlSpot(0, 15), FlSpot(1, 20), FlSpot(2, 18), FlSpot(3, 22), FlSpot(4, 20) ];
-
-    // Combine all data into a single list
-    final List<List<FlSpot>> allChartData = [
-      nyamukData,
-      lalatData,
-      ngengatData,
-      phoridsData,
-    ];
-
-    // Define different colors for each line
-    final List<Color> allColors = [
-      Colors.blue,    // Mosquitoes
-      Colors.red,     // Flies
-      Colors.purple,  // Moths
-      Colors.orange,  // Phorids
-      Colors.teal,    // Others
-    ];
-
-
-
-
     final controller = Get.find<DetailDataController>();
 
     return Scaffold(
@@ -56,7 +29,7 @@ class DetailDataView extends StatelessWidget {
               title: "Detail Data",
               onBackTap: controller.goToDashboard,
               rightIcon: "assets/icons/report.svg",
-              rightOnTap: () => Get.to('ReportInput'),
+              rightOnTap: () => Get.toNamed('/HistoryReport'),
             ),
             Expanded(
               child: RefreshIndicator(
@@ -83,33 +56,119 @@ class DetailDataView extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
 
-                    ChartTool(
-                        title: "Fly Catchers Lamp",
-                        chartData: allChartData,
-                        onNoteChanged: (text) => controller.updateNote(0, text),
-                        onSave: () => print("Data Land disimpan!"),
-                          colors: allColors
-                      ),
-                      SizedBox(height: 25.h),
+                      // Dynamic Chart Cards based on Pest Types
+                      Obx(() {
+                        if (controller.isLoadingChart.value) {
+                          return Container(
+                            height: 300.h,
+                            margin: EdgeInsets.symmetric(vertical: 8.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(AppColor.btnoren),
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  Text(
+                                    'Loading chart data...',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
 
-              Obx(() =>DataCard(
-                        title: "Land",
-                        chartData: controller.getChartData("Land"),
-                        onNoteChanged: (text) => controller.updateNote(0, text),
-                        onSave: () => print("Data Land disimpan!"),
-                        color: AppColor.ijomuda,
-                      ),),
-                      SizedBox(height: 25.h),
+                        if (controller.availablePestTypes.isEmpty) {
+                          return Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(32.w),
+                            margin: EdgeInsets.symmetric(vertical: 8.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.analytics_outlined,
+                                  size: 64.w,
+                                  color: Colors.grey.shade400,
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  "No chart data available",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.grey.shade600,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  "Data will appear when catches are recorded for tools",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          );
+                        }
 
-                      // Fly Chart
-              Obx(() =>DataCard(
-                        title: "Fly",
-                        chartData: controller.getChartData("Fly"),
-                        onNoteChanged: (text) => controller.updateNote(1, text),
-                        onSave: () => print("Data Fly disimpan!"),
-                        color: AppColor.btnoren,
-                      ),),
-                      SizedBox(height: 35.h),
+                        // Generate layered charts for each pest type
+                        return Column(
+                          children: controller.availablePestTypes.map((pestType) {
+                            // Get layered data for this pest type
+                            List<List<FlSpot>> layeredChartData = controller.getLayeredChartDataByPestType(pestType);
+                            List<Color> layeredColors = controller.getLayeredColorsByPestType(pestType);
+                            List<String> labels = controller.getLabelsByPestType(pestType);
+
+                            return Column(
+                              children: [
+                                ChartTool(
+                                  title: pestType,
+                                  chartData: layeredChartData,
+                                  colors: layeredColors,
+                                  labels: labels,
+                                  onNoteChanged: (text) => controller.updateNote(
+                                      controller.availablePestTypes.indexOf(pestType),
+                                      text
+                                  ),
+                                  onSave: () => print("Layered data for $pestType saved!"),
+                                ),
+                                SizedBox(height: 25.h),
+                              ],
+                            );
+                          }).toList(),
+                        );
+                      }),
+
+                      SizedBox(height: 10.h),
 
                       Row(
                         children: [
