@@ -1,5 +1,4 @@
 import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomButtonEdit.dart';
-import 'package:admin/app/pages/Company/Edit%20Data%20History%20Screen/widgets/CustomTextFieldEdit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +8,8 @@ import '../../../global component/CustomAppBar.dart';
 import '../../../global component/ImageUpload.dart';
 import 'edit_data_controller.dart';
 import 'dart:io';
+
+import 'widgets/CustomTextFieldEdit.dart';
 
 class EditDataView extends StatelessWidget {
   EditDataView({super.key});
@@ -30,7 +31,7 @@ class EditDataView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: "Edit $namaAlat", onBackTap:Get.back,),
+            CustomAppBar(title: "Edit $namaAlat", onBackTap: ()=> Get.back(),),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -205,6 +206,8 @@ class EditDataView extends StatelessWidget {
                             ],
                           )),
                           SizedBox(height: screenHeight * 0.01),
+
+                          // Jumlah Field
                           Obx(() => CustomTextFieldEdit(
                             label: "Jumlah",
                             initialValue: controller.jumlah.value,
@@ -234,17 +237,18 @@ class EditDataView extends StatelessWidget {
                                 );
                               }).toList(),
                               DropdownMenuItem<String>(
-                                value: "Lainnya (ketik manual)", // Value for custom input
+                                value: "Other", // Value for custom input
                                 child: Text("Lainnya (ketik manual)"),
                               ),
                             ],
                             onChanged: (String? newValue) {
-                              if (newValue != "Lainnya (ketik manual)") {
-                                controller.setJenisHama(newValue!);
+                              if (newValue != "Other") {
+                                controller.setSelectedPest(newValue!);
                                 controller.showCustomPestField.value = false;
                               } else {
                                 controller.showCustomPestField.value = true;
-                                controller.setJenisHama('');
+                                controller.setSelectedPest('');
+                                controller.setCustomPestText(''); // Clear custom text when switching
                               }
                             },
                             decoration: InputDecoration(
@@ -282,8 +286,8 @@ class EditDataView extends StatelessWidget {
                             padding: EdgeInsets.only(top: screenHeight * 0.01),
                             child: CustomTextFieldEdit(
                               label: "Jenis Hama Lainnya",
-                              initialValue: controller.jenisHama.value,
-                              onChanged: controller.setJenisHama,
+                              initialValue: controller.customPestText.value,
+                              onChanged: controller.setCustomPestText, // Use setCustomPestText instead
                               errorMessage: controller.jenisHamaError,
                             ),
                           )

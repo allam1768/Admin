@@ -1,297 +1,245 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:admin/values/app_color.dart';
 
-class LineChartToolWidget extends StatelessWidget {
-  final List<List<FlSpot>> allData;
-  final List<Color> primaryColors;
+class LineChartToolWidget extends StatefulWidget {
+  final List<List<FlSpot>> allData; // Multiple layers of data
   final String title;
+  final List<Color> primaryColors; // Colors for each layer
   final bool isLoading;
 
   const LineChartToolWidget({
     Key? key,
     required this.allData,
     required this.title,
-    this.primaryColors = const [AppColor.btnoren, Colors.green, Colors.blue, Colors.red, Colors.purple],
+    required this.primaryColors,
     this.isLoading = false,
   }) : super(key: key);
 
-  double get maxY {
-    if (allData.isEmpty || allData.every((data) => data.isEmpty)) return 10;
-    double max = 0;
-    for (var dataSet in allData) {
-      if (dataSet.isNotEmpty) {
-        double dataSetMax = dataSet.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
-        if (dataSetMax > max) {
-          max = dataSetMax;
-        }
-      }
-    }
-    if (max == 0) return 10;
-    return max < 10 ? 10 : max * 1.2;
-  }
+  @override
+  State<LineChartToolWidget> createState() => _LineChartToolWidgetState();
+}
 
-  double get maxX {
-    if (allData.isEmpty || allData.every((data) => data.isEmpty)) return 5;
-    double max = 0;
-    for (var dataSet in allData) {
-      if (dataSet.isNotEmpty) {
-        double dataSetMax = dataSet.map((spot) => spot.x).reduce((a, b) => a > b ? a : b);
-        if (dataSetMax > max) {
-          max = dataSetMax;
-        }
-      }
-    }
-    return max == 0 ? 1 : max + 0.5;
-  }
-
-  bool get hasValidData {
-    if (allData.isEmpty || allData.every((data) => data.isEmpty)) return false;
-    return allData.any((data) => data.any((spot) => spot.y != 0));
-  }
+class _LineChartToolWidgetState extends State<LineChartToolWidget> {
+  List<int> showingTooltipOnSpots = [];
 
   @override
   Widget build(BuildContext context) {
-    double totalAllData = 0;
-    if (hasValidData) {
-      for (var dataSet in allData) {
-        if (dataSet.isNotEmpty) {
-          totalAllData += dataSet.map((e) => e.y).reduce((a, b) => a + b);
+    if (widget.isLoading) {
+      return Container(
+        height: 200.h,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (widget.allData.isEmpty || widget.allData.every((data) => data.isEmpty)) {
+      return Container(
+        height: 200.h,
+        child: Center(
+          child: Text(
+            'No data available',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      height: 250.h,
+      padding: EdgeInsets.all(16.w),
+      child: LineChart(
+        _buildLineChartData(),
+        duration: const Duration(milliseconds: 250),
+      ),
+    );
+  }
+
+  LineChartData _buildLineChartData() {
+    // Calculate min/max values across all datasets
+    double minX = double.infinity;
+    double maxX = double.negativeInfinity;
+    double minY = 0;
+    double maxY = double.negativeInfinity;
+
+    for (var dataSet in widget.allData) {
+      if (dataSet.isNotEmpty) {
+        for (var spot in dataSet) {
+          if (spot.x < minX) minX = spot.x;
+          if (spot.x > maxX) maxX = spot.x;
+          if (spot.y > maxY) maxY = spot.y;
         }
       }
     }
 
-    return Container(
-      padding: EdgeInsets.all(25.w),
-      margin: EdgeInsets.symmetric(vertical: 8.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 4.w,
-                height: 20.h,
-                decoration: BoxDecoration(
-                  color: primaryColors.first,
-                  borderRadius: BorderRadius.circular(2.r),
+    // Handle edge cases
+    if (minX == double.infinity) minX = 0;
+    if (maxX == double.negativeInfinity) maxX = 1;
+    if (maxY == double.negativeInfinity) maxY = 10;
+
+    // Add some padding to max values
+    maxY = maxY * 1.1;
+    if (maxY == 0) maxY = 10;
+
+    return LineChartData(
+      lineTouchData: LineTouchData(
+        enabled: true,
+        handleBuiltInTouches: true,
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.black.withOpacity(0.8),
+          tooltipRoundedRadius: 8.r,
+          tooltipPadding: EdgeInsets.all(8.w),
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots.map((touchedSpot) {
+              final color = widget.primaryColors.length > touchedSpot.barIndex
+                  ? widget.primaryColors[touchedSpot.barIndex]
+                  : Colors.grey;
+
+              return LineTooltipItem(
+                '${touchedSpot.y.toInt()}',
+                TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.sp,
                 ),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              Spacer(),
-              if (isLoading) ...[
-                SizedBox(
-                  width: 16.w,
-                  height: 16.h,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryColors.first),
-                  ),
-                ),
-              ] else if (hasValidData) ...[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: primaryColors.first.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Text(
-                    'Total: ${totalAllData.toInt()}',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: primaryColors.first,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-          SizedBox(height: 16.h),
-          Container(
-            height: 250.h,
-            child: isLoading
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryColors.first),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'Loading chart data...',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            )
-                : !hasValidData
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.analytics_outlined,
-                    size: 48.w,
-                    color: Colors.grey.shade400,
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'No data available',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Data will appear when catches are recorded',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey.shade500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            )
-                : LineChart(
-              LineChartData(
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: true,
-                  horizontalInterval: maxY > 10 ? maxY / 5 : 2,
-                  verticalInterval: maxX > 1 ? 1 : 0.5,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.grey.withOpacity(0.15),
-                    strokeWidth: 1.w,
-                  ),
-                  getDrawingVerticalLine: (value) => FlLine(
-                    color: Colors.grey.withOpacity(0.15),
-                    strokeWidth: 1.w,
-                  ),
-                ),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 35.h,
-                      interval: 1,
-                      getTitlesWidget: (value, meta) {
-                        int intValue = value.toInt();
-                        if (value == intValue && intValue >= 0 && intValue < allData.first.length) {
-                          return Padding(
-                            padding: EdgeInsets.only(top: 8.h),
-                            child: Text(
-                              'Week ${intValue + 1}',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 10.sp,
-                              ),
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                  ),
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.2),
-                    width: 1.5,
-                  ),
-                ),
-                minX: 0,
-                maxX: maxX,
-                minY: 0,
-                maxY: maxY,
-                lineBarsData: [
-                  for (int i = 0; i < allData.length; i++)
-                    LineChartBarData(
-                      spots: allData[i],
-                      isCurved: true,
-                      curveSmoothness: 0.35,
-                      color: primaryColors.length > i ? primaryColors[i] : primaryColors.first,
-                      barWidth: 3.w,
-                      isStrokeCapRound: true,
-                      belowBarData: BarAreaData(
-                        show: true,
-                        gradient: LinearGradient(
-                          colors: [
-                            (primaryColors.length > i ? primaryColors[i] : primaryColors.first).withOpacity(0.3),
-                            (primaryColors.length > i ? primaryColors[i] : primaryColors.first).withOpacity(0.15),
-                            (primaryColors.length > i ? primaryColors[i] : primaryColors.first).withOpacity(0.05),
-                            Colors.transparent,
-                          ],
-                          stops: const [0.0, 0.3, 0.7, 1.0],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                      ),
-                      dotData: FlDotData(
-                        show: true,
-                        getDotPainter: (spot, percent, barData, index) {
-                          return FlDotCirclePainter(
-                            radius: 5.r,
-                            color: primaryColors.length > i ? primaryColors[i] : primaryColors.first,
-                            strokeWidth: 2.w,
-                            strokeColor: Colors.white,
-                          );
-                        },
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-          if (hasValidData) ...[
-            SizedBox(height: 12.h),
-            Row(
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16.w,
-                  color: Colors.grey.shade600,
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  'Showing ${allData.first.length} data points for selected range',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ],
+              );
+            }).toList();
+          },
+        ),
       ),
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: false,
+        horizontalInterval: maxY / 5,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: Colors.grey.shade300,
+            strokeWidth: 0.5,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30.h,
+            interval: 1,
+            getTitlesWidget: (value, meta) {
+              if (value < 0 || value >= (maxX - minX + 1)) {
+                return Text('');
+              }
+
+              // Simple day numbering
+              return Text(
+                '${value.toInt() + 1}',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 10.sp,
+                ),
+              );
+            },
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40.w,
+            interval: maxY / 5,
+            getTitlesWidget: (value, meta) {
+              return Text(
+                value.toInt().toString(),
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 10.sp,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+          bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+          left: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
+      ),
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      lineBarsData: _buildLineBarsData(),
     );
+  }
+
+  List<LineChartBarData> _buildLineBarsData() {
+    List<LineChartBarData> lineBars = [];
+
+    for (int i = 0; i < widget.allData.length; i++) {
+      final dataSet = widget.allData[i];
+      final color = i < widget.primaryColors.length
+          ? widget.primaryColors[i]
+          : Colors.grey;
+
+      // Skip empty datasets or datasets with only zero values
+      if (dataSet.isEmpty || (dataSet.length == 1 && dataSet.first.y == 0)) {
+        continue;
+      }
+
+      lineBars.add(
+        LineChartBarData(
+          spots: dataSet,
+          isCurved: true,
+          color: color,
+          barWidth: 3.w,
+          isStrokeCapRound: true,
+          curveSmoothness: 0.3,
+          preventCurveOverShooting: true,
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (spot, percent, barData, index) {
+              return FlDotCirclePainter(
+                radius: 4.w,
+                color: color,
+                strokeWidth: 2.w,
+                strokeColor: Colors.white,
+              );
+            },
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            color: color.withOpacity(0.1),
+          ),
+          shadow: Shadow(
+            blurRadius: 8,
+            color: color.withOpacity(0.2),
+            offset: Offset(0, 2),
+          ),
+        ),
+      );
+    }
+
+    // If no valid data, show a placeholder line
+    if (lineBars.isEmpty) {
+      lineBars.add(
+        LineChartBarData(
+          spots: [FlSpot(0, 0), FlSpot(1, 0)],
+          isCurved: false,
+          color: Colors.grey.shade400,
+          barWidth: 1.w,
+          dotData: FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+        ),
+      );
+    }
+
+    return lineBars;
   }
 }
