@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class CatchModel {
   final int? id;
   final String alatId;
@@ -6,11 +8,15 @@ class CatchModel {
   final String tanggal;
   final String dicatatOleh;
   final String fotoDokumentasi;
-  final String? imageUrl; // NEW: Processed image URL
+  final String? imageUrl;
   final String kondisi;
   final String catatan;
   final String? updatedAt;
   final String? createdAt;
+
+  // Baru: waktu dalam format WIB string
+  final String? createdAtWib;
+  final String? updatedAtWib;
 
   CatchModel({
     this.id,
@@ -25,9 +31,18 @@ class CatchModel {
     required this.catatan,
     this.updatedAt,
     this.createdAt,
+    this.createdAtWib,
+    this.updatedAtWib,
   });
 
   factory CatchModel.fromJson(Map<String, dynamic> json) {
+    String? created = json['created_at'];
+    String? updated = json['updated_at'];
+
+    // Parsing dan konversi waktu ke lokal (WIB)
+    String? createdWib = _formatDateToWib(created);
+    String? updatedWib = _formatDateToWib(updated);
+
     return CatchModel(
       id: json['id'],
       alatId: json['alat_id'],
@@ -36,11 +51,13 @@ class CatchModel {
       tanggal: json['tanggal'],
       dicatatOleh: json['dicatat_oleh'],
       fotoDokumentasi: json['foto_dokumentasi'] ?? '',
-      imageUrl: _processImageUrl(json['foto_dokumentasi']), // Process image URL
+      imageUrl: _processImageUrl(json['foto_dokumentasi']),
       kondisi: json['kondisi'],
       catatan: json['catatan'],
-      updatedAt: json['updated_at'],
-      createdAt: json['created_at'],
+      updatedAt: updated,
+      createdAt: created,
+      createdAtWib: createdWib,
+      updatedAtWib: updatedWib,
     );
   }
 
@@ -57,40 +74,42 @@ class CatchModel {
     };
   }
 
-  // Static method to process image URL
+  static String? _formatDateToWib(String? utcTime) {
+    if (utcTime == null) return null;
+    try {
+      final dateTime = DateTime.parse(utcTime).toLocal();
+      return DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+    } catch (_) {
+      return null;
+    }
+  }
+
   static String? _processImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.isEmpty) {
-      return null; // Return null for empty paths, will use default image
+      return null;
     }
 
-    // If already a full URL, return as is
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
 
-    // Process the image path based on folder structure
     const String baseUrl = 'https://hamatech.rplrus.com/storage';
 
-    // If path already includes pest_catches folder
     if (imagePath.startsWith('pest_catches/')) {
       return '$baseUrl/$imagePath';
     } else {
-      // Add pest_catches folder to the path
       return '$baseUrl/pest_catches/$imagePath';
     }
   }
 
-  // Getter for image URL with fallback
   String get fullImageUrl {
     return imageUrl ?? 'assets/images/example.png';
   }
 
-  // Method to check if image exists (has valid URL)
   bool get hasImage {
     return imageUrl != null && imageUrl!.isNotEmpty;
   }
 
-  // Create copy with updated image
   CatchModel copyWith({
     int? id,
     String? alatId,
@@ -104,6 +123,8 @@ class CatchModel {
     String? catatan,
     String? updatedAt,
     String? createdAt,
+    String? createdAtWib,
+    String? updatedAtWib,
   }) {
     return CatchModel(
       id: id ?? this.id,
@@ -118,10 +139,11 @@ class CatchModel {
       catatan: catatan ?? this.catatan,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
+      createdAtWib: createdAtWib ?? this.createdAtWib,
+      updatedAtWib: updatedAtWib ?? this.updatedAtWib,
     );
   }
 
-  // Helper method to get image URL for display
   static String getDisplayImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.isEmpty) {
       return 'assets/images/example.png';
@@ -148,9 +170,7 @@ class CatchModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is CatchModel &&
-              runtimeType == other.runtimeType &&
-              id == other.id;
+          other is CatchModel && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
