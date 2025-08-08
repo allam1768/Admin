@@ -55,6 +55,8 @@ class LoginController extends GetxController {
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userData', jsonEncode(result.user!.toJson()));
 
+      await prefs.setString('nama', result.user!.name);
+
       // Simpan token ke SharedPreferences
       if (result.token != null && result.token!.isNotEmpty) {
         await prefs.setString('token', result.token!);
@@ -65,13 +67,13 @@ class LoginController extends GetxController {
       } else {
         print('⚠️ Login berhasil tapi token tidak ditemukan atau kosong');
       }
+      await prefs.setString('nama', result.user!.name);
 
       Get.snackbar("Login Berhasil", result.message,
           snackPosition: SnackPosition.TOP);
       Get.offNamed(Routes.botomnav);
-    } else {
-      loginError.value = result.message;
     }
+
   }
 
   // Method untuk mengambil token dari SharedPreferences

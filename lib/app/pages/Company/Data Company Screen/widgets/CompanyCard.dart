@@ -52,10 +52,15 @@ class CompanyCard extends StatelessWidget {
   Future<void> _saveCompanyId() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      // FIX: Simpan sebagai int, bukan string
       await prefs.setInt('companyid', id);
-      print('Company ID $id saved to SharedPreferences');
+      print('✅ Company ID $id saved to SharedPreferences as int');
+
+      // Debug: Verifikasi penyimpanan
+      final savedId = prefs.getInt('companyid');
+      print('🔍 Verification - Saved Company ID: $savedId');
     } catch (e) {
-      print('Error saving company ID: $e');
+      print('❌ Error saving company ID: $e');
     }
   }
 
@@ -73,6 +78,7 @@ class CompanyCard extends StatelessWidget {
           await _saveCompanyId();
 
           Get.toNamed('/detaildata', arguments: {
+            'id': id, // Tambahkan ID ke arguments
             'name': companyName,
             'address': companyAddress,
             'phoneNumber': phoneNumber,
@@ -138,6 +144,15 @@ class CompanyCard extends StatelessWidget {
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                        ),
+                        // Debug info - bisa dihapus di production
+                        Text(
+                          'ID: $id',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: Colors.grey[600],
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ],
                     ),

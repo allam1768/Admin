@@ -18,8 +18,6 @@ class ReportInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("🏗️ ReportInputView building...");
-    print("📱 Screen size: ${MediaQuery.of(context).size}");
 
     return Scaffold(
       backgroundColor: AppColor.background,
@@ -28,7 +26,7 @@ class ReportInputView extends StatelessWidget {
           children: [
             Column(
               children: [
-                CustomAppBar(title: "Report", onBackTap: ()=>Get.back,),
+                CustomAppBar(title: "Report", onBackTap: () => Get.back(),),
                 SizedBox(height: 22.h),
                 Center(
                   child: SvgPicture.asset(
@@ -56,9 +54,7 @@ class ReportInputView extends StatelessWidget {
                         return CustomTextFieldEdit(
                           label: "Area",
                           onChanged: (value) {
-                            print("📝 Area field changed: '$value'");
                             controller.amount.value = value;
-                            print("✅ Area value set to: '${controller.amount.value}'");
                           },
                           errorMessage: controller.areaError,
                         );
@@ -71,9 +67,7 @@ class ReportInputView extends StatelessWidget {
                         return CustomTextFieldEdit(
                           label: "Information",
                           onChanged: (value) {
-                            print("📝 Information field changed: '$value'");
                             controller.information.value = value;
-                            print("✅ Information value set to: '${controller.information.value}'");
                           },
                           errorMessage: controller.informationError,
                         );
@@ -103,12 +97,6 @@ class ReportInputView extends StatelessWidget {
                           onPressed: isLoading
                               ? null
                               : () {
-                            print("🔘 Save button pressed");
-                            print("📋 Current form state:");
-                            print("  - Area: '${controller.amount.value}'");
-                            print("  - Information: '${controller.information.value}'");
-                            print("  - Image: ${controller.imageFile.value != null ? 'Selected' : 'Not selected'}");
-                            print("  - Loading: ${controller.isLoading.value}");
 
                             controller.validateForm();
                           },

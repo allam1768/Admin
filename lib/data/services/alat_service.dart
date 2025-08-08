@@ -1,4 +1,3 @@
-// alat_service.dart
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -11,13 +10,11 @@ import '../models/alat_model.dart';
 class AlatService {
   static const String baseUrl = 'https://hamatech.rplrus.com/api';
 
-  // Method untuk mengambil token dari SharedPreferences
   static Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
 
-  // Method untuk membuat headers dengan Bearer token
   static Future<Map<String, String>> _getHeaders() async {
     final token = await _getToken();
     final headers = <String, String>{
