@@ -1,3 +1,5 @@
+import '../../values/config.dart';
+
 class ClientModel {
   final int id;
   final String name;
@@ -50,7 +52,7 @@ class ClientModel {
       if (image!.startsWith('http')) {
         return image;
       } else {
-        return 'https://hamatech.rplrus.com/storage/$image';
+        return Config.getImageUrl(image);
       }
     }
     return null;

@@ -92,8 +92,8 @@ class ReportInputView extends StatelessWidget {
                         return CustomButtonEdit(
                           text: isLoading ? "Menyimpan..." : "Save",
                           backgroundColor: isLoading
-                              ? AppColor.btnijo.withOpacity(0.6)
-                              : AppColor.btnijo,
+                              ? AppColor.btnoren.withOpacity(0.6)
+                              : AppColor.btnoren,
                           onPressed: isLoading
                               ? null
                               : () {

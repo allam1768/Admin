@@ -1,4 +1,5 @@
-// alat_model.dart
+import '../../values/config.dart';
+
 class AlatModel {
   final int id;
   final String namaAlat;
@@ -32,10 +33,18 @@ class AlatModel {
       kondisi: json['kondisi'] ?? '',
       kodeQr: json['kode_qr'] ?? '',
       imagePath: json['alat_image'] != null && json['alat_image'].toString().isNotEmpty
-          ? 'https://hamatech.rplrus.com/storage/${json['alat_image']}'
+          ? json['alat_image'].toString()
           : null,
       companyId: json['company_id'], // Added company ID from JSON
     );
+  }
+
+  // PERBAIKAN: Helper method untuk mendapatkan image URL lengkap menggunakan Config
+  String get fullImageUrl {
+    if (imagePath != null && imagePath!.isNotEmpty) {
+      return Config.getImageUrl(imagePath);
+    }
+    return Config.getImageUrl(null); // Return default image
   }
 
   Map<String, dynamic> toJson() {
@@ -50,5 +59,35 @@ class AlatModel {
       'alat_image': imagePath,
       'company_id': companyId, // Added company ID to JSON
     };
+  }
+
+  // TAMBAHAN: Helper method untuk copy dengan perubahan
+  AlatModel copyWith({
+    int? id,
+    String? namaAlat,
+    String? lokasi,
+    String? detailLokasi,
+    String? pestType,
+    String? kondisi,
+    String? kodeQr,
+    String? imagePath,
+    int? companyId,
+  }) {
+    return AlatModel(
+      id: id ?? this.id,
+      namaAlat: namaAlat ?? this.namaAlat,
+      lokasi: lokasi ?? this.lokasi,
+      detailLokasi: detailLokasi ?? this.detailLokasi,
+      pestType: pestType ?? this.pestType,
+      kondisi: kondisi ?? this.kondisi,
+      kodeQr: kodeQr ?? this.kodeQr,
+      imagePath: imagePath ?? this.imagePath,
+      companyId: companyId ?? this.companyId,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'AlatModel(id: $id, namaAlat: $namaAlat, lokasi: $lokasi, pestType: $pestType, companyId: $companyId)';
   }
 }

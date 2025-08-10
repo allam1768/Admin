@@ -160,14 +160,7 @@ class ReportDetailView extends StatelessWidget {
               //   )),
               // ],
             ),
-            SizedBox(height: 22.h),
-            Center(
-              child: SvgPicture.asset(
-                "assets/images/report_illustration.svg",
-                width: 250.w,
-                height: 212.h,
-              ),
-            ),
+
           ],
         ),
         Align(
@@ -230,10 +223,8 @@ class ReportDetailView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12.h),
-            _buildInfoRow("ID", "#${report.id}"),
             _buildInfoRow("Pengirim", report.namaPengirim),
             _buildInfoRow("Perusahaan", report.company.name),
-            _buildInfoRow("Role", report.role),
             _buildInfoRow("Tanggal", report.formattedDate),
             _buildInfoRow("Waktu", report.formattedTime),
           ],

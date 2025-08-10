@@ -3,18 +3,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../../app/pages/Login screen/login_controller.dart';
+import '../../values/config.dart';
 import '../models/worker_model.dart';
 import '../models/LoginResponse_model.dart';
 
 class WorkerService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-
   // Helper method to get the authorization headers for JSON requests
   static Future<Map<String, String>> _getAuthHeaders() async {
     final token = await LoginController.getToken();
     return {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      ...Config.commonHeaders,
       if (token != null) 'Authorization': 'Bearer $token',
     };
   }
@@ -32,9 +30,9 @@ class WorkerService {
     try {
       final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.get(
-        Uri.parse('$baseUrl/workers'),
+        Uri.parse(Config.getApiUrl('/workers')),
         headers: headers,
-      );
+      ).timeout(Config.requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -57,7 +55,7 @@ class WorkerService {
     File? profileImage,
   }) async {
     try {
-      final url = Uri.parse('$baseUrl/users');
+      final url = Uri.parse(Config.getApiUrl('/users'));
 
       // Membuat request multipart
       var request = http.MultipartRequest('POST', url);
@@ -125,7 +123,7 @@ class WorkerService {
 
     while (retryCount < maxRetries) {
       try {
-        final url = Uri.parse('$baseUrl/users/$workerId');
+        final url = Uri.parse(Config.getApiUrl('/users/$workerId'));
         print('Request URL: $url');
 
         var request = http.MultipartRequest('POST', url);
@@ -163,7 +161,7 @@ class WorkerService {
         print('Request files: ${request.files.length} file(s)');
 
         final streamedResponse = await request.send().timeout(
-          const Duration(seconds: 30),
+          Config.requestTimeout,
           onTimeout: () {
             throw TimeoutException('Koneksi timeout. Silakan coba lagi.');
           },
@@ -262,9 +260,9 @@ class WorkerService {
     try {
       final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.delete(
-        Uri.parse('$baseUrl/users/$workerId'),
+        Uri.parse(Config.getApiUrl('/users/$workerId')),
         headers: headers,
-      );
+      ).timeout(Config.requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);

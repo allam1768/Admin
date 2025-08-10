@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import '../../values/config.dart';
 
 class CatchModel {
   final int? id;
@@ -84,6 +85,7 @@ class CatchModel {
     }
   }
 
+  // PERBAIKAN: Menggunakan Config untuk URL processing
   static String? _processImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.isEmpty) {
       return null;
@@ -93,17 +95,20 @@ class CatchModel {
       return imagePath;
     }
 
-    const String baseUrl = 'https://hamatech.rplrus.com/storage';
-
+    // Pastikan path dimulai dengan pest_catches/
     if (imagePath.startsWith('pest_catches/')) {
-      return '$baseUrl/$imagePath';
+      return Config.getStorageUrl(imagePath);
     } else {
-      return '$baseUrl/pest_catches/$imagePath';
+      return Config.getStorageUrl('pest_catches/$imagePath');
     }
   }
 
+  // PERBAIKAN: Menggunakan Config untuk fullImageUrl
   String get fullImageUrl {
-    return imageUrl ?? 'assets/images/example.png';
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return imageUrl!;
+    }
+    return Config.getImageUrl(null); // Return default image
   }
 
   bool get hasImage {
@@ -144,21 +149,21 @@ class CatchModel {
     );
   }
 
+  // PERBAIKAN: Static method menggunakan Config
   static String getDisplayImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.isEmpty) {
-      return 'assets/images/example.png';
+      return Config.getImageUrl(null); // Return default image
     }
 
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
 
-    const String baseUrl = 'https://hamatech.rplrus.com/storage';
-
+    // Pastikan path dimulai dengan pest_catches/
     if (imagePath.startsWith('pest_catches/')) {
-      return '$baseUrl/$imagePath';
+      return Config.getStorageUrl(imagePath);
     } else {
-      return '$baseUrl/pest_catches/$imagePath';
+      return Config.getStorageUrl('pest_catches/$imagePath');
     }
   }
 

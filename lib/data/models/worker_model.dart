@@ -1,3 +1,5 @@
+import '../../values/config.dart';
+
 class WorkerModel {
   final int id;
   final String name;
@@ -130,7 +132,7 @@ class WorkerModel {
       if (image!.startsWith('http')) {
         return image;
       } else {
-        return 'https://hamatech.rplrus.com/storage/$image';
+        return Config.getImageUrl(image);
       }
     }
     return null;

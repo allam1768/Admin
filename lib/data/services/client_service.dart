@@ -3,21 +3,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../../app/pages/Login screen/login_controller.dart';
+import '../../values/config.dart';
 import '../models/LoginResponse_model.dart';
 import '../models/client_model.dart';
 
 class ClientService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api/clients';
-  static const String createUserUrl = 'https://hamatech.rplrus.com/api/clients/register';
-  static const String userDetailUrl = 'https://hamatech.rplrus.com/api/users';
-
   // Helper method to get the authorization headers
   static Future<Map<String, String>> _getAuthHeaders() async {
     final token = await LoginController.getToken();
-    return {
-      'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
+    final headers = Map<String, String>.from(Config.commonHeaders);
+
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    return headers;
   }
 
   // Helper method to get the authorization headers for multipart requests
@@ -32,7 +32,7 @@ class ClientService {
   static Future<List<ClientModel>> fetchClients() async {
     final headers = await _getAuthHeaders();
     final response = await http.get(
-      Uri.parse(baseUrl),
+      Uri.parse(Config.getApiUrl('/clients')),
       headers: headers,
     );
 
@@ -56,7 +56,7 @@ class ClientService {
   static Future<ClientModel?> fetchClientDetail(int clientId) async {
     final headers = await _getAuthHeaders();
     final response = await http.get(
-      Uri.parse('$userDetailUrl/$clientId'),
+      Uri.parse(Config.getApiUrl('/users/$clientId')),
       headers: headers,
     );
 
@@ -78,7 +78,7 @@ class ClientService {
   static Future<bool> deleteClient(int clientId) async {
     final headers = await _getAuthHeaders();
     final response = await http.delete(
-      Uri.parse('https://hamatech.rplrus.com/api/users/$clientId'),
+      Uri.parse(Config.getApiUrl('/users/$clientId')),
       headers: headers,
     );
 
@@ -105,7 +105,7 @@ class ClientService {
     File? profileImage,
   }) async {
     try {
-      final url = Uri.parse(createUserUrl);
+      final url = Uri.parse(Config.getApiUrl('/clients/register'));
       var request = http.MultipartRequest('POST', url);
 
       // Get multipart headers including authorization token
@@ -170,7 +170,7 @@ class ClientService {
 
     while (retryCount < maxRetries) {
       try {
-        final url = Uri.parse('https://hamatech.rplrus.com/api/users/$clientId');
+        final url = Uri.parse(Config.getApiUrl('/users/$clientId'));
         print('Request URL: $url');
 
         var request = http.MultipartRequest('POST', url);
@@ -203,7 +203,7 @@ class ClientService {
         }
 
         final streamedResponse = await request.send().timeout(
-          const Duration(seconds: 30),
+          Config.requestTimeout,
           onTimeout: () {
             throw TimeoutException('Koneksi timeout. Silakan coba lagi.');
           },

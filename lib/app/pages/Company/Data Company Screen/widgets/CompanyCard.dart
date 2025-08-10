@@ -145,15 +145,6 @@ class CompanyCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        // Debug info - bisa dihapus di production
-                        Text(
-                          'ID: $id',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: Colors.grey[600],
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
                       ],
                     ),
                   ),

@@ -1,20 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../data/models/LoginResponse_model.dart';
+import '../../values/config.dart';
 
 class LoginService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-
   static Future<LoginResponseModel> login({
     required String name,
     required String password,
   }) async {
-    final url = Uri.parse('$baseUrl/login');
+    final url = Uri.parse(Config.getApiUrl('/login'));
 
     try {
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
+        headers: Config.commonHeaders,
         body: jsonEncode({
           'name': name,
           'password': password,

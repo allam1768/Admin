@@ -2,17 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../values/config.dart';
 import '../models/company_model.dart';
 
 class CompanyService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-  static const String imageBaseUrl = 'https://hamatech.rplrus.com/storage/';
-
   String getImageUrl(String? imagePath) {
-    if (imagePath == null || imagePath.isEmpty) {
-      return 'assets/images/example.png';
-    }
-    return '$imageBaseUrl$imagePath';
+    return Config.getImageUrl(imagePath);
   }
 
   // Function to get token from SharedPreferences
@@ -41,11 +36,8 @@ class CompanyService {
   Future<Map<String, String>> getAuthHeaders() async {
     final token = await getToken();
 
-    Map<String, String> headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'ngrok-skip-browser-warning': '1',
-    };
+    Map<String, String> headers = Map<String, String>.from(Config.commonHeaders);
+    headers['ngrok-skip-browser-warning'] = '1';
 
     if (token != null && token.isNotEmpty) {
       headers['Authorization'] = 'Bearer $token';
@@ -83,7 +75,7 @@ class CompanyService {
       print('📡 Fetching companies from API...');
 
       final response = await http.get(
-        Uri.parse('$baseUrl/companies'),
+        Uri.parse(Config.getApiUrl('/companies')),
         headers: headers,
       );
 
@@ -129,7 +121,7 @@ class CompanyService {
 
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/companies'),
+        Uri.parse(Config.getApiUrl('/companies')),
       );
 
       // Add headers with authentication
@@ -224,7 +216,7 @@ class CompanyService {
       print('📤 Sending data to API: ${json.encode(data)}');
 
       final response = await http.post(
-        Uri.parse('$baseUrl/companies'),
+        Uri.parse(Config.getApiUrl('/companies')),
         headers: headers,
         body: json.encode(data),
       );
@@ -279,7 +271,7 @@ class CompanyService {
       print('🔄 Updating company ID: $id');
 
       final response = await http.put(
-        Uri.parse('$baseUrl/companies/$id'),
+        Uri.parse(Config.getApiUrl('/companies/$id')),
         headers: headers,
         body: json.encode(data),
       );
@@ -309,7 +301,7 @@ class CompanyService {
       print('🗑️ Deleting company ID: $id');
 
       final response = await http.delete(
-        Uri.parse('$baseUrl/companies/$id'),
+        Uri.parse(Config.getApiUrl('/companies/$id')),
         headers: headers,
       );
 

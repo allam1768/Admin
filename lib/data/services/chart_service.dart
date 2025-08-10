@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import '../../values/config.dart';
 import '../models/chart_model.dart';
 
 class ChartService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-
   // New method to fetch all chart data without pest_type filter
   static Future<List<ChartModel>> fetchAllChartData({
     required int companyId,
@@ -23,7 +21,7 @@ class ChartService {
       }
 
       // Build URL with proper encoding (without pest_type filter)
-      final uri = Uri.parse('$baseUrl/catches/chart').replace(
+      final uri = Uri.parse(Config.getApiUrl('/catches/chart')).replace(
         queryParameters: {
           'company_id': companyId.toString(),
           'start_date': startDate,
@@ -35,11 +33,8 @@ class ChartService {
 
       final response = await http.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+        headers: Config.commonHeaders,
+      ).timeout(Config.requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -122,7 +117,7 @@ class ChartService {
       }
 
       // Build URL with proper encoding
-      final uri = Uri.parse('$baseUrl/catches/chart').replace(
+      final uri = Uri.parse(Config.getApiUrl('/catches/chart')).replace(
         queryParameters: {
           'company_id': companyId.toString(),
           'pest_type': pestType,
@@ -131,13 +126,12 @@ class ChartService {
         },
       );
 
+      print('Fetching chart data from: $uri');
+
       final response = await http.get(
         uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+        headers: Config.commonHeaders,
+      ).timeout(Config.requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -145,6 +139,9 @@ class ChartService {
         if (jsonResponse['success'] == true) {
           final List<dynamic> data = jsonResponse['data'] ?? [];
           List<ChartModel> chartDataList = data.map((item) => ChartModel.fromJson(item)).toList();
+
+          print('Fetched ${chartDataList.length} chart data items for pest type: $pestType');
+
           return chartDataList;
         } else {
           final errorMessage = jsonResponse['message'] ?? 'API returned success: false';
@@ -211,6 +208,7 @@ class ChartService {
 
     for (String variation in pestTypeVariations) {
       try {
+        print('Trying pest type variation: $variation');
         return await fetchChartData(
           companyId: companyId,
           pestType: variation,
@@ -218,6 +216,7 @@ class ChartService {
           endDate: endDate,
         );
       } catch (e) {
+        print('Failed with variation "$variation": $e');
         lastException = e is Exception ? e : Exception(e.toString());
         continue;
       }
