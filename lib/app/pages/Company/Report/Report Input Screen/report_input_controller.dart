@@ -49,11 +49,12 @@ class ReportInputController extends GetxController {
 
     if (amount.value.isEmpty) areaError.value = "Area harus diisi!";
     if (information.value.isEmpty) informationError.value = "Information harus diisi!";
-    if (imageFile.value == null) imageError.value = true;
+    // Removed image validation - image is now optional
+    // if (imageFile.value == null) imageError.value = true;
 
     bool isValid = amount.value.isNotEmpty &&
-        information.value.isNotEmpty &&
-        imageFile.value != null;
+        information.value.isNotEmpty;
+    // Removed imageFile.value != null from validation
 
     if (isValid) {
       submitReport();
@@ -69,7 +70,7 @@ class ReportInputController extends GetxController {
       await _reportService.createReportWithImage(
         area: amount.value,
         informasi: information.value,
-        imageFile: imageFile.value,
+        imageFile: imageFile.value, // This can be null now
       );
 
       _showSuccessSnackbar("Report berhasil dibuat");

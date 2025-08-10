@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../values/config.dart';
 import '../models/report_model.dart';
 
 class ReportService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-
   // Get token dari SharedPreferences
   Future<String?> get token async {
     final prefs = await SharedPreferences.getInstance();
@@ -17,8 +16,7 @@ class ReportService {
   Future<Map<String, String>> get headers async {
     final tokenValue = await token;
     return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      ...Config.commonHeaders, // Use common headers from config
       if (tokenValue != null) 'Authorization': 'Bearer $tokenValue',
     };
   }
@@ -45,7 +43,7 @@ class ReportService {
       }
 
       // Selalu sertakan company_id dalam query parameter
-      String endpoint = '$baseUrl/reports?page=$page&company_id=$companyId';
+      String endpoint = Config.getApiUrl('/reports?page=$page&company_id=$companyId');
 
       print('🌐 Making request to: $endpoint');
 
@@ -55,7 +53,10 @@ class ReportService {
       print('📋 Headers: $requestHeaders');
       print('🏢 Filtering by Company ID: $companyId');
 
-      final response = await http.get(url, headers: requestHeaders);
+      final response = await http.get(
+        url,
+        headers: requestHeaders,
+      ).timeout(Config.requestTimeout);
 
       print('📡 Response status: ${response.statusCode}');
       print('📄 Response body: ${response.body}');
@@ -110,13 +111,16 @@ class ReportService {
   // GET laporan by company ID - Metode utama untuk filter berdasarkan company
   Future<ReportsResponse> getReportsByCompany(int companyId, {int page = 1}) async {
     try {
-      final url = Uri.parse('$baseUrl/reports?page=$page&company_id=$companyId');
+      final url = Uri.parse(Config.getApiUrl('/reports?page=$page&company_id=$companyId'));
       final requestHeaders = await headers;
 
       print('🌐 Making company-filtered request to: $url');
       print('🏢 Company ID filter: $companyId');
 
-      final response = await http.get(url, headers: requestHeaders);
+      final response = await http.get(
+        url,
+        headers: requestHeaders,
+      ).timeout(Config.requestTimeout);
 
       print('📡 Response status: ${response.statusCode}');
 
@@ -172,10 +176,13 @@ class ReportService {
       final prefs = await SharedPreferences.getInstance();
       final userCompanyId = prefs.getInt('companyid');
 
-      final url = Uri.parse('$baseUrl/reports/$id');
+      final url = Uri.parse(Config.getApiUrl('/reports/$id'));
       final requestHeaders = await headers;
 
-      final response = await http.get(url, headers: requestHeaders);
+      final response = await http.get(
+        url,
+        headers: requestHeaders,
+      ).timeout(Config.requestTimeout);
 
       if (response.statusCode == 200) {
         if (response.body.isEmpty) throw Exception('Empty response from server');
@@ -210,7 +217,7 @@ class ReportService {
     String? role,
   }) async {
     try {
-      final url = Uri.parse('$baseUrl/reports');
+      final url = Uri.parse(Config.getApiUrl('/reports'));
       final tokenValue = await token;
       final user = await userData;
 
@@ -288,7 +295,7 @@ class ReportService {
     String? role,
   }) async {
     try {
-      final url = Uri.parse('$baseUrl/reports');
+      final url = Uri.parse(Config.getApiUrl('/reports'));
       final requestHeaders = await headers;
       final user = await userData;
 
@@ -311,7 +318,11 @@ class ReportService {
 
       print('📤 Creating report for Company ID: $finalCompanyId');
 
-      final response = await http.post(url, headers: requestHeaders, body: body);
+      final response = await http.post(
+        url,
+        headers: requestHeaders,
+        body: body,
+      ).timeout(Config.requestTimeout);
 
       if (response.statusCode == 201) {
         if (response.body.isEmpty) throw Exception('Empty response from server');

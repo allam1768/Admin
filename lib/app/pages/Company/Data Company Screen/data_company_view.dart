@@ -25,8 +25,6 @@ class DataCompanyView extends StatelessWidget {
             CustomAppBar(
               title: "Company",
               showBackButton: false,
-              rightIcon: "",
-              rightOnTap: () {},
               onBackTap: () {},
             ),
             Expanded(

@@ -1,3 +1,6 @@
+
+import '../../values/config.dart';
+
 class CompanyModel {
   final int id;
   final String name;
@@ -31,13 +34,21 @@ class CompanyModel {
       phoneNumber: json['phone_number'] ?? '',
       email: json['email'] ?? '',
       imagePath: json['image'] != null && json['image'].toString().isNotEmpty
-          ? 'https://hamatech.rplrus.com/storage/${json['image']}'
+          ? json['image'].toString()
           : null,
       companyQr: json['company_qr'], // QR code dari response
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
       client: json['client'] != null ? ClientModel.fromJson(json['client']) : null,
     );
+  }
+
+  // Helper method untuk mendapatkan image URL lengkap menggunakan Config
+  String get fullImageUrl {
+    if (imagePath != null && imagePath!.isNotEmpty) {
+      return Config.getImageUrl(imagePath);
+    }
+    return Config.getImageUrl(null); // Return default image
   }
 
   Map<String, dynamic> toJson() {

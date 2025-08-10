@@ -3,19 +3,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../../app/pages/Login screen/login_controller.dart';
+import '../../values/config.dart';
 import '../models/catch_model.dart';
 
 class CatchService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-  static const String storageUrl = 'https://hamatech.rplrus.com/storage';
-
   // Helper method to get the authorization headers for JSON requests
   static Future<Map<String, String>> _getAuthHeaders() async {
     final token = await LoginController.getToken();
-    return {
-      'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
+    final headers = Map<String, String>.from(Config.commonHeaders);
+
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    return headers;
   }
 
   // Helper method to get the authorization headers for multipart requests
@@ -32,7 +33,7 @@ class CatchService {
   /// Create a new catch record with image
   Future<CatchModel> createCatch(CatchModel catchData) async {
     try {
-      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/catches'));
+      var request = http.MultipartRequest('POST', Uri.parse(Config.getApiUrl('/catches')));
 
       // Add auth headers for multipart request
       request.headers.addAll(await _getMultipartAuthHeaders());
@@ -77,7 +78,7 @@ class CatchService {
     try {
       final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.get(
-        Uri.parse('$baseUrl/catches'),
+        Uri.parse(Config.getApiUrl('/catches')),
         headers: headers,
       );
 
@@ -128,7 +129,7 @@ class CatchService {
     try {
       final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.get(
-        Uri.parse('$baseUrl/catches/$id'),
+        Uri.parse(Config.getApiUrl('/catches/$id')),
         headers: headers,
       );
 
@@ -158,7 +159,7 @@ class CatchService {
     try {
       final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.put(
-        Uri.parse('$baseUrl/catches/$id'),
+        Uri.parse(Config.getApiUrl('/catches/$id')),
         headers: headers,
         body: jsonEncode(updateData),
       );
@@ -188,7 +189,7 @@ class CatchService {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/catches/$id'),
+        Uri.parse(Config.getApiUrl('/catches/$id')),
       );
 
       // Add auth headers for multipart request
@@ -231,7 +232,7 @@ class CatchService {
     try {
       final headers = await _getAuthHeaders(); // Use auth headers
       final response = await http.delete(
-        Uri.parse('$baseUrl/catches/$id'),
+        Uri.parse(Config.getApiUrl('/catches/$id')),
         headers: headers,
       );
 

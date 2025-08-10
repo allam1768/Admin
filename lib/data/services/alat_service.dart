@@ -5,11 +5,10 @@ import 'package:path/path.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../values/config.dart';
 import '../models/alat_model.dart';
 
 class AlatService {
-  static const String baseUrl = 'https://hamatech.rplrus.com/api';
-
   static Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -17,10 +16,7 @@ class AlatService {
 
   static Future<Map<String, String>> _getHeaders() async {
     final token = await _getToken();
-    final headers = <String, String>{
-      'ngrok-skip-browser-warning': '1',
-      'Content-Type': 'application/json',
-    };
+    final headers = Map<String, String>.from(Config.commonHeaders);
 
     if (token != null && token.isNotEmpty) {
       headers['Authorization'] = 'Bearer $token';
@@ -35,7 +31,7 @@ class AlatService {
 
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/alat'),
+        Uri.parse(Config.getApiUrl('/alat')),
       );
 
       // Add Bearer token to headers
@@ -77,7 +73,7 @@ class AlatService {
 
   // Modified fetchAlat to accept optional companyId parameter and use Bearer token
   static Future<List<AlatModel>> fetchAlat({int? companyId}) async {
-    String url = '$baseUrl/alat';
+    String url = Config.getApiUrl('/alat');
 
     // Add company_id parameter if provided
     if (companyId != null) {
@@ -117,7 +113,7 @@ class AlatService {
       final headers = await _getHeaders();
 
       final response = await http.delete(
-        Uri.parse('$baseUrl/alat/$id'),
+        Uri.parse(Config.getApiUrl('/alat/$id')),
         headers: headers,
       );
 
@@ -137,7 +133,7 @@ class AlatService {
 
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/alat/$id'),
+        Uri.parse(Config.getApiUrl('/alat/$id')),
       );
 
       // Add Bearer token to headers
@@ -183,7 +179,7 @@ class AlatService {
       final headers = await _getHeaders();
 
       final response = await http.get(
-        Uri.parse('$baseUrl/alat/$id'),
+        Uri.parse(Config.getApiUrl('/alat/$id')),
         headers: headers,
       );
 
@@ -203,7 +199,7 @@ class AlatService {
       final headers = await _getHeaders();
 
       final response = await http.get(
-        Uri.parse('$baseUrl/user/profile'), // endpoint untuk cek token
+        Uri.parse(Config.getApiUrl('/user/profile')), // endpoint untuk cek token
         headers: headers,
       );
 
