@@ -29,6 +29,7 @@ class SingleHistoryCard extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(12.r),
             onTap: () {
+              // Pass the catch data to detail page
               Get.toNamed('/detailhistory', arguments: item);
             },
             child: Container(
@@ -48,7 +49,7 @@ class SingleHistoryCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Tool name and pest type
+                        // Tool name
                         Row(
                           children: [
                             Expanded(
@@ -65,6 +66,7 @@ class SingleHistoryCard extends StatelessWidget {
                         ),
                         SizedBox(height: 6.h),
 
+                        // Date, time (converted) and recorded by
                         Row(
                           children: [
                             Icon(
@@ -74,7 +76,7 @@ class SingleHistoryCard extends StatelessWidget {
                             ),
                             SizedBox(width: 4.w),
                             Text(
-                              "${item["date"]} at ${item["time"]}",
+                              convertGmtToWib(item["created_at"]),
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 color: Colors.black54,
@@ -126,6 +128,20 @@ class SingleHistoryCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Convert dari GMT/UTC ke WIB
+  String convertGmtToWib(String gmtDateTime) {
+    try {
+      DateTime utcTime = DateTime.parse(gmtDateTime).toUtc();
+      DateTime wibTime = utcTime.add(const Duration(hours: 7));
+      return "${wibTime.day.toString().padLeft(2, '0')}-"
+          "${wibTime.month.toString().padLeft(2, '0')}-"
+          "${wibTime.year} ${wibTime.hour.toString().padLeft(2, '0')}:"
+          "${wibTime.minute.toString().padLeft(2, '0')}";
+    } catch (e) {
+      return gmtDateTime; // fallback kalau format tidak sesuai
+    }
   }
 
   Color _getStatusColor(String status) {

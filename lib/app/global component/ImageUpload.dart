@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../values/config.dart'; // Import Config class
 
 class ImageUpload extends StatelessWidget {
   final Rx<File?> imageFile;
@@ -106,7 +107,7 @@ class ImageUpload extends StatelessWidget {
   }
 
   void showPreview() {
-    if (imageFile.value == null) return;
+    if (imageFile.value == null && imageUrl == null) return;
 
     Get.dialog(
       GestureDetector(
@@ -123,10 +124,17 @@ class ImageUpload extends StatelessWidget {
               maxScale: 4,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
-                child: Image.file(
+                child: imageFile.value != null
+                    ? Image.file(
                   imageFile.value!,
                   width: 300.w,
                   fit: BoxFit.contain,
+                )
+                    : Image.network(
+                  Config.getImageUrl(imageUrl),
+                  width: 300.w,
+                  fit: BoxFit.contain,
+                  headers: Config.commonHeaders,
                 ),
               ),
             ),
@@ -135,6 +143,20 @@ class ImageUpload extends StatelessWidget {
       ),
       barrierColor: Colors.transparent,
     );
+  }
+
+  // Helper method untuk mendapatkan URL gambar yang benar
+  String _getImageUrl() {
+    if (imageUrl == null || imageUrl!.isEmpty) {
+      return '';
+    }
+
+    // Debug print untuk melihat URL yang digunakan
+    final finalUrl = Config.getImageUrl(imageUrl);
+    print('Original imageUrl: $imageUrl');
+    print('Final URL: $finalUrl');
+
+    return finalUrl;
   }
 
   @override
@@ -166,129 +188,166 @@ class ImageUpload extends StatelessWidget {
                 width: 2.w,
               ),
             ),
-            child: Obx(() => imageFile.value != null
-                ? Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Image.file(
-                    imageFile.value!,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 8.h,
-                  right: 8.w,
-                  child: GestureDetector(
-                    onTap: showPreview,
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Icon(
-                        Icons.fullscreen,
-                        color: Colors.white,
-                        size: 20.sp,
+            child: Obx(() {
+              // Prioritas: File lokal > Network image > Placeholder
+              if (imageFile.value != null) {
+                // Tampilkan gambar dari file lokal
+                return Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Image.file(
+                        imageFile.value!,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                ),
-              ],
-            )
-                : imageUrl != null
-                ? ClipRRect(
-              borderRadius: BorderRadius.circular(10.r),
-              child: Image.network(
-                imageUrl!.trim().replaceAll(' ', ''),
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-                headers: {
-                  'Accept': 'image/*',
-                  'ngrok-skip-browser-warning': '1',
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          strokeWidth: 3.w,
-                          value: loadingProgress.expectedTotalBytes !=
-                              null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          'Loading...',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.grey.shade600,
+                    Positioned(
+                      top: 8.h,
+                      right: 8.w,
+                      child: GestureDetector(
+                        onTap: showPreview,
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: Icon(
+                            Icons.fullscreen,
+                            color: Colors.white,
+                            size: 20.sp,
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 48.sp,
+                  ],
+                );
+              } else if (imageUrl != null && imageUrl!.isNotEmpty) {
+                // Tampilkan gambar dari network
+                final networkUrl = _getImageUrl();
+
+                return Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Image.network(
+                        networkUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        headers: Config.commonHeaders,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  strokeWidth: 3.w,
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  'Loading...',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          // Debug print untuk error
+                          print('Image loading error: $error');
+                          print('URL: $networkUrl');
+
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 48.sp,
+                                ),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  'Gambar tidak tersedia',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  'URL: $networkUrl',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10.sp,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        'Gambar tidak tersedia',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
+                    ),
+                    Positioned(
+                      top: 8.h,
+                      right: 8.w,
+                      child: GestureDetector(
+                        onTap: showPreview,
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: Icon(
+                            Icons.fullscreen,
+                            color: Colors.white,
+                            size: 20.sp,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Coba refresh halaman',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12.sp,
-                        ),
-                        textAlign: TextAlign.center,
+                    ),
+                  ],
+                );
+              } else {
+                // Placeholder ketika tidak ada gambar
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera_alt,
+                      size: 64.sp,
+                      color: Colors.grey.shade400,
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      'Tap untuk upload gambar',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-                : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.camera_alt,
-                  size: 64.sp,
-                  color: Colors.grey.shade400,
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  'Tap untuk upload gambar',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            )),
+                    ),
+                  ],
+                );
+              }
+            }),
           ),
         ),
         if (imageError != null)

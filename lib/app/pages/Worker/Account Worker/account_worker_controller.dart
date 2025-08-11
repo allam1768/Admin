@@ -27,6 +27,68 @@ class AccountWorkerController extends GetxController {
     _loadWorkerData();
   }
 
+  /// Konversi waktu UTC ke WIB (UTC+7)
+  String convertUtcToWib(String utcTimeString) {
+    try {
+      // Parse UTC time
+      DateTime utcTime = DateTime.parse(utcTimeString);
+
+      // Konversi ke WIB (UTC+7)
+      DateTime wibTime = utcTime.add(Duration(hours: 7));
+
+      // Format ke string yang diinginkan
+      return "${wibTime.day.toString().padLeft(2, '0')}/${wibTime.month.toString().padLeft(2, '0')}/${wibTime.year}";
+    } catch (e) {
+      print("Error converting UTC to WIB: $e");
+      return utcTimeString; // Return original string jika error
+    }
+  }
+
+  /// Konversi waktu UTC ke WIB dengan format lengkap (termasuk jam, menit, detik)
+  String convertUtcToWibFull(String utcTimeString) {
+    try {
+      // Parse UTC time
+      DateTime utcTime = DateTime.parse(utcTimeString);
+
+      // Konversi ke WIB (UTC+7)
+      DateTime wibTime = utcTime.add(Duration(hours: 7));
+
+      // Format lengkap: DD/MM/YYYY HH:mm:ss WIB
+      return "${wibTime.day.toString().padLeft(2, '0')}/${wibTime.month.toString().padLeft(2, '0')}/${wibTime.year} "
+          "${wibTime.hour.toString().padLeft(2, '0')}:${wibTime.minute.toString().padLeft(2, '0')}:${wibTime.second.toString().padLeft(2, '0')} WIB";
+    } catch (e) {
+      print("Error converting UTC to WIB: $e");
+      return utcTimeString; // Return original string jika error
+    }
+  }
+
+  /// Konversi waktu UTC ke WIB dengan format custom
+  String convertUtcToWibCustom(String utcTimeString, {bool includeTime = false, bool includeWibSuffix = true}) {
+    try {
+      // Parse UTC time
+      DateTime utcTime = DateTime.parse(utcTimeString);
+
+      // Konversi ke WIB (UTC+7)
+      DateTime wibTime = utcTime.add(Duration(hours: 7));
+
+      String dateString = "${wibTime.day.toString().padLeft(2, '0')}/${wibTime.month.toString().padLeft(2, '0')}/${wibTime.year}";
+
+      if (includeTime) {
+        String timeString = "${wibTime.hour.toString().padLeft(2, '0')}:${wibTime.minute.toString().padLeft(2, '0')}";
+        dateString += " $timeString";
+
+        if (includeWibSuffix) {
+          dateString += " WIB";
+        }
+      }
+
+      return dateString;
+    } catch (e) {
+      print("Error converting UTC to WIB: $e");
+      return utcTimeString; // Return original string jika error
+    }
+  }
+
   void _loadWorkerData() {
     try {
       isLoading.value = true;
@@ -48,10 +110,14 @@ class AccountWorkerController extends GetxController {
         userImage.value = _processImagePath(worker.image);
 
         workerId.value = worker.id?.toString() ?? "";
+
+        // Gunakan fungsi konversi UTC ke WIB untuk format tanggal
         createdAt.value = _formatCreatedAt(worker.createdAt);
 
         print('Original image: "${worker.image}"');
         print('Processed image path: "${userImage.value}"');
+        print('Created At (UTC): "${worker.createdAt}"');
+        print('Created At (WIB): "${createdAt.value}"');
 
       } else {
         print('No worker data received');
@@ -191,23 +257,26 @@ class AccountWorkerController extends GetxController {
     Get.toNamed('/EditAccountWorker', arguments: workerData.value);
   }
 
-  // Helper method untuk format tanggal - sama seperti client
+  // Helper method untuk format tanggal dengan konversi UTC ke WIB
   String _formatCreatedAt(String? createdAt) {
     if (createdAt == null || createdAt.isEmpty) {
       return "Tanggal tidak tersedia";
     }
 
     try {
-      // Parse ISO string ke DateTime
-      DateTime dateTime = DateTime.parse(createdAt);
-
-      // Format ke format yang lebih readable seperti client controller
-      String formattedDate = "${dateTime.day}/${dateTime.month}/${dateTime.year}";
-
-      return formattedDate;
+      // Gunakan fungsi konversi UTC ke WIB
+      return convertUtcToWib(createdAt);
     } catch (e) {
-      print('Error formatting date: $e');
-      return createdAt; // Return original jika error
+      print('Error formatting date with WIB conversion: $e');
+      // Fallback ke method lama jika ada error
+      try {
+        DateTime dateTime = DateTime.parse(createdAt);
+        String formattedDate = "${dateTime.day}/${dateTime.month}/${dateTime.year}";
+        return formattedDate;
+      } catch (e2) {
+        print('Error with fallback formatting: $e2');
+        return createdAt; // Return original jika semua error
+      }
     }
   }
 }

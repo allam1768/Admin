@@ -149,18 +149,7 @@ class ReportDetailView extends StatelessWidget {
             CustomAppBar(
               title: "Report Detail",
               onBackTap: () => Get.back(),
-              // Note: If CustomAppBar doesn't support actions, remove this
-              // actions: [
-              //   Obx(() => IconButton(
-              //     icon: Icon(
-              //       controller.isEditing.value ? Icons.close : Icons.edit,
-              //       color: Colors.white,
-              //     ),
-              //     onPressed: () => controller.toggleEditMode(),
-              //   )),
-              // ],
             ),
-
           ],
         ),
         Align(

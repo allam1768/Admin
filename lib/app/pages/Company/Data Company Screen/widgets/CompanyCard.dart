@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../values/config.dart';
+
 class CompanyCard extends StatelessWidget {
   final int id;
   final String companyName;
@@ -48,11 +50,15 @@ class CompanyCard extends StatelessWidget {
     );
   }
 
+  // Method untuk membuat URL gambar lengkap menggunakan Config
+  String _getFullImageUrl(String? imagePath) {
+    return Config.getImageUrl(imagePath);
+  }
+
   // Method untuk menyimpan company ID ke SharedPreferences
   Future<void> _saveCompanyId() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      // FIX: Simpan sebagai int, bukan string
       await prefs.setInt('companyid', id);
       print('✅ Company ID $id saved to SharedPreferences as int');
 
@@ -74,11 +80,10 @@ class CompanyCard extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: isLoading ? null : () async {
-          // Simpan company ID ke SharedPreferences sebelum navigasi
           await _saveCompanyId();
 
           Get.toNamed('/detaildata', arguments: {
-            'id': id, // Tambahkan ID ke arguments
+            'id': id,
             'name': companyName,
             'address': companyAddress,
             'phoneNumber': phoneNumber,
@@ -108,16 +113,7 @@ class CompanyCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
                 child: isLoading
                     ? _skeletonImage()
-                    : (imagePath != null && imagePath!.isNotEmpty
-                    ? Image.network(
-                  imagePath!,
-                  width: double.infinity,
-                  height: 180.h,
-                  fit: BoxFit.cover,
-                  headers: {'ngrok-skip-browser-warning': '1'},
-                  errorBuilder: (_, __, ___) => _fallbackImage(),
-                )
-                    : _fallbackImage()),
+                    : _buildImageWidget(),
               ),
               SizedBox(height: 10.h),
               Row(
@@ -150,7 +146,6 @@ class CompanyCard extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: isLoading ? null : () async {
-                      // Simpan company ID ke SharedPreferences sebelum navigasi ke detail company
                       await _saveCompanyId();
 
                       Get.toNamed('/detailcompany', arguments: {
@@ -173,6 +168,51 @@ class CompanyCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImageWidget() {
+    final fullImageUrl = _getFullImageUrl(imagePath);
+
+    // Debug: Print URL untuk melihat apakah URL sudah benar
+    print('🖼️ Image URL: $fullImageUrl');
+
+    // Jika URL menunjuk ke assets (default image), tampilkan fallback
+    if (fullImageUrl.startsWith('assets/')) {
+      return _fallbackImage();
+    }
+
+    return Image.network(
+      fullImageUrl,
+      width: double.infinity,
+      height: 180.h,
+      fit: BoxFit.cover,
+      headers: Config.commonHeaders, // Menggunakan headers dari config
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+
+        return Container(
+          width: double.infinity,
+          height: 180.h,
+          color: Colors.grey.shade300,
+          child: Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                  loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2.0,
+              color: Colors.blue,
+            ),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        // Debug: Print error untuk debugging
+        print('❌ Image load error: $error');
+        print('🔗 Failed URL: $fullImageUrl');
+        return _fallbackImage();
+      },
     );
   }
 

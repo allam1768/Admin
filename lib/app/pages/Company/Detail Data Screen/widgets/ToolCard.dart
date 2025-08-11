@@ -2,8 +2,8 @@ import 'package:admin/values/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import '../../../../../data/models/alat_model.dart';
+import '../../../../../values/config.dart';
 import '../detail_data_controller.dart';
 
 class ToolCard extends StatefulWidget {
@@ -73,69 +73,13 @@ class _ToolCardState extends State<ToolCard> {
             'toolName': widget.toolName,
             'location': widget.location,
             'locationDetail': widget.locationDetail,
-
           }),
           child: Padding(
             padding: EdgeInsets.all(12.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_showImage)
-                  Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12.r),
-                        child: Image.network(
-                          widget.imagePath,
-                          width: double.infinity,
-                          height: 180.h,
-                          fit: BoxFit.cover,
-                          headers: {
-                            'ngrok-skip-browser-warning': '1',
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/images/broken.png',
-                              width: double.infinity,
-                              height: 180.h,
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        top: 10.h,
-                        right: 10.w,
-                        child: Container(
-                          width: 10.w,
-                          height: 10.w,
-                          decoration: BoxDecoration(
-                            color: statusColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 12.h,
-                        left: 12.w,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Text(
-                            widget.toolName,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                if (_showImage) _buildToolImage(statusColor),
                 SizedBox(height: 12.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,11 +151,9 @@ class _ToolCardState extends State<ToolCard> {
                                       color: (normalized == 'good' || normalized == 'baik') ? Colors.green : Colors.grey,
                                     ),
                                   ),
-
                                 ],
                               ),
                               SizedBox(height: 4.h),
-
                             ],
                           ),
                         ),
@@ -284,6 +226,121 @@ class _ToolCardState extends State<ToolCard> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildToolImage(Color statusColor) {
+    // Menggunakan Config.getImageUrl untuk mendapatkan URL lengkap
+    final fullImageUrl = Config.getImageUrl(widget.imagePath);
+
+    // Debug: Print URL untuk debugging
+    print('🔧 Tool Image URL: $fullImageUrl');
+    print('🔍 Original imagePath: ${widget.imagePath}');
+
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12.r),
+          child: _buildNetworkImage(fullImageUrl),
+        ),
+        Positioned(
+          top: 10.h,
+          right: 10.w,
+          child: Container(
+            width: 10.w,
+            height: 10.w,
+            decoration: BoxDecoration(
+              color: statusColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 12.h,
+          left: 12.w,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Text(
+              widget.toolName,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNetworkImage(String imageUrl) {
+    // Jika URL menunjuk ke assets (default image), tampilkan fallback
+    if (imageUrl.startsWith('assets/')) {
+      return _fallbackImage();
+    }
+
+    return Image.network(
+      imageUrl,
+      width: double.infinity,
+      height: 180.h,
+      fit: BoxFit.cover,
+      headers: Config.commonHeaders, // Menggunakan headers dari config
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+
+        return Container(
+          width: double.infinity,
+          height: 180.h,
+          color: Colors.grey.shade300,
+          child: Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2.0,
+              color: Colors.blue,
+            ),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        // Debug: Print error untuk debugging
+        print('❌ Tool Image load error: $error');
+        print('🔗 Failed URL: $imageUrl');
+        return _fallbackImage();
+      },
+    );
+  }
+
+  Widget _fallbackImage() {
+    return Container(
+      width: double.infinity,
+      height: 180.h,
+      color: Colors.grey.shade400,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.construction,
+            size: 36.sp,
+            color: Colors.white,
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Image not available',
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

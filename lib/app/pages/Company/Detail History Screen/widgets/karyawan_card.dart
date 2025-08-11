@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../values/app_color.dart';
 
 class EmployeeCard extends StatelessWidget {
   final String name;
   final String employeeNumber;
-  final String date;
+  final String date; // ini diisi GMT/UTC dari controller
 
   const EmployeeCard({
     super.key,
@@ -28,18 +27,6 @@ class EmployeeCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: CircleAvatar(
-              radius: 50.r,
-              backgroundColor: AppColor.ijomuda,
-              child:
-                  Icon(Icons.person, size: 40.sp, color: Colors.grey.shade700),
-            ),
-          ),
-          SizedBox(width: 20.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,22 +41,13 @@ class EmployeeCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 4.h),
-                Text(
-                  employeeNumber,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey.shade700,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 4.h),
                 Row(
                   children: [
                     Icon(Icons.access_time,
                         size: 14.sp, color: Colors.grey.shade600),
                     SizedBox(width: 4.w),
                     Text(
-                      date,
+                      convertGmtToWib(date), // langsung convert di sini
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: Colors.grey.shade600,
@@ -84,5 +62,20 @@ class EmployeeCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Fungsi untuk convert GMT/UTC ke WIB
+  String convertGmtToWib(String gmtDateTime) {
+    try {
+      DateTime utcTime = DateTime.parse(gmtDateTime).toUtc();
+      DateTime wibTime = utcTime.add(const Duration(hours: 7));
+
+      return "${wibTime.day.toString().padLeft(2, '0')}-"
+          "${wibTime.month.toString().padLeft(2, '0')}-"
+          "${wibTime.year} ${wibTime.hour.toString().padLeft(2, '0')}:"
+          "${wibTime.minute.toString().padLeft(2, '0')}";
+    } catch (e) {
+      return gmtDateTime; // fallback kalau format salah
+    }
   }
 }

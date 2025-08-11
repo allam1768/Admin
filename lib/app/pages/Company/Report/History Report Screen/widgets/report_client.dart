@@ -75,7 +75,7 @@ class ReportClient extends StatelessWidget {
                   Text(
                     area,
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 15.sp,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                     ),
@@ -84,7 +84,7 @@ class ReportClient extends StatelessWidget {
                   Text(
                     informasi,
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 15.sp,
                       color: Colors.grey[600],
                     ),
                     maxLines: 2,
@@ -92,15 +92,19 @@ class ReportClient extends StatelessWidget {
                   ),
                   SizedBox(height: 8.h),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end, // dorong ke kanan
                     children: [
-                      Icon(Icons.access_time,
-                          size: 14.sp, color: Colors.grey[600]),
+                      Icon(
+                        Icons.access_time,
+                        size: 14.sp,
+                        color: Colors.grey[900],
+                      ),
                       SizedBox(width: 4.w),
                       Text(
                         time,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: Colors.grey[600],
+                          color: Colors.grey[900],
                         ),
                       ),
                     ],
