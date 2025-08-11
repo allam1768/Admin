@@ -30,6 +30,68 @@ class AccountClientController extends GetxController {
     }
   }
 
+  /// Konversi waktu UTC ke WIB (UTC+7)
+  String convertUtcToWib(String utcTimeString) {
+    try {
+      // Parse UTC time
+      DateTime utcTime = DateTime.parse(utcTimeString);
+
+      // Konversi ke WIB (UTC+7)
+      DateTime wibTime = utcTime.add(Duration(hours: 7));
+
+      // Format ke string yang diinginkan
+      return "${wibTime.day.toString().padLeft(2, '0')}/${wibTime.month.toString().padLeft(2, '0')}/${wibTime.year}";
+    } catch (e) {
+      print("Error converting UTC to WIB: $e");
+      return utcTimeString; // Return original string jika error
+    }
+  }
+
+  /// Konversi waktu UTC ke WIB dengan format lengkap (termasuk jam, menit, detik)
+  String convertUtcToWibFull(String utcTimeString) {
+    try {
+      // Parse UTC time
+      DateTime utcTime = DateTime.parse(utcTimeString);
+
+      // Konversi ke WIB (UTC+7)
+      DateTime wibTime = utcTime.add(Duration(hours: 7));
+
+      // Format lengkap: DD/MM/YYYY HH:mm:ss WIB
+      return "${wibTime.day.toString().padLeft(2, '0')}/${wibTime.month.toString().padLeft(2, '0')}/${wibTime.year} "
+          "${wibTime.hour.toString().padLeft(2, '0')}:${wibTime.minute.toString().padLeft(2, '0')}:${wibTime.second.toString().padLeft(2, '0')} WIB";
+    } catch (e) {
+      print("Error converting UTC to WIB: $e");
+      return utcTimeString; // Return original string jika error
+    }
+  }
+
+  /// Konversi waktu UTC ke WIB dengan format custom
+  String convertUtcToWibCustom(String utcTimeString, {bool includeTime = false, bool includeWibSuffix = true}) {
+    try {
+      // Parse UTC time
+      DateTime utcTime = DateTime.parse(utcTimeString);
+
+      // Konversi ke WIB (UTC+7)
+      DateTime wibTime = utcTime.add(Duration(hours: 7));
+
+      String dateString = "${wibTime.day.toString().padLeft(2, '0')}/${wibTime.month.toString().padLeft(2, '0')}/${wibTime.year}";
+
+      if (includeTime) {
+        String timeString = "${wibTime.hour.toString().padLeft(2, '0')}:${wibTime.minute.toString().padLeft(2, '0')}";
+        dateString += " $timeString";
+
+        if (includeWibSuffix) {
+          dateString += " WIB";
+        }
+      }
+
+      return dateString;
+    } catch (e) {
+      print("Error converting UTC to WIB: $e");
+      return utcTimeString; // Return original string jika error
+    }
+  }
+
   Future<void> fetchClientData(String clientName) async {
     try {
       isLoading.value = true;
@@ -49,11 +111,11 @@ class AccountClientController extends GetxController {
         userEmail.value = client.email ?? "Email tidak tersedia";
         phoneNumber.value = client.phoneNumber ?? "Phone tidak tersedia";
 
-        // Format created date
+        // Format created date dengan konversi UTC ke WIB
         if (client.createdAt != null) {
           try {
-            final DateTime date = DateTime.parse(client.createdAt!);
-            createdAt.value = "${date.day}/${date.month}/${date.year}";
+            // Gunakan fungsi konversi UTC ke WIB
+            createdAt.value = convertUtcToWib(client.createdAt!);
           } catch (e) {
             createdAt.value = client.createdAt ?? "Data tidak tersedia";
           }
@@ -81,8 +143,8 @@ class AccountClientController extends GetxController {
 
           if (detailData.createdAt != null) {
             try {
-              final DateTime date = DateTime.parse(detailData.createdAt!);
-              createdAt.value = "${date.day}/${date.month}/${date.year}";
+              // Gunakan fungsi konversi UTC ke WIB untuk detail data
+              createdAt.value = convertUtcToWib(detailData.createdAt!);
             } catch (e) {
               createdAt.value = detailData.createdAt ?? createdAt.value;
             }

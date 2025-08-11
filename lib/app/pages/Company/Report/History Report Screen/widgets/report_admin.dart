@@ -77,8 +77,8 @@ class ReportAdmin extends StatelessWidget {
                   Text(
                     area,
                     style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey[600],
+                      fontSize: 15.sp,
+                      color: Colors.black87,
                       fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.right,
@@ -87,8 +87,8 @@ class ReportAdmin extends StatelessWidget {
                   Text(
                     informasi,
                     style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey[600],
+                      fontSize: 15.sp,
+                      color: Colors.black87,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -101,13 +101,13 @@ class ReportAdmin extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.access_time,
-                              size: 14.sp, color: Colors.grey[600]),
+                              size: 14.sp, color: Colors.grey[900]),
                           SizedBox(width: 4.w),
                           Text(
                             time,
                             style: TextStyle(
                               fontSize: 13.sp,
-                              color: Colors.grey[600],
+                              color: Colors.grey[900],
                             ),
                           ),
                         ],

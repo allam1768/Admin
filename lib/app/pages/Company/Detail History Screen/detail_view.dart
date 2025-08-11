@@ -69,7 +69,9 @@ class DetailView extends StatelessWidget {
                                 child: Obx(() => ImagePreviewCard(
                                   imageUrl: controller.imagePath.value,
                                   imageTitle: controller.jenisHama.value,
-                                )),
+                                  isLoading: controller.isLoading.value,
+                                )
+                                ),
                               ),
                             ),
                           ),
@@ -94,7 +96,7 @@ class DetailView extends StatelessWidget {
                                 Obx(() => EmployeeCard(
                                   name: controller.namaKaryawan.value,
                                   employeeNumber: controller.nomorKaryawan.value,
-                                  date: controller.tanggalJam.value,
+                                  date: controller.catchData['created_at'] ?? '',
                                 )),
                                 Divider(height: 1, color: Colors.grey.withOpacity(0.3)),
 
