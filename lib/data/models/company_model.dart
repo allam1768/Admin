@@ -1,4 +1,3 @@
-
 import '../../values/config.dart';
 
 class CompanyModel {
@@ -11,6 +10,7 @@ class CompanyModel {
   final String? companyQr; // Tambahan field untuk QR code
   final String createdAt;
   final String updatedAt;
+  final int? alatCount; // Tambahan untuk jumlah alat
   final ClientModel? client; // Tambahan untuk client info
 
   CompanyModel({
@@ -23,6 +23,7 @@ class CompanyModel {
     this.companyQr,
     required this.createdAt,
     required this.updatedAt,
+    this.alatCount,
     this.client,
   });
 
@@ -39,6 +40,7 @@ class CompanyModel {
       companyQr: json['company_qr'], // QR code dari response
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
+      alatCount: json['alat_count'], // Jumlah alat
       client: json['client'] != null ? ClientModel.fromJson(json['client']) : null,
     );
   }
@@ -62,6 +64,7 @@ class CompanyModel {
       'company_qr': companyQr,
       'created_at': createdAt,
       'updated_at': updatedAt,
+      'alat_count': alatCount,
       'client': client?.toJson(),
     };
   }
@@ -72,11 +75,15 @@ class ClientModel {
   final int id;
   final String name;
   final String email;
+  final String? phoneNumber; // Tambahan field phone number
+  final String? imagePath; // Tambahan field image
 
   ClientModel({
     required this.id,
     required this.name,
     required this.email,
+    this.phoneNumber,
+    this.imagePath,
   });
 
   factory ClientModel.fromJson(Map<String, dynamic> json) {
@@ -84,7 +91,19 @@ class ClientModel {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       email: json['email'] ?? '',
+      phoneNumber: json['phone_number'],
+      imagePath: json['image'] != null && json['image'].toString().isNotEmpty
+          ? json['image'].toString()
+          : null,
     );
+  }
+
+  // Helper method untuk mendapatkan client image URL lengkap
+  String get fullImageUrl {
+    if (imagePath != null && imagePath!.isNotEmpty) {
+      return Config.getImageUrl(imagePath);
+    }
+    return Config.getImageUrl(null); // Return default image
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +111,8 @@ class ClientModel {
       'id': id,
       'name': name,
       'email': email,
+      'phone_number': phoneNumber,
+      'image': imagePath,
     };
   }
 }

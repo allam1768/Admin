@@ -5,8 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../../../data/models/alat_model.dart';
 import '../../../../data/models/chart_model.dart';
+import '../../../../data/models/company_model.dart';
 import '../../../../data/services/alat_service.dart';
 import '../../../../data/services/chart_service.dart';
+import '../../../../data/services/company_service.dart';
+import '../../../../values/config.dart';
 import '../../Bottom Nav/bottomnav_controller.dart';
 
 class DetailDataController extends GetxController {
@@ -15,12 +18,18 @@ class DetailDataController extends GetxController {
   var isLoadingChart = false.obs;
 
   // Modified for layered charts
-  var pestTypeLayeredData = <String, Map<String, List<FlSpot>>>{}.obs; // pest_type -> label -> data
-  var pestTypeLabelColors = <String, Map<String, Color>>{}.obs; // pest_type -> label -> color
+  var pestTypeLayeredData = <String, Map<String, List<FlSpot>>>{}
+      .obs; // pest_type -> label -> data
+  var pestTypeLabelColors = <String, Map<String, Color>>{}
+      .obs; // pest_type -> label -> color
   var availablePestTypes = <String>[].obs;
 
-  var startDate = DateTime.now().obs;
-  var endDate = DateTime.now().obs;
+  var startDate = DateTime
+      .now()
+      .obs;
+  var endDate = DateTime
+      .now()
+      .obs;
 
   var companyId = 0.obs;
   var companyName = ''.obs;
@@ -30,6 +39,13 @@ class DetailDataController extends GetxController {
   var companyImagePath = ''.obs;
   var companyCreatedAt = ''.obs;
   var companyUpdatedAt = ''.obs;
+
+  // Client information
+  var clientId = 0.obs;
+  var clientName = ''.obs;
+  var clientEmail = ''.obs;
+  var clientPhoneNumber = ''.obs;
+  var clientImagePath = ''.obs;
 
   // Extended color palette for multiple layers
   final List<Color> _colorPalette = [
@@ -75,6 +91,16 @@ class DetailDataController extends GetxController {
       companyImagePath.value = arguments['imagePath'] ?? '';
       companyCreatedAt.value = arguments['createdAt'] ?? '';
       companyUpdatedAt.value = arguments['updatedAt'] ?? '';
+
+      // Client information from arguments
+      if (arguments['client'] != null) {
+        var clientData = arguments['client'];
+        clientId.value = clientData['id'] ?? 0;
+        clientName.value = clientData['name'] ?? '';
+        clientEmail.value = clientData['email'] ?? '';
+        clientPhoneNumber.value = clientData['phone_number'] ?? '';
+        clientImagePath.value = clientData['image'] ?? '';
+      }
     }
 
     final now = DateTime.now();
@@ -89,8 +115,44 @@ class DetailDataController extends GetxController {
     companyId.value = prefs.getInt('companyid') ?? 0;
     print('Loaded Company ID from SharedPreferences: ${companyId.value}');
     if (companyId.value > 0) {
+      await fetchCompanyDetails(); // Fetch company details to get client info
       fetchData();
     }
+  }
+
+  Future<void> fetchCompanyDetails() async {
+    try {
+      if (companyId.value > 0) {
+        // Get all companies and find the one with our ID
+        List<CompanyModel> companies = await CompanyService().getCompanies();
+        CompanyModel? company = companies.firstWhereOrNull((c) =>
+        c.id == companyId.value);
+
+        if (company != null && company.client != null) {
+          clientId.value = company.client!.id;
+          clientName.value = company.client!.name;
+          clientEmail.value = company.client!.email;
+          clientPhoneNumber.value = company.client!.phoneNumber ?? '';
+          clientImagePath.value = company.client!.imagePath ?? '';
+
+          print(
+              'Client info loaded: ${clientName.value} (${clientEmail.value})');
+          print('Client image path: ${clientImagePath.value}');
+        } else {
+          print('No client found for company ID: ${companyId.value}');
+        }
+      }
+    } catch (e) {
+      print('Error fetching company details: $e');
+      // Don't show error to user as this is additional info
+    }
+  }
+
+  String getClientImageUrl() {
+    if (clientImagePath.value.isNotEmpty) {
+      return Config.getImageUrl(clientImagePath.value);
+    }
+    return Config.getImageUrl(null); // Return default image
   }
 
   Future<void> fetchData() async {
@@ -154,7 +216,8 @@ class DetailDataController extends GetxController {
 
     // Debug: Print all received data
     for (var item in allData) {
-      print('Chart item: pest_type="${item.pestType}", label="${item.label}", value=${item.value}, date=${item.tanggal}');
+      print('Chart item: pest_type="${item.pestType}", label="${item
+          .label}", value=${item.value}, date=${item.tanggal}');
     }
 
     // Group data by pest_type, then by label
@@ -208,10 +271,12 @@ class DetailDataController extends GetxController {
         pestTypeLayeredData[pestType]![label] = _convertToFlSpots(data);
 
         // Assign unique color for this label
-        Color assignedColor = _colorPalette[globalColorIndex % _colorPalette.length];
+        Color assignedColor = _colorPalette[globalColorIndex %
+            _colorPalette.length];
         pestTypeLabelColors[pestType]![label] = assignedColor;
 
-        print('Processed: "$pestType" -> "$label": ${data.length} items, color: $assignedColor');
+        print('Processed: "$pestType" -> "$label": ${data
+            .length} items, color: $assignedColor');
         globalColorIndex++;
       });
     });
@@ -339,7 +404,9 @@ class DetailDataController extends GetxController {
       return;
     }
 
-    final range = end.difference(start).inDays;
+    final range = end
+        .difference(start)
+        .inDays;
     if (range > 365) {
       Get.snackbar("Too Long", "Please choose a range within 1 year");
       return;
@@ -359,12 +426,19 @@ class DetailDataController extends GetxController {
   }
 
   void goToDashboard() {
-    Get.find<BottomNavController>().selectedIndex.value = 0;
+    Get
+        .find<BottomNavController>()
+        .selectedIndex
+        .value = 0;
     Get.offNamed('/bottomnav');
   }
 
   String getCompanyInfo() {
     return "${companyName.value} - ${companyAddress.value}";
+  }
+
+  String getClientInfo() {
+    return "${clientName.value} - ${clientEmail.value}";
   }
 
   Future<void> refreshData() async {
@@ -379,7 +453,9 @@ class DetailDataController extends GetxController {
     int total = 0;
     pestTypeLayeredData.forEach((pestType, labelMap) {
       labelMap.forEach((label, data) {
-        total += data.where((e) => e.y > 0).length;
+        total += data
+            .where((e) => e.y > 0)
+            .length;
       });
     });
     return total;
@@ -404,7 +480,8 @@ class DetailDataController extends GetxController {
 
   String get formattedDateRange {
     final formatter = DateFormat('MMM d, yyyy');
-    return '${formatter.format(startDate.value)} - ${formatter.format(endDate.value)}';
+    return '${formatter.format(startDate.value)} - ${formatter.format(
+        endDate.value)}';
   }
 
   @override

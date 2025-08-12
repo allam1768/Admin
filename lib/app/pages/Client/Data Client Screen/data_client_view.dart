@@ -81,6 +81,7 @@ class DataClientView extends StatelessWidget {
 
                       return ClientCard(
                         client: clientData.name,
+                        company: clientData.company, // Tambahan parameter company
                         imagePath: imageUrl,
                         isNetworkImage: isNetworkImage,
                         isLoading: false, // Data sudah dimuat
