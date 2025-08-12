@@ -6,6 +6,7 @@ import '../../../../../values/app_color.dart';
 
 class ClientCard extends StatelessWidget {
   final String client;
+  final String? company;
   final String? imagePath;
   final bool isNetworkImage;
   final bool isLoading;
@@ -13,15 +14,16 @@ class ClientCard extends StatelessWidget {
   const ClientCard({
     super.key,
     required this.client,
+    this.company,
     this.imagePath,
     this.isNetworkImage = false,
     this.isLoading = false,
   });
 
-  // Factory constructor untuk membuat skeleton card
   factory ClientCard.skeleton() {
     return ClientCard(
       client: 'Client Name Placeholder',
+      company: 'Company Name Placeholder',
       imagePath: '',
       isNetworkImage: false,
       isLoading: true,
@@ -81,6 +83,18 @@ class ClientCard extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
+                    if (company != null && company!.isNotEmpty) ...[
+                      SizedBox(height: 4.h),
+                      Text(
+                        company!,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),

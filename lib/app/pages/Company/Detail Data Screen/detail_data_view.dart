@@ -1,5 +1,5 @@
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ChartTool.dart';
-import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DataCard.dart';
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ClientInfo.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/ToolCard.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DateSelection.dart';
 import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/SummarySection.dart';
@@ -40,6 +40,10 @@ class DetailDataView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Client Info Section
+                      const ClientInfoSection(),
+                      SizedBox(height: 15.h),
+
                       // Company Info Section
                       Obx(() => SummarySection(
                         totalAlat: controller.traps.length,
