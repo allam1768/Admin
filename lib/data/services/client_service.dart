@@ -6,6 +6,7 @@ import '../../app/pages/Login screen/login_controller.dart';
 import '../../values/config.dart';
 import '../models/LoginResponse_model.dart';
 import '../models/client_model.dart';
+import 'image_service.dart'; // Import ImageService
 
 class ClientService {
   // Helper method to get the authorization headers
@@ -116,11 +117,31 @@ class ClientService {
       request.fields['phone_number'] = phoneNumber;
       request.fields['password'] = password;
 
+      // Compress and add profile image if exists
       if (profileImage != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'image',
-          profileImage.path,
-        ));
+        print('Original client profile image size: ${await profileImage.length()} bytes');
+
+        // Compress image using ImageService
+        final compressResult = await ImageService.compressToMax2MB(profileImage);
+
+        File? finalImageFile;
+        if (compressResult is File) {
+          finalImageFile = compressResult;
+          print('Client profile image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+        } else {
+          print('Client profile image compression failed, using original image');
+          finalImageFile = profileImage;
+        }
+
+        // Check if image is under limit
+        if (await ImageService.isUnderLimit(finalImageFile)) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'image',
+            finalImageFile.path,
+          ));
+        } else {
+          throw Exception('Profile image is too large even after compression. Please use a smaller image.');
+        }
       }
 
       final streamedResponse = await request.send();
@@ -194,12 +215,32 @@ class ClientService {
 
         request.fields['role'] = 'client';
 
+        // Compress and add profile image if exists
         if (profileImage != null) {
-          request.files.add(await http.MultipartFile.fromPath(
-            'image',
-            profileImage.path,
-          ));
-          print('Adding profile image to request...');
+          print('Original client profile image size: ${await profileImage.length()} bytes');
+
+          // Compress image using ImageService
+          final compressResult = await ImageService.compressToMax2MB(profileImage);
+
+          File? finalImageFile;
+          if (compressResult is File) {
+            finalImageFile = compressResult;
+            print('Client profile image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+          } else {
+            print('Client profile image compression failed, using original image');
+            finalImageFile = profileImage;
+          }
+
+          // Check if image is under limit
+          if (await ImageService.isUnderLimit(finalImageFile)) {
+            request.files.add(await http.MultipartFile.fromPath(
+              'image',
+              finalImageFile.path,
+            ));
+            print('Adding compressed client profile image to request...');
+          } else {
+            throw Exception('Profile image is too large even after compression. Please use a smaller image.');
+          }
         }
 
         final streamedResponse = await request.send().timeout(

@@ -5,6 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../values/config.dart';
+import '../data_company_controller.dart';
 
 class CompanyCard extends StatelessWidget {
   final int id;
@@ -55,10 +56,15 @@ class CompanyCard extends StatelessWidget {
     return Config.getImageUrl(imagePath);
   }
 
-  // Method untuk menyimpan company ID ke SharedPreferences
+  // Method untuk menyimpan company ID ke SharedPreferences dengan validasi
   Future<void> _saveCompanyId() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+
+      // Clear previous company ID first
+      await prefs.remove('companyid');
+
+      // Save new company ID
       await prefs.setInt('companyid', id);
       print('✅ Company ID $id saved to SharedPreferences as int');
 
@@ -67,6 +73,32 @@ class CompanyCard extends StatelessWidget {
       print('🔍 Verification - Saved Company ID: $savedId');
     } catch (e) {
       print('❌ Error saving company ID: $e');
+    }
+  }
+
+  // Method untuk validasi company masih exist sebelum navigate
+  Future<bool> _validateCompanyExists() async {
+    try {
+      // Cek di DataCompanyController apakah company masih ada
+      if (Get.isRegistered<DataCompanyController>()) {
+        final dataController = Get.find<DataCompanyController>();
+        final companyExists = dataController.isCompanyExist(id);
+
+        if (!companyExists) {
+          Get.snackbar(
+            'Error',
+            'Company tidak ditemukan atau sudah dihapus',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      print('❌ Error validating company existence: $e');
+      return false;
     }
   }
 
@@ -80,6 +112,10 @@ class CompanyCard extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: isLoading ? null : () async {
+          // Validasi company masih exist sebelum navigate
+          final isValid = await _validateCompanyExists();
+          if (!isValid) return;
+
           await _saveCompanyId();
 
           Get.toNamed('/detaildata', arguments: {
@@ -146,6 +182,10 @@ class CompanyCard extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: isLoading ? null : () async {
+                      // Validasi company masih exist sebelum navigate
+                      final isValid = await _validateCompanyExists();
+                      if (!isValid) return;
+
                       await _saveCompanyId();
 
                       Get.toNamed('/detailcompany', arguments: {
@@ -236,3 +276,4 @@ class CompanyCard extends StatelessWidget {
     );
   }
 }
+

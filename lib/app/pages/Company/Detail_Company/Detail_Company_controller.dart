@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../data/models/company_model.dart';
 import '../../../../../data/services/company_service.dart';
+import '../Data Company Screen/data_company_controller.dart';
 
 class DetailCompanyController extends GetxController {
   final companyName = "".obs;
@@ -9,7 +11,7 @@ class DetailCompanyController extends GetxController {
   final phoneNumber = "".obs;
   final email = "".obs;
   final imagePath = "".obs;
-  final companyQr = "".obs; // Added QR field
+  final companyQr = "".obs;
   final createdAt = "".obs;
   final updatedAt = "".obs;
   final id = 0.obs;
@@ -51,7 +53,7 @@ class DetailCompanyController extends GetxController {
     phoneNumber.value = args['phoneNumber'] ?? '';
     email.value = args['email'] ?? '';
     imagePath.value = args['imagePath'] ?? '';
-    companyQr.value = args['companyQr'] ?? ''; // Set QR value
+    companyQr.value = args['companyQr'] ?? '';
     createdAt.value = args['createdAt'] ?? '';
     updatedAt.value = args['updatedAt'] ?? '';
   }
@@ -101,7 +103,7 @@ class DetailCompanyController extends GetxController {
 
     } catch (e) {
       print('Error converting datetime to WIB: $e');
-      return dateTimeString; // Return original if conversion fails
+      return dateTimeString;
     }
   }
 
@@ -129,7 +131,7 @@ class DetailCompanyController extends GetxController {
       return '$day/$month/$year $hour:$minute ';
     } catch (e) {
       print('Error formatting date to WIB: $e');
-      return '$dateString '; // Fallback: just add WIB suffix
+      return '$dateString ';
     }
   }
 
@@ -174,6 +176,31 @@ class DetailCompanyController extends GetxController {
     }
   }
 
+  /// Clear SharedPreferences data for the deleted company
+  Future<void> _clearSharedPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('companyid');
+      print('✅ SharedPreferences cleared for deleted company');
+    } catch (e) {
+      print('❌ Error clearing SharedPreferences: $e');
+    }
+  }
+
+  /// Refresh the company list controller
+  void _refreshCompanyList() {
+    try {
+      // Cari DataCompanyController yang sudah ada
+      if (Get.isRegistered<DataCompanyController>()) {
+        final dataController = Get.find<DataCompanyController>();
+        dataController.fetchCompanies(); // Refresh data list
+        print('✅ Company list refreshed');
+      }
+    } catch (e) {
+      print('❌ Error refreshing company list: $e');
+    }
+  }
+
   void deleteCompany(int id) async {
     print('Mencoba menghapus company dengan ID: $id');
 
@@ -207,9 +234,15 @@ class DetailCompanyController extends GetxController {
       );
 
       await _companyService.deleteCompany(id);
-      print('Company berhasil dihapus pada ${getCurrentWIBTime()}'); // Log success with WIB time
+      print('Company berhasil dihapus pada ${getCurrentWIBTime()}');
 
       Get.back(); // Tutup loading dialog
+
+      // Clear SharedPreferences setelah delete berhasil
+      await _clearSharedPreferences();
+
+      // Refresh company list
+      _refreshCompanyList();
 
       Get.snackbar(
         'Berhasil',
@@ -221,8 +254,9 @@ class DetailCompanyController extends GetxController {
 
       // Kembali ke halaman sebelumnya
       Get.toNamed('/bottomnav');
+
     } catch (e) {
-      print('Error saat menghapus company: $e'); // Log error
+      print('Error saat menghapus company: $e');
       Get.back(); // Tutup loading dialog jika masih terbuka
       Get.snackbar(
         'Error',

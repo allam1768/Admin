@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../values/config.dart';
 import '../models/company_model.dart';
+import 'image_service.dart'; // Import ImageService
 
 class CompanyService {
   String getImageUrl(String? imagePath) {
@@ -101,7 +102,7 @@ class CompanyService {
     }
   }
 
-  // Updated function to create company with client ID and image, including company_qr generation
+  // Updated function to create company with client ID and image, including company_qr generation - WITH IMAGE COMPRESSION
   Future<CompanyModel> createCompanyWithImage({
     required String name,
     required String address,
@@ -140,14 +141,33 @@ class CompanyService {
         request.fields['company_qr'] = companyQr;
       }
 
-      // Add image if exists
+      // Compress and add image if exists
       if (imageFile != null && imageFile.existsSync()) {
-        var multipartFile = await http.MultipartFile.fromPath(
-          'image', // adjust according to backend field name
-          imageFile.path,
-        );
-        request.files.add(multipartFile);
-        print('📷 Image added to request: ${imageFile.path}');
+        print('Original company image size: ${await imageFile.length()} bytes');
+
+        // Compress image using ImageService
+        final compressResult = await ImageService.compressToMax2MB(imageFile);
+
+        File? finalImageFile;
+        if (compressResult is File) {
+          finalImageFile = compressResult;
+          print('Company image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+        } else {
+          print('Company image compression failed, using original image');
+          finalImageFile = imageFile;
+        }
+
+        // Check if image is under limit
+        if (await ImageService.isUnderLimit(finalImageFile)) {
+          var multipartFile = await http.MultipartFile.fromPath(
+            'image', // adjust according to backend field name
+            finalImageFile.path,
+          );
+          request.files.add(multipartFile);
+          print('📷 Compressed image added to request: ${finalImageFile.path}');
+        } else {
+          throw Exception('Company image is too large even after compression. Please use a smaller image.');
+        }
       }
 
       print('📤 Creating company with authentication...');
@@ -268,7 +288,7 @@ class CompanyService {
     try {
       final headers = await getAuthHeaders();
 
-      print('🔄 Updating company ID: $id');
+      print('📄 Updating company ID: $id');
 
       final response = await http.put(
         Uri.parse(Config.getApiUrl('/companies/$id')),
