@@ -20,6 +20,13 @@ class DataCompanyController extends GetxController {
   }
 
   @override
+  void onReady() {
+    super.onReady();
+    // Pastikan data fresh ketika controller ready
+    ever(companies, (_) => update());
+  }
+
+  @override
   void onClose() {
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
@@ -44,10 +51,19 @@ class DataCompanyController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 500));
 
       final companiesList = await _companyService.getCompanies();
+
+      // Update companies list
       companies.assignAll(companiesList);
+
+      print('✅ Companies fetched successfully. Count: ${companies.length}');
+
     } catch (e) {
       // Snackbar dihapus, bisa log error jika mau
-      print('Gagal mengambil data perusahaan: $e');
+      print('❌ Gagal mengambil data perusahaan: $e');
+
+      // Kosongkan list jika error
+      companies.clear();
+
     } finally {
       isLoading.value = false;
     }
@@ -63,7 +79,10 @@ class DataCompanyController extends GetxController {
       final companiesList = await _companyService.getCompanies();
       companies.assignAll(companiesList);
 
+      print('✅ Companies refreshed on scroll. Count: ${companies.length}');
+
     } catch (e) {
+      print('❌ Error refreshing companies on scroll: $e');
       Get.snackbar(
         'Error',
         'Gagal memperbarui data: ${e.toString()}',
@@ -74,7 +93,35 @@ class DataCompanyController extends GetxController {
     }
   }
 
+  /// Method untuk force refresh dari luar (misal setelah delete)
+  Future<void> forceRefresh() async {
+    print('🔄 Force refreshing companies...');
+    await fetchCompanies();
+  }
+
+  /// Method untuk menghapus company dari list lokal
+  void removeCompanyFromList(int companyId) {
+    companies.removeWhere((company) => company.id == companyId);
+    companies.refresh(); // Trigger UI update
+    print('✅ Company with ID $companyId removed from local list');
+  }
+
+  /// Method untuk mengecek apakah company masih ada
+  bool isCompanyExist(int companyId) {
+    return companies.any((company) => company.id == companyId);
+  }
+
   int get companyCount => companies.length;
 
   CompanyModel getCompany(int index) => companies[index];
+
+  /// Method untuk mendapatkan company berdasarkan ID
+  CompanyModel? getCompanyById(int companyId) {
+    try {
+      return companies.firstWhere((company) => company.id == companyId);
+    } catch (e) {
+      print('❌ Company with ID $companyId not found');
+      return null;
+    }
+  }
 }

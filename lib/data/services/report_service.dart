@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../values/config.dart';
 import '../models/report_model.dart';
+import 'image_service.dart'; // Import ImageService
 
 class ReportService {
   // Get token dari SharedPreferences
@@ -207,7 +208,7 @@ class ReportService {
     }
   }
 
-  // POST laporan dengan gambar (Multipart) - WAJIB validasi company_id
+  // POST laporan dengan gambar (Multipart) - WAJIB validasi company_id - WITH IMAGE COMPRESSION
   Future<ReportModel> createReportWithImage({
     required String area,
     required String informasi,
@@ -245,15 +246,34 @@ class ReportService {
       print('📤 Creating report for Company ID: $finalCompanyId');
 
       if (imageFile != null && await imageFile.exists()) {
-        var imageStream = http.ByteStream(imageFile.openRead());
-        var imageLength = await imageFile.length();
-        var multipartFile = http.MultipartFile(
-          'dokumentasi',
-          imageStream,
-          imageLength,
-          filename: 'report_image.jpg',
-        );
-        request.files.add(multipartFile);
+        print('🖼️ Original image size: ${await imageFile.length()} bytes');
+
+        // Compress image using ImageService
+        final compressResult = await ImageService.compressToMax2MB(imageFile);
+
+        File? finalImageFile;
+        if (compressResult is File) {
+          finalImageFile = compressResult;
+          print('✅ Image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+        } else {
+          print('❌ Image compression failed, using original image');
+          finalImageFile = imageFile;
+        }
+
+        // Check if image is under limit
+        if (await ImageService.isUnderLimit(finalImageFile)) {
+          var imageStream = http.ByteStream(finalImageFile.openRead());
+          var imageLength = await finalImageFile.length();
+          var multipartFile = http.MultipartFile(
+            'dokumentasi',
+            imageStream,
+            imageLength,
+            filename: 'report_image.jpg',
+          );
+          request.files.add(multipartFile);
+        } else {
+          throw Exception('Image is too large even after compression. Please use a smaller image.');
+        }
       }
 
       var streamedResponse = await request.send();
@@ -355,9 +375,9 @@ class ReportService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final companyId = prefs.getInt('companyid');
-      print('🐛 === COMPANY ID DEBUG ===');
+      print('🛠 === COMPANY ID DEBUG ===');
       print('🏢 Current Company ID: $companyId');
-      print('🔍 Type: ${companyId.runtimeType}');
+      print('📝 Type: ${companyId.runtimeType}');
       print('✅ Is Valid: ${companyId != null && companyId > 0}');
       print('========================');
     } catch (e) {

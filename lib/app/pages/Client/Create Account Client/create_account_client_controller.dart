@@ -95,11 +95,63 @@ class CreateAccountClientController extends GetxController {
         "profileImage": profileImage.value,
       },
     );
+
+    // Tidak clear form di sini, akan di-clear bersamaan dengan company form
   }
 
   void goToDashboard() {
     Get.find<BottomNavController>().selectedIndex.value = 1;
     Get.offNamed('/bottomnav');
+  }
+
+  // Fungsi untuk clear semua field dan image
+  void clearAllFields() {
+    // Clear all text controllers
+    nameController.clear();
+    emailController.clear();
+    phoneController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+
+    // Clear profile image
+    profileImage.value = null;
+    imageError.value = false;
+
+    // Clear all error messages
+    nameError.value = null;
+    emailError.value = null;
+    phoneError.value = null;
+    passwordError.value = null;
+    confirmPasswordError.value = null;
+
+    print('✨ Client form fields cleared successfully');
+  }
+
+  // Fungsi untuk mengambil gambar dari kamera
+  Future<void> takePicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      profileImage.value = File(pickedFile.path);
+      imageError.value = false;
+    }
+  }
+
+  // Fungsi untuk mengambil gambar dari galeri
+  Future<void> pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      profileImage.value = File(pickedFile.path);
+      imageError.value = false;
+    }
+  }
+
+  // Fungsi untuk reset form manual (jika diperlukan)
+  void resetForm() {
+    clearAllFields();
   }
 
   @override

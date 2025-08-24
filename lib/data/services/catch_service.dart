@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../../app/pages/Login screen/login_controller.dart';
 import '../../values/config.dart';
 import '../models/catch_model.dart';
+import 'image_service.dart'; // Import ImageService
 
 class CatchService {
   // Helper method to get the authorization headers for JSON requests
@@ -23,14 +24,14 @@ class CatchService {
   static Future<Map<String, String>> _getMultipartAuthHeaders() async {
     final token = await LoginController.getToken();
     return {
-      'Accept': 'application/json', // Accept header might be needed for some APIs
+      'Accept': 'application/json',
       if (token != null) 'Authorization': 'Bearer $token',
     };
   }
 
   // ========== CREATE OPERATIONS ==========
 
-  /// Create a new catch record with image
+  /// Create a new catch record with image - WITH IMAGE COMPRESSION
   Future<CatchModel> createCatch(CatchModel catchData) async {
     try {
       var request = http.MultipartRequest('POST', Uri.parse(Config.getApiUrl('/catches')));
@@ -47,12 +48,37 @@ class CatchService {
       request.fields['kondisi'] = catchData.kondisi;
       request.fields['catatan'] = catchData.catatan;
 
-      // Add image file
-      var imageFile = await http.MultipartFile.fromPath(
-        'foto_dokumentasi',
-        catchData.fotoDokumentasi,
-      );
-      request.files.add(imageFile);
+      // Compress and add image file
+      File originalImageFile = File(catchData.fotoDokumentasi);
+
+      if (await originalImageFile.exists()) {
+        print('Original catch image size: ${await originalImageFile.length()} bytes');
+
+        // Compress image using ImageService
+        final compressResult = await ImageService.compressToMax2MB(originalImageFile);
+
+        File? finalImageFile;
+        if (compressResult is File) {
+          finalImageFile = compressResult;
+          print('Catch image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+        } else {
+          print('Catch image compression failed, using original image');
+          finalImageFile = originalImageFile;
+        }
+
+        // Check if image is under limit
+        if (await ImageService.isUnderLimit(finalImageFile)) {
+          var imageFile = await http.MultipartFile.fromPath(
+            'foto_dokumentasi',
+            finalImageFile.path,
+          );
+          request.files.add(imageFile);
+        } else {
+          throw Exception('Image is too large even after compression. Please use a smaller image.');
+        }
+      } else {
+        throw Exception('Image file not found: ${catchData.fotoDokumentasi}');
+      }
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
@@ -180,7 +206,7 @@ class CatchService {
     }
   }
 
-  /// Update catch with multipart data (including image) with token
+  /// Update catch with multipart data (including image) with token - WITH IMAGE COMPRESSION
   static Future<Map<String, dynamic>> updateCatchWithImage(
       int id,
       Map<String, String> fields,
@@ -198,12 +224,38 @@ class CatchService {
       request.fields['_method'] = 'PUT';
       request.fields.addAll(fields);
 
+      // Compress and add image if provided
       if (imagePath != null && imagePath.isNotEmpty) {
-        var imageFile = await http.MultipartFile.fromPath(
-          'foto_dokumentasi',
-          imagePath,
-        );
-        request.files.add(imageFile);
+        File originalImageFile = File(imagePath);
+
+        if (await originalImageFile.exists()) {
+          print('Original update image size: ${await originalImageFile.length()} bytes');
+
+          // Compress image using ImageService
+          final compressResult = await ImageService.compressToMax2MB(originalImageFile);
+
+          File? finalImageFile;
+          if (compressResult is File) {
+            finalImageFile = compressResult;
+            print('Update image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+          } else {
+            print('Update image compression failed, using original image');
+            finalImageFile = originalImageFile;
+          }
+
+          // Check if image is under limit
+          if (await ImageService.isUnderLimit(finalImageFile)) {
+            var imageFile = await http.MultipartFile.fromPath(
+              'foto_dokumentasi',
+              finalImageFile.path,
+            );
+            request.files.add(imageFile);
+          } else {
+            throw Exception('Image is too large even after compression. Please use a smaller image.');
+          }
+        } else {
+          throw Exception('Image file not found: $imagePath');
+        }
       }
 
       var streamedResponse = await request.send();

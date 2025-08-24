@@ -7,6 +7,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../values/config.dart';
 import '../models/alat_model.dart';
+import 'image_service.dart'; // Import ImageService
 
 class AlatService {
   static Future<String?> _getToken() async {
@@ -52,10 +53,31 @@ class AlatService {
         request.fields['company_id'] = alat.companyId.toString();
       }
 
+      // Compress and add image if exists
       if (imageFile != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('alat_image', imageFile.path),
-        );
+        print('Original alat image size: ${await imageFile.length()} bytes');
+
+        // Compress image using ImageService
+        final compressResult = await ImageService.compressToMax2MB(imageFile);
+
+        File? finalImageFile;
+        if (compressResult is File) {
+          finalImageFile = compressResult;
+          print('Alat image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+        } else {
+          print('Alat image compression failed, using original image');
+          finalImageFile = imageFile;
+        }
+
+        // Check if image is under limit
+        if (await ImageService.isUnderLimit(finalImageFile)) {
+          request.files.add(
+            await http.MultipartFile.fromPath('alat_image', finalImageFile.path),
+          );
+        } else {
+          print('Error: Image is too large even after compression');
+          return null;
+        }
       }
 
       final streamedResponse = await request.send();
@@ -155,10 +177,31 @@ class AlatService {
         request.fields['company_id'] = alat.companyId.toString();
       }
 
+      // Compress and add image if exists
       if (imageFile != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('alat_image', imageFile.path),
-        );
+        print('Original update alat image size: ${await imageFile.length()} bytes');
+
+        // Compress image using ImageService
+        final compressResult = await ImageService.compressToMax2MB(imageFile);
+
+        File? finalImageFile;
+        if (compressResult is File) {
+          finalImageFile = compressResult;
+          print('Update alat image compressed successfully. New size: ${await finalImageFile.length()} bytes');
+        } else {
+          print('Update alat image compression failed, using original image');
+          finalImageFile = imageFile;
+        }
+
+        // Check if image is under limit
+        if (await ImageService.isUnderLimit(finalImageFile)) {
+          request.files.add(
+            await http.MultipartFile.fromPath('alat_image', finalImageFile.path),
+          );
+        } else {
+          print('Error: Image is too large even after compression');
+          return null;
+        }
       }
 
       final streamedResponse = await request.send();

@@ -54,6 +54,7 @@ class CreateQrCompanyView extends StatelessWidget {
 
                           Obx(() => CustomTextField(
                             label: "Name Company",
+                            controller: controller.nameController,
                             onChanged: (value) => controller.name.value = value,
                             errorMessage: controller.nameError.value.isNotEmpty ? controller.nameError.value : null,
                           )),
@@ -61,6 +62,7 @@ class CreateQrCompanyView extends StatelessWidget {
 
                           Obx(() => CustomTextField(
                             label: "Address Company",
+                            controller: controller.addressController,
                             onChanged: (value) => controller.address.value = value,
                             errorMessage: controller.addressError.value.isNotEmpty ? controller.addressError.value : null,
                           )),
@@ -68,6 +70,7 @@ class CreateQrCompanyView extends StatelessWidget {
 
                           Obx(() => CustomTextField(
                             label: "Phone number",
+                            controller: controller.phoneController,
                             isNumber: true,
                             onChanged: (value) => controller.phoneNumber.value = value,
                             errorMessage: controller.phoneError.value.isNotEmpty ? controller.phoneError.value : null,
@@ -76,6 +79,7 @@ class CreateQrCompanyView extends StatelessWidget {
 
                           Obx(() => CustomTextField(
                             label: "Email Company",
+                            controller: controller.emailController,
                             keyboardType: TextInputType.emailAddress,
                             onChanged: (value) => controller.email.value = value,
                             errorMessage: controller.emailError.value.isNotEmpty ? controller.emailError.value : null,
