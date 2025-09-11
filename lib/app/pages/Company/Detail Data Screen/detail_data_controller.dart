@@ -1,3 +1,4 @@
+import 'package:admin/app/pages/Company/Detail%20Data%20Screen/widgets/DateSelection.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ import '../../../../data/models/company_model.dart';
 import '../../../../data/services/alat_service.dart';
 import '../../../../data/services/chart_service.dart';
 import '../../../../data/services/company_service.dart';
+import '../../../../data/services/pdf_service.dart';
 import '../../../../values/config.dart';
 import '../../Bottom Nav/bottomnav_controller.dart';
 
@@ -16,7 +18,7 @@ class DetailDataController extends GetxController {
   var traps = <AlatModel>[].obs;
   var selectedMonth = 0.obs;
   var isLoadingChart = false.obs;
-
+  var isLoading = false.obs;
   // Modified for layered charts
   var pestTypeLayeredData = <String, Map<String, List<FlSpot>>>{}
       .obs; // pest_type -> label -> data
@@ -46,6 +48,7 @@ class DetailDataController extends GetxController {
   var clientEmail = ''.obs;
   var clientPhoneNumber = ''.obs;
   var clientImagePath = ''.obs;
+  final PdfService _pdfService = PdfService();
 
   // Extended color palette for multiple layers
   final List<Color> _colorPalette = [
@@ -487,5 +490,83 @@ class DetailDataController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  Future<void> exportPdf(BuildContext context) async {
+    DateTime? startDate;
+    DateTime? endDate;
+
+    // 1. Munculin MonthSelection dalam bottom sheet
+    final confirm = await Get.bottomSheet<bool>(
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Pilih Rentang Bulan",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            MonthSelection(
+              onMonthRangeChanged: (start, end) {
+                startDate = start;
+                endDate = end;
+              },
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Get.back(result: false),
+                  child: const Text("Batal"),
+                ),
+                ElevatedButton(
+                  onPressed: () => Get.back(result: true),
+                  child: const Text("Ya"),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+    );
+
+    if (confirm != true || startDate == null || endDate == null) return;
+
+    // Validasi company ID sebelum export
+    if (companyId.value <= 0) {
+      Get.snackbar("Error", "Company ID tidak valid. Silakan refresh halaman dan coba lagi.");
+      return;
+    }
+
+    final startDateStr = startDate!.toIso8601String().split("T").first;
+    final endDateStr = endDate!.toIso8601String().split("T").first;
+
+    // 2. Proses download PDF
+    try {
+      isLoading.value = true;
+      final file = await _pdfService.downloadPdf(
+        companyId: companyId.value, // Gunakan companyId yang sebenarnya
+        startDate: startDateStr,
+        endDate: endDateStr,
+        useDate: "created_at",
+      );
+
+      if (file != null) {
+        await _pdfService.openPdf(file);
+      } else {
+        Get.snackbar("Error", "Gagal export PDF");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Gagal export PDF: ${e.toString()}");
+      print('Error exporting PDF: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

@@ -50,7 +50,7 @@ class DetailDataView extends StatelessWidget {
                         totalPengecekan: controller.totalPengecekan,
                         onQrTap: () => Get.offNamed('/CreateQrTools', arguments: {
                           'companyId': controller.companyId.value,
-                        }),
+                        }), onPdfTap: () => controller.exportPdf(context),
                       )),
                       SizedBox(height: 20.h),
 

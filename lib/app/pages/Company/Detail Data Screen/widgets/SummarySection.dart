@@ -10,12 +10,14 @@ class SummarySection extends StatelessWidget {
   final int totalAlat;
   final int totalPengecekan;
   final VoidCallback onQrTap;
+  final VoidCallback onPdfTap;
 
   const SummarySection({
     super.key,
     required this.totalAlat,
     required this.totalPengecekan,
     required this.onQrTap,
+    required this.onPdfTap,
   });
 
   @override
@@ -53,6 +55,24 @@ class SummarySection extends StatelessWidget {
               child: Center(
                 child: SvgPicture.asset(
                   "assets/icons/qr_icont.svg",
+                  width: 50.w,
+                  height: 50.h,
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: onPdfTap, // Use the callback passed from parent
+            child: Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                color: AppColor.btnoren,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  "assets/icons/pdf_icont.svg",
                   width: 50.w,
                   height: 50.h,
                 ),
